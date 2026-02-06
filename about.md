@@ -91,7 +91,7 @@ permalink: /about/
       <a href="https://medium.com/google-cloud/introducing-spanner-schema-insights-optimizing-your-global-database-design-aa0ae7d4843f">Read on Medium →</a></p>
       <p style="margin-top: 1.5rem;"><strong>"Methods of Computational Linguistics and Natural Language Processing: Opportunities and Limitations for Personality Psychology Tasks"</strong><br>
       Kuzmina A.A., Lifshits M.A., Kostenko V.Y. — <em>Journal of Modern Foreign Psychology</em>, 2022<br>
-      <a href="https://www.researchgate.net/publication/359960231">Read on ResearchGate →</a></p>
+      Independent research · <a href="https://www.researchgate.net/publication/359960231">Read on ResearchGate →</a></p>
     </div>
   </div>
 </section>
