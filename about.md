@@ -17,7 +17,7 @@ permalink: /about/
       <div class="card">
         <div class="card-icon">💼</div>
         <h3 class="card-title">By Day</h3>
-        <p class="card-text">Leading engineering teams at Google Cloud building UI for Spanner, Bigtable, and Firestore. Making petabyte-scale data feel approachable.</p>
+        <p class="card-text">Leading full-stack engineering at Google Cloud for Spanner, Bigtable, and Firestore — APIs, services, and the tools developers use to manage petabyte-scale data.</p>
       </div>
       <div class="card">
         <div class="card-icon">🎓</div>

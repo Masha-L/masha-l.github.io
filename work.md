@@ -7,7 +7,7 @@ permalink: /work/
 <section class="about-intro">
   <div class="about-content">
     <h1>Work</h1>
-    <p class="lead">Building interfaces for some of the most powerful database systems on the planet.</p>
+    <p class="lead">Leading full-stack engineering for Google Cloud's database management systems.</p>
   </div>
 </section>
 
@@ -21,17 +21,17 @@ permalink: /work/
       <div class="card">
         <div class="card-icon">🌐</div>
         <h3 class="card-title">Cloud Spanner</h3>
-        <p class="card-text">The world's first horizontally scalable, globally consistent relational database. SQL semantics with NoSQL scale.</p>
+        <p class="card-text">Full-stack development for the world's first horizontally scalable, globally consistent relational database. APIs, services, and developer tools.</p>
       </div>
       <div class="card">
         <div class="card-icon">⚡</div>
         <h3 class="card-title">Cloud Bigtable</h3>
-        <p class="card-text">Powering Search, Maps, and Gmail. Petabytes of data with single-digit millisecond latency.</p>
+        <p class="card-text">Building the platform that powers Search, Maps, and Gmail. APIs and tooling for petabyte-scale NoSQL.</p>
       </div>
       <div class="card">
         <div class="card-icon">🔥</div>
         <h3 class="card-title">Firestore</h3>
-        <p class="card-text">Firebase's serverless database. Real-time sync, offline support, developer simplicity.</p>
+        <p class="card-text">Engineering Firebase's serverless database platform. Real-time sync, offline support, developer APIs.</p>
       </div>
     </div>
   </div>
