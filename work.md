@@ -122,12 +122,17 @@ permalink: /work/
       <div class="card">
         <div class="card-icon">☁️</div>
         <h3 class="card-title">Cloud & Infrastructure</h3>
-        <p class="card-text">Google Cloud Platform · AWS · Terraform · Firebase · Spanner · Bigtable · BigQuery</p>
+        <p class="card-text">GCP · AWS · Terraform · Cloud Run · Gateway API · Load Balancing · Firebase · Spanner · Bigtable · BigQuery · Postgres</p>
       </div>
       <div class="card">
         <div class="card-icon">🤖</div>
-        <h3 class="card-title">AI & Data</h3>
-        <p class="card-text">LLM Integration · NL2SQL · Gemini · TF-IDF · Information Retrieval · Data Pipelines</p>
+        <h3 class="card-title">AI & ML</h3>
+        <p class="card-text">LLM Integration · RAG · NL2SQL · Eval Sets · CNNs · LSTMs · Gemini · TF-IDF · Information Retrieval</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3 class="card-title">Data & Search</h3>
+        <p class="card-text">Spark · Flink · Vector Search · Elasticsearch · Data Pipelines · SQL · BigQuery</p>
       </div>
       <div class="card">
         <div class="card-icon">🛠️</div>
