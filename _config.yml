@@ -3,10 +3,12 @@ description: Engineering leader, cybersecurity student, and occasional poet. Bui
 url: "https://masha-l.github.io"
 baseurl: ""
 
-# Theme
-remote_theme: pages-themes/minimal@v0.2.0
+# Build settings
+markdown: kramdown
+permalink: /blog/:title/
+
+# Plugins (minimal for custom design)
 plugins:
-  - jekyll-remote-theme
   - jekyll-feed
   - jekyll-seo-tag
 
@@ -18,10 +20,6 @@ author:
 # Social
 twitter_username: ocean_ragess
 github_username: Masha-L
-
-# Build settings
-markdown: kramdown
-permalink: /blog/:title/
 
 # Collections
 collections:
@@ -36,3 +34,13 @@ defaults:
       type: "posts"
     values:
       layout: "post"
+  - scope:
+      path: ""
+    values:
+      layout: "default"
+
+# Exclude
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
