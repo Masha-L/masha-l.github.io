@@ -4,66 +4,90 @@ title: Work
 permalink: /work/
 ---
 
-<section class="about-intro">
-  <div class="about-content">
-    <h1>Work</h1>
-    <p class="lead">I lead three UI teams at Google Cloud, building the interfaces for some of the most powerful database systems on the planet.</p>
-  </div>
-</section>
+# Work
 
-<section class="section">
-  <div class="section-container">
-    <div class="work-intro">
-      <p>My teams work on the Google Cloud Console experiences for <strong>Bigtable</strong>, <strong>Spanner</strong>, and <strong>Firestore</strong>. These are databases that power some of the world's largest applications — and our job is to make them feel approachable.</p>
-      <p>It's a fascinating challenge: how do you build interfaces for systems that handle petabytes of data, millions of operations per second, global distribution — and still make them intuitive enough that a developer can get started in minutes?</p>
-    </div>
+<p class="lead">Product-focused, full-stack engineering leader specializing in AI/ML integrations and strategic user experience at Google Cloud.</p>
 
-    <div class="team-grid stagger">
-      <div class="team-card">
-        <h3>Cloud Bigtable</h3>
-        <p class="team-type">NoSQL at Scale</p>
-        <p>Google's massively scalable NoSQL database service. The same technology that powers Search, Maps, and Gmail. Petabytes of data with single-digit millisecond latency.</p>
-      </div>
-      <div class="team-card">
-        <h3>Cloud Spanner</h3>
-        <p class="team-type">Global Relational</p>
-        <p>The world's first horizontally scalable, globally consistent relational database. SQL semantics with NoSQL scale. It shouldn't be possible, and yet.</p>
-      </div>
-      <div class="team-card">
-        <h3>Firestore</h3>
-        <p class="team-type">Serverless Document DB</p>
-        <p>Firebase's flexible, scalable database for mobile and web. Real-time sync, offline support, and the simplicity developers need to move fast.</p>
-      </div>
-    </div>
-  </div>
-</section>
+---
 
-<section class="section section-alt">
-  <div class="about-content">
-    <div class="about-section">
-      <h2>What I Actually Do</h2>
-      <p>The job title says "Engineering Manager," but day-to-day looks more like:</p>
-      <ul>
-        <li><strong>Building teams.</strong> Hiring, developing, and creating an environment where talented people do their best work.</li>
-        <li><strong>Setting direction.</strong> Working with product, design, and leadership to figure out what we should build and why.</li>
-        <li><strong>Removing obstacles.</strong> Whether that's organizational friction, technical debt, or unclear priorities.</li>
-        <li><strong>Staying technical.</strong> I don't write as much code as I used to, but I stay close to the architecture and review enough PRs to keep my opinions informed.</li>
-        <li><strong>Connecting dots.</strong> Three products means three sets of stakeholders, timelines, and challenges. Finding synergies is part of the game.</li>
-      </ul>
-    </div>
+## Current Role
 
-    <div class="about-section">
-      <h2>Things I Believe About Building Products</h2>
-      <p><strong>Complexity is the enemy.</strong> The hardest part of building tools for powerful systems is resisting the urge to expose all that power at once. Good design is about what you leave out.</p>
-      <p><strong>Users are smarter than you think — and busier.</strong> They can handle sophisticated tools, but they don't have time to figure out your clever interface. Meet them where they are.</p>
-      <p><strong>Teams build products, not individuals.</strong> My job is to create the conditions for great work, then get out of the way.</p>
-      <p><strong>The best code is the code you don't write.</strong> Every line is a liability. Solve the problem with the smallest possible surface area.</p>
-    </div>
+### TLM, Front Row Databases
+**Google Cloud** · Sep 2025 – Present
 
-    <div class="about-section">
-      <h2>Before Google</h2>
-      <p>My path here wasn't a straight line. I've worked on everything from early-stage startups to enterprise software. Each stop taught me something about how to build things people actually want to use.</p>
-      <p>The common thread: I've always been drawn to the places where complex systems meet human needs. The gap between what technology can do and what people can easily use — that's where I like to work.</p>
-    </div>
-  </div>
-</section>
+Leading the engineering teams responsible for **Cloud Spanner**, **Bigtable**, and **Firestore** frontend platforms and API integrations. Overseeing product development, team growth, hiring, and cross-functional planning with a 200-person backend organization.
+
+---
+
+## Previous Role
+
+### Tech Lead, Frontend Platform – Spanner
+**Google Cloud** · Nov 2021 – Sep 2025
+
+Led the Spanner frontend platform team through the successful delivery of 10+ major features, including Spanner Editions, Scheduled Backups, and Graph Visualization. Established team processes for sprint planning, backlog grooming, and quarterly roadmapping.
+
+---
+
+## Key Projects
+
+### AI/ML Integration & Innovation
+
+**Duet AI / Gemini for Databases**
+Led the full-stack integration of generative AI into Google Cloud database products. Designed a novel query regression testing pipeline to evaluate accuracy of LLM-generated queries—a framework later adopted by the central NL2SQL team.
+
+**Conversational AI Agent (Project "Debbie")**
+Led end-to-end UI/UX and agent development, including backend integration and API definition.
+
+**Bias Busting Initiative**
+Initiated and led threat modeling sessions with executives to identify and mitigate risks of AI-generated bias in NL2SQL.
+
+---
+
+### Strategic Initiatives
+
+**Project Oasis (Oracle @ Google Cloud)**
+Full-stack engineering lead for UX aspects of a strategic cross-company partnership bringing Oracle Exadata Infrastructure to GCP. In the absence of a dedicated manager, assumed leadership responsibilities for a new team, driving API contracts, project planning, and core development to meet aggressive launch deadlines.
+
+**Spanner Product-Led Growth**
+Spearheaded the full-stack UI strategy for a multi-quarter PLG initiative:
+- **32% YoY increase** in free trial creations
+- **50% increase** in conversion rate in first month
+- Launched revamped "Zero-State" and Free Trial experience with pre-loaded sample datasets
+- Built "one-click" data loading feature (CSV, Avro, mysqldump)
+
+**Spanner Editions Launch**
+Led Front Row engineering through a complex, high-risk 7-month project introducing a tiered pricing model critical for revenue growth. Received Spot Bonus for exceptional leadership and execution speed.
+
+---
+
+### Core Feature Delivery
+
+**Schema Insights & Analysis (Spanalyze)**
+Led full-stack development of an internal tool providing deep schema insights, performance analysis, and optimization recommendations for Spanner databases.
+
+**Spanner Graph Visualization**
+Led end-to-end UI development for a high-visibility feature for Google Cloud Next. Spearheaded complex security, legal, and technical integration of a third-party library (Ogma.js)—instrumental in securing a new strategic customer in APAC.
+
+**Data Protection Features**
+Led UI development for Scheduled Backups and Incremental Backups from implementation to GA launch. Received two Spot Bonuses for strong partnership and leadership.
+
+---
+
+## Leadership & Impact
+
+**Developer Advocacy**
+Partnered with DevRel and product teams to shape external messaging and create technical content for key product launches.
+
+**Mentorship**
+Actively mentored junior engineers on technical growth, project ownership, and promotion readiness. Recognized as an "amazing team lead" for building strong team community.
+
+**Process Innovation**
+- Organized the first-ever Spanner UI Summit to align leadership on UI strategy
+- Co-led creation of comprehensive on-call training program, nearly doubling team confidence in on-call readiness
+
+**Cross-Team Influence**
+Championed reusable components (graph visualization library) adopted by the Dataplex team, saving significant development time.
+
+---
+
+<p><a href="/">← Home</a></p>
