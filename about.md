@@ -85,6 +85,17 @@ permalink: /about/
 <section class="section section-alt">
   <div class="about-content">
     <div class="about-section">
+      <h2>Research</h2>
+      <p><strong>"Methods of Computational Linguistics and Natural Language Processing: Opportunities and Limitations for Personality Psychology Tasks"</strong></p>
+      <p>Kuzmina A.A., Lifshits M.A., Kostenko V.Y. — <em>Journal of Modern Foreign Psychology</em>, 2022</p>
+      <p><a href="https://www.researchgate.net/publication/359960231">Read on ResearchGate →</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="about-content">
+    <div class="about-section">
       <h2>Let's Connect</h2>
       <p>Happy to chat about engineering leadership, security, grad school struggles, or life in tech.</p>
       <p>
