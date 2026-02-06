@@ -77,7 +77,7 @@ permalink: /work/
         <p class="tech-stack">Python · Gemini LLM · NL2SQL</p>
         <p class="description">Led generative AI integration into Cloud databases. Query your data in plain English. Built LLM testing framework adopted by central NL2SQL team.</p>
         <div class="card-links">
-          <a href="https://cloud.google.com/blog/products/databases/spanner-in-2025" class="link-external link-blog">Spanner AI Features</a>
+          <a href="https://cloud.google.com/blog/products/databases/techniques-for-improving-text-to-sql" class="link-external link-blog">Text-to-SQL Deep Dive</a>
         </div>
       </div>
       <div class="featured-card">
@@ -113,6 +113,14 @@ permalink: /work/
       <h2 class="section-title">Publications</h2>
     </div>
     <div class="stagger">
+      <div class="pub-card">
+        <span class="pub-icon">🤖</span>
+        <div class="pub-content">
+          <h3>Techniques for Improving Text-to-SQL</h3>
+          <p class="pub-meta">Google Cloud Blog · 2025</p>
+          <a href="https://cloud.google.com/blog/products/databases/techniques-for-improving-text-to-sql" class="link-text">Read on Google Cloud Blog ↗</a>
+        </div>
+      </div>
       <div class="pub-card">
         <span class="pub-icon">📝</span>
         <div class="pub-content">
