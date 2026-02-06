@@ -1010,7 +1010,7 @@ p {
    FOOTER
    ============================================ */
 .footer {
-  background: var(--color-dark);
+  background: #0d1b2a;
   color: rgba(255, 255, 255, 0.8);
   padding: var(--space-lg) var(--space-md);
 }
