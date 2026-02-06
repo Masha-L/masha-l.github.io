@@ -114,6 +114,14 @@ permalink: /work/
     </div>
     <div class="stagger">
       <div class="pub-card">
+        <span class="pub-icon">📊</span>
+        <div class="pub-content">
+          <h3>Introducing Spanner Schema Insights</h3>
+          <p class="pub-meta">Google Cloud Community on Medium · January 2026</p>
+          <a href="https://medium.com/google-cloud/introducing-spanner-schema-insights-optimizing-your-global-database-design-aa0ae7d4843f" class="link-text">Read on Medium ↗</a>
+        </div>
+      </div>
+      <div class="pub-card">
         <span class="pub-icon">🤖</span>
         <div class="pub-content">
           <h3>Techniques for Improving Text-to-SQL</h3>
