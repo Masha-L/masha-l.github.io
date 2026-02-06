@@ -4,18 +4,11 @@ title: Work
 permalink: /work/
 ---
 
-<section class="section">
-<div class="section-container">
-
 # What I Do
 
 I lead the frontend teams for Google Cloud's database products — Spanner, Bigtable, and Firestore. My job is making incredibly complex systems feel approachable. Petabytes of data, globally distributed, millisecond latency... and it should still be intuitive to use.
 
-</div>
-</section>
-
-<section class="section section-alt">
-<div class="section-container">
+---
 
 ## The Fun Stuff
 
@@ -33,11 +26,7 @@ I led the UX side of a big Oracle partnership — bringing Oracle Exadata to Goo
 
 Product-led growth is a fancy way of saying "let people try the thing without talking to sales first." I led a redesign of Spanner's trial experience — pre-loaded sample data, one-click imports, zero friction. Trial creations went up 32%, conversions jumped 50% in the first month.
 
-</div>
-</section>
-
-<section class="section">
-<div class="section-container">
+---
 
 ## How I Lead
 
@@ -47,21 +36,13 @@ But I've also learned that the multiplier effect of growing others is huge. Some
 
 I organized the first Spanner UI Summit. I co-built an on-call training program that doubled team confidence. I care about process when it enables people, and I kill process when it gets in the way.
 
-</div>
-</section>
-
-<section class="section section-alt">
-<div class="section-container">
+---
 
 ## The Philosophy
 
-I believe in:
 - **Products over features** — Does this actually make someone's life better?
 - **Clarity over cleverness** — If it needs a manual, we failed
 - **Speed with intention** — Move fast, but know why you're moving
 - **Growing people** — A team that learns together wins together
 
-</div>
-</section>
-
-<p class="text-center"><a href="/">← Back home</a></p>
+[← Back home](/)
