@@ -76,6 +76,9 @@ permalink: /work/
         <h3>Generative AI Integration</h3>
         <p class="tech-stack">Python · Gemini LLM · NL2SQL</p>
         <p class="description">Led generative AI integration into Cloud databases. Query your data in plain English. Built LLM testing framework adopted by central NL2SQL team.</p>
+        <div class="card-links">
+          <a href="https://cloud.google.com/blog/products/databases/spanner-in-2025" class="link-external link-blog">Spanner AI Features</a>
+        </div>
       </div>
       <div class="featured-card">
         <span class="badge badge-shipped">📊 Shipped</span>
@@ -83,7 +86,8 @@ permalink: /work/
         <p class="tech-stack">TypeScript · Third-party Integration</p>
         <p class="description">Shipped graph visualization at Cloud Next. Complex third-party integration. Landed a strategic APAC customer.</p>
         <div class="card-links">
-          <a href="#" class="link-external link-blog">Read Blog Post</a>
+          <a href="https://cloud.google.com/blog/products/databases/announcing-spanner-graph" class="link-external link-blog">Announcement</a>
+          <a href="https://cloud.google.com/blog/products/databases/spanner-graph-is-now-ga" class="link-external link-blog">GA Launch</a>
         </div>
       </div>
       <div class="featured-card">
@@ -112,9 +116,9 @@ permalink: /work/
       <div class="pub-card">
         <span class="pub-icon">📝</span>
         <div class="pub-content">
-          <h3>Introducing Spanner Schema Insights</h3>
+          <h3>Spanner in 2025: AI, Graph, and Beyond</h3>
           <p class="pub-meta">Google Cloud Blog · January 2026</p>
-          <a href="#" class="link-text">Read on Google Cloud Blog ↗</a>
+          <a href="https://cloud.google.com/blog/products/databases/spanner-in-2025" class="link-text">Read on Google Cloud Blog ↗</a>
         </div>
       </div>
       <div class="pub-card">
