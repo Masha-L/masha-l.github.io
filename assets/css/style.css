@@ -1569,6 +1569,31 @@ p {
   background: #000;
 }
 
+[data-theme="dark"] .footer {
+  background: #0a1628;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .footer-tagline {
+  color: #e6e6e6;
+}
+
+[data-theme="dark"] .footer-links a {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+[data-theme="dark"] .footer-links a:hover {
+  color: var(--color-accent);
+}
+
+[data-theme="dark"] .footer-copy {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] .footer-copy a {
+  color: rgba(255, 255, 255, 0.4);
+}
+
 [data-theme="dark"] h1, 
 [data-theme="dark"] h2, 
 [data-theme="dark"] h3, 
