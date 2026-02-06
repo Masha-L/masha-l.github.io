@@ -57,6 +57,5 @@ When I have time (which is rare), I tinker with ideas like:
 
 - Twitter: [@ocean_ragess](https://twitter.com/ocean_ragess)
 - GitHub: [Masha-L](https://github.com/Masha-L)
-- Email: [masha.lifsh@gmail.com](mailto:masha.lifsh@gmail.com)
 
 <p><a href="/">← Home</a></p>
