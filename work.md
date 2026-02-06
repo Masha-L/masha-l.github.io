@@ -108,6 +108,47 @@ permalink: /work/
 </section>
 
 <section class="section section-alt">
+  <div class="section-container">
+    <div class="section-header">
+      <p class="section-label">Toolkit</p>
+      <h2 class="section-title">Skills & Experience</h2>
+    </div>
+    <div class="card-grid stagger">
+      <div class="card">
+        <div class="card-icon">💻</div>
+        <h3 class="card-title">Languages</h3>
+        <p class="card-text">Python · TypeScript · JavaScript · Kotlin · Java · SQL · C · C++</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">☁️</div>
+        <h3 class="card-title">Cloud & Infrastructure</h3>
+        <p class="card-text">Google Cloud Platform · AWS · Terraform · Firebase · Spanner · Bigtable · BigQuery</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🤖</div>
+        <h3 class="card-title">AI & Data</h3>
+        <p class="card-text">LLM Integration · NL2SQL · Gemini · TF-IDF · Information Retrieval · Data Pipelines</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🛠️</div>
+        <h3 class="card-title">Full Stack</h3>
+        <p class="card-text">React · Angular · Flask · FastAPI · REST APIs · gRPC · System Design</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📋</div>
+        <h3 class="card-title">Product & Strategy</h3>
+        <p class="card-text">PRDs & Specs · Roadmapping · User Research · A/B Testing · Product-Led Growth</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">👥</div>
+        <h3 class="card-title">Leadership</h3>
+        <p class="card-text">Team Building · Mentorship · Cross-functional Collaboration · Hiring · On-call Programs</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
   <div class="about-content">
     <div class="about-section">
       <h2>Before Google</h2>
