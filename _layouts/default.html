@@ -92,7 +92,102 @@
       });
     }, observerOptions);
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Quote rotator
+    const rotator = document.getElementById('quote-rotator');
+    const dotsContainer = document.getElementById('quote-dots');
+    if (rotator && dotsContainer) {
+      const quotes = rotator.querySelectorAll('.quote-item');
+      let currentQuote = 0;
+      
+      // Create dots
+      quotes.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'quote-dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => goToQuote(i));
+        dotsContainer.appendChild(dot);
+      });
+      
+      const dots = dotsContainer.querySelectorAll('.quote-dot');
+      
+      function goToQuote(index) {
+        quotes[currentQuote].classList.remove('active');
+        dots[currentQuote].classList.remove('active');
+        currentQuote = index;
+        quotes[currentQuote].classList.add('active');
+        dots[currentQuote].classList.add('active');
+      }
+      
+      setInterval(() => {
+        goToQuote((currentQuote + 1) % quotes.length);
+      }, 4000);
+    }
+
+    // Scroll reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.card, .team-card, .featured-card, .interest-card, .now-item').forEach(el => {
+      el.classList.add('reveal');
+      revealObserver.observe(el);
+    });
     
+    // Typing effect for hero
+    const typingText = document.querySelector('.typing-text');
+    if (typingText) {
+      const phrases = [
+        'less confusing',
+        'actually work',
+        'not lose your data',
+        'scale globally',
+        'spark joy'
+      ];
+      let phraseIndex = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+      let isPaused = false;
+      
+      function type() {
+        const currentPhrase = phrases[phraseIndex];
+        
+        if (isPaused) {
+          isPaused = false;
+          isDeleting = true;
+          setTimeout(type, 1500);
+          return;
+        }
+        
+        if (isDeleting) {
+          typingText.textContent = currentPhrase.substring(0, charIndex - 1);
+          charIndex--;
+          
+          if (charIndex === 0) {
+            isDeleting = false;
+            phraseIndex = (phraseIndex + 1) % phrases.length;
+            setTimeout(type, 500);
+            return;
+          }
+        } else {
+          typingText.textContent = currentPhrase.substring(0, charIndex + 1);
+          charIndex++;
+          
+          if (charIndex === currentPhrase.length) {
+            isPaused = true;
+            setTimeout(type, 100);
+            return;
+          }
+        }
+        
+        setTimeout(type, isDeleting ? 50 : 100);
+      }
+      
+      setTimeout(type, 1000);
+    }
+
     // Easter egg: Konami code
     const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
     let konamiIndex = 0;
