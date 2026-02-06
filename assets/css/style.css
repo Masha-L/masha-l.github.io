@@ -268,13 +268,11 @@ p {
 
 .hero-content {
   will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
 }
 
 .hero-shapes {
-  will-change: transform;
-}
-
-.shape {
   will-change: transform;
 }
 
@@ -323,7 +321,10 @@ p {
   position: absolute;
   border-radius: 50%;
   opacity: 0.15;
-  animation: float 20s ease-in-out infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  transition: none;
 }
 
 .shape-1 {
@@ -332,7 +333,7 @@ p {
   background: var(--color-primary);
   top: 10%;
   right: 10%;
-  animation-delay: 0s;
+  
 }
 
 .shape-2 {
@@ -341,7 +342,7 @@ p {
   background: var(--color-accent);
   bottom: 20%;
   left: 5%;
-  animation-delay: -5s;
+  
 }
 
 .shape-3 {
@@ -350,7 +351,7 @@ p {
   background: var(--color-sage);
   top: 60%;
   right: 25%;
-  animation-delay: -10s;
+  
 }
 
 .shape-4 {
@@ -359,7 +360,7 @@ p {
   background: var(--color-primary-light);
   top: 30%;
   left: 15%;
-  animation-delay: -7s;
+  
   opacity: 0.1;
 }
 
@@ -369,7 +370,7 @@ p {
   background: var(--color-accent);
   bottom: 10%;
   right: 10%;
-  animation-delay: -3s;
+  
   opacity: 0.08;
 }
 
@@ -1050,12 +1051,12 @@ p {
   animation: fadeInUp 0.6s ease forwards;
 }
 
-.stagger > *:nth-child(1) { animation-delay: 0.1s; }
-.stagger > *:nth-child(2) { animation-delay: 0.2s; }
-.stagger > *:nth-child(3) { animation-delay: 0.3s; }
-.stagger > *:nth-child(4) { animation-delay: 0.4s; }
-.stagger > *:nth-child(5) { animation-delay: 0.5s; }
-.stagger > *:nth-child(6) { animation-delay: 0.6s; }
+.stagger > *:nth-child(1) {  }
+.stagger > *:nth-child(2) {  }
+.stagger > *:nth-child(3) {  }
+.stagger > *:nth-child(4) {  }
+.stagger > *:nth-child(5) {  }
+.stagger > *:nth-child(6) {  }
 
 @keyframes fadeInUp {
   to {
@@ -1070,10 +1071,10 @@ p {
   animation: fadeInUp 0.8s ease forwards;
 }
 
-.hero-greeting { animation-delay: 0.1s; }
-.hero-title { animation-delay: 0.2s; }
-.hero-description { animation-delay: 0.3s; }
-.hero-links { animation-delay: 0.4s; }
+.hero-greeting {  }
+.hero-title {  }
+.hero-description {  }
+.hero-links {  }
 
 /* ============================================
    UTILITIES

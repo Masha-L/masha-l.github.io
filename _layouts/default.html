@@ -136,47 +136,67 @@
       revealObserver.observe(el);
     });
 
-    // Parallax effect
-    const parallaxElements = document.querySelectorAll('.hero-shapes .shape, .hero::before, .hero::after');
+    // Smooth parallax effect with requestAnimationFrame
     const heroContent = document.querySelector('.hero-content');
+    const shapes = {
+      s1: document.querySelectorAll('.shape-1'),
+      s2: document.querySelectorAll('.shape-2'),
+      s3: document.querySelectorAll('.shape-3'),
+      s4: document.querySelectorAll('.shape-4'),
+      s5: document.querySelectorAll('.shape-5')
+    };
     
-    window.addEventListener('scroll', () => {
-      const scrolled = window.pageYOffset;
-      const rate = scrolled * -0.3;
-      const rateSlower = scrolled * -0.15;
-      const rateFaster = scrolled * -0.5;
+    let ticking = false;
+    let lastScrollY = 0;
+    let currentY = 0;
+    
+    function lerp(start, end, factor) {
+      return start + (end - start) * factor;
+    }
+    
+    function updateParallax() {
+      // Smooth interpolation for buttery scrolling
+      currentY = lerp(currentY, lastScrollY, 0.1);
+      
+      const scrolled = currentY;
       
       // Move shapes at different speeds
-      document.querySelectorAll('.shape-1').forEach(el => {
-        el.style.transform = `translateY(${rate}px) rotate(${scrolled * 0.02}deg)`;
+      shapes.s1.forEach(el => {
+        el.style.transform = `translate3d(0, ${scrolled * -0.3}px, 0) rotate(${scrolled * 0.02}deg)`;
       });
-      document.querySelectorAll('.shape-2').forEach(el => {
-        el.style.transform = `translateY(${rateSlower}px) rotate(${scrolled * -0.03}deg)`;
+      shapes.s2.forEach(el => {
+        el.style.transform = `translate3d(0, ${scrolled * -0.15}px, 0) rotate(${scrolled * -0.03}deg)`;
       });
-      document.querySelectorAll('.shape-3').forEach(el => {
-        el.style.transform = `translateY(${rateFaster}px) rotate(${scrolled * 0.01}deg)`;
+      shapes.s3.forEach(el => {
+        el.style.transform = `translate3d(0, ${scrolled * -0.5}px, 0) rotate(${scrolled * 0.01}deg)`;
       });
-      document.querySelectorAll('.shape-4').forEach(el => {
-        el.style.transform = `translateY(${scrolled * -0.4}px) rotate(${scrolled * -0.02}deg)`;
+      shapes.s4.forEach(el => {
+        el.style.transform = `translate3d(0, ${scrolled * -0.4}px, 0) rotate(${scrolled * -0.02}deg)`;
       });
-      document.querySelectorAll('.shape-5').forEach(el => {
-        el.style.transform = `translateY(${scrolled * -0.25}px) rotate(${scrolled * 0.015}deg)`;
+      shapes.s5.forEach(el => {
+        el.style.transform = `translate3d(0, ${scrolled * -0.25}px, 0) rotate(${scrolled * 0.015}deg)`;
       });
       
-      // Hero content moves slower (creates depth)
+      // Hero content
       if (heroContent && scrolled < 800) {
-        heroContent.style.transform = `translateY(${scrolled * 0.2}px)`;
-        heroContent.style.opacity = 1 - (scrolled * 0.002);
+        heroContent.style.transform = `translate3d(0, ${scrolled * 0.2}px, 0)`;
+        heroContent.style.opacity = Math.max(0, 1 - (scrolled * 0.0015));
       }
       
-      // Section headers parallax
-      document.querySelectorAll('.section-header').forEach(el => {
-        const rect = el.getBoundingClientRect();
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
-          const offset = (rect.top - window.innerHeight / 2) * 0.05;
-          el.style.transform = `translateY(${offset}px)`;
-        }
-      });
+      // Keep animating if not caught up
+      if (Math.abs(currentY - lastScrollY) > 0.5) {
+        requestAnimationFrame(updateParallax);
+      } else {
+        ticking = false;
+      }
+    }
+    
+    window.addEventListener('scroll', () => {
+      lastScrollY = window.pageYOffset;
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateParallax);
+      }
     }, { passive: true });
     
     // Typing effect for hero
