@@ -40,29 +40,90 @@ permalink: /work/
 <section class="section section-alt">
   <div class="section-container">
     <div class="section-header">
+      <p class="section-label">Impact</p>
+      <h2 class="section-title">By the Numbers</h2>
+    </div>
+    <div class="metrics-grid stagger">
+      <div class="metric-card">
+        <div class="metric-number">32%</div>
+        <div class="metric-label">More Signups</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-number">50%</div>
+        <div class="metric-label">Better Conversion</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-number">3</div>
+        <div class="metric-label">Products Led</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-number">4+</div>
+        <div class="metric-label">Years at Google</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-container">
+    <div class="section-header">
       <p class="section-label">Highlights</p>
       <h2 class="section-title">Recent Wins</h2>
     </div>
-    <div class="card-grid stagger">
-      <div class="card">
-        <div class="card-icon">🤖</div>
-        <h3 class="card-title">AI Integration</h3>
-        <p class="card-text">Led generative AI integration into Cloud databases. Query your data in plain English. Built LLM testing framework adopted by central NL2SQL team.</p>
+    <div class="featured-grid stagger">
+      <div class="featured-card">
+        <span class="badge badge-google">🤖 AI</span>
+        <h3>Generative AI Integration</h3>
+        <p class="tech-stack">Python · Gemini LLM · NL2SQL</p>
+        <p class="description">Led generative AI integration into Cloud databases. Query your data in plain English. Built LLM testing framework adopted by central NL2SQL team.</p>
       </div>
-      <div class="card">
-        <div class="card-icon">🤝</div>
-        <h3 class="card-title">Oracle Partnership</h3>
-        <p class="card-text">UX lead for Oracle Exadata on GCP. No manager, aggressive deadlines, high stakes. Shipped it.</p>
+      <div class="featured-card">
+        <span class="badge badge-shipped">📊 Shipped</span>
+        <h3>Spanner Graph</h3>
+        <p class="tech-stack">TypeScript · Third-party Integration</p>
+        <p class="description">Shipped graph visualization at Cloud Next. Complex third-party integration. Landed a strategic APAC customer.</p>
+        <div class="card-links">
+          <a href="#" class="link-external link-blog">Read Blog Post</a>
+        </div>
       </div>
-      <div class="card">
-        <div class="card-icon">📈</div>
-        <h3 class="card-title">Product-Led Growth</h3>
-        <p class="card-text">Redesigned Spanner trials. 32% more signups, 50% better conversion. One-click data loading, sample datasets, zero friction.</p>
+      <div class="featured-card">
+        <span class="badge badge-shipped">📈 Growth</span>
+        <h3>Product-Led Growth</h3>
+        <p class="tech-stack">Full Stack · UX · A/B Testing</p>
+        <p class="description">Redesigned Spanner trials. 32% more signups, 50% better conversion. One-click data loading, sample datasets, zero friction.</p>
       </div>
-      <div class="card">
-        <div class="card-icon">📊</div>
-        <h3 class="card-title">Graph Visualization</h3>
-        <p class="card-text">Shipped Spanner Graph at Cloud Next. Complex third-party integration. Landed a strategic APAC customer.</p>
+      <div class="featured-card">
+        <span class="badge badge-google">🤝 Partnership</span>
+        <h3>Oracle Exadata on GCP</h3>
+        <p class="tech-stack">UX Lead · Cross-functional</p>
+        <p class="description">UX lead for Oracle partnership. No manager, aggressive deadlines, high stakes. Shipped it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="section-container">
+    <div class="section-header">
+      <p class="section-label">Writing</p>
+      <h2 class="section-title">Publications</h2>
+    </div>
+    <div class="stagger">
+      <div class="pub-card">
+        <span class="pub-icon">📝</span>
+        <div class="pub-content">
+          <h3>Introducing Spanner Schema Insights</h3>
+          <p class="pub-meta">Google Cloud Blog · January 2026</p>
+          <a href="#" class="link-text">Read on Google Cloud Blog ↗</a>
+        </div>
+      </div>
+      <div class="pub-card">
+        <span class="pub-icon">📚</span>
+        <div class="pub-content">
+          <h3>Methods of Computational Linguistics and NLP for Personality Psychology</h3>
+          <p class="pub-meta">Journal of Modern Foreign Psychology · 2022</p>
+          <p style="color: var(--color-text-muted); margin: 0; font-size: 0.95rem;">Independent research bridging computational methods with psychological analysis.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -110,6 +171,44 @@ permalink: /work/
 <section class="section section-alt">
   <div class="section-container">
     <div class="section-header">
+      <p class="section-label">Journey</p>
+      <h2 class="section-title">Career Path</h2>
+    </div>
+    <div class="timeline stagger">
+      <div class="timeline-item current">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Nov 2021 – Present</div>
+        <h3 class="timeline-title">Google Cloud</h3>
+        <p class="timeline-subtitle">Tech Lead Manager → Engineering Lead</p>
+        <div class="timeline-content">
+          <p>Leading 3 full-stack teams across Spanner, Bigtable, and Firestore. Building the developer experience for Google's flagship databases.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2018 – 2021</div>
+        <h3 class="timeline-title">ActionIQ</h3>
+        <p class="timeline-subtitle">Software Engineer → Senior Engineer</p>
+        <div class="timeline-content">
+          <p>NYC startup building customer data platforms. Ship fast, wear many hats, never lose sight of what users actually need. That's where I learned the best products come from understanding the full stack.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2015 – 2019</div>
+        <h3 class="timeline-title">Mount Holyoke College</h3>
+        <p class="timeline-subtitle">BA Computer Science & Psychology</p>
+        <div class="timeline-content">
+          <p>Double major. Chaired ACM-W. Ran the CS society. Organized hackathons. Built robots in the M5 Makerspace.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-container">
+    <div class="section-header">
       <p class="section-label">Toolkit</p>
       <h2 class="section-title">Skills & Experience</h2>
     </div>
@@ -140,30 +239,10 @@ permalink: /work/
         <p class="card-text">React · Next.js · Angular · Flask · FastAPI · REST · gRPC · SOAP · Microservices · System Design</p>
       </div>
       <div class="card">
-        <div class="card-icon">🔗</div>
-        <h3 class="card-title">Enterprise & Integrations</h3>
-        <p class="card-text">Third-party integrations · Trillions of rows · Facebook · Salesforce · Email channels · Data exports at scale</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">📋</div>
-        <h3 class="card-title">Product & Strategy</h3>
-        <p class="card-text">PRDs & Specs · Roadmapping · User Research · A/B Testing · Product-Led Growth</p>
-      </div>
-      <div class="card">
         <div class="card-icon">👥</div>
         <h3 class="card-title">Leadership</h3>
-        <p class="card-text">Team Building · Mentorship · Cross-functional Collaboration · Hiring · On-call Programs</p>
+        <p class="card-text">Team Building · Mentorship · Cross-functional Collaboration · Hiring · On-call Programs · PRDs & Roadmapping</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="about-content">
-    <div class="about-section">
-      <h2>Before Google</h2>
-      <p><strong>ActionIQ</strong> — 3+ years at a NYC startup building customer data platforms. Startup life: ship fast, wear many hats, never lose sight of what users actually need.</p>
-      <p>That's where I learned the best products come from understanding the full stack and caring deeply about the people who use what you build.</p>
     </div>
   </div>
 </section>
