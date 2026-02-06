@@ -19,6 +19,20 @@
   --color-sage: #81b29a;         /* Soft sage */
   --color-cream: #f9f7f3;
   --color-dark: #0d1b2a;
+}
+
+/* Dark mode */
+[data-theme="dark"] {
+  --color-bg: #0d1b2a;
+  --color-bg-alt: #1a2d42;
+  --color-text: #e6e6e6;
+  --color-text-muted: #9ca3af;
+  --color-primary: #14919b;
+  --color-primary-light: #1fb4bf;
+  --color-accent: #e07a5f;
+  --color-accent-soft: #2d3a4a;
+  --color-cream: #1a2d42;
+  --color-dark: #e6e6e6;
   
   /* Typography */
   --font-heading: 'Space Grotesk', -apple-system, sans-serif;
@@ -1230,4 +1244,79 @@ p {
   .metrics-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* ============================================
+   DARK MODE OVERRIDES
+   ============================================ */
+[data-theme="dark"] .nav {
+  background: rgba(13, 27, 42, 0.95);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .card,
+[data-theme="dark"] .now-item,
+[data-theme="dark"] .team-card,
+[data-theme="dark"] .featured-card,
+[data-theme="dark"] .pub-card,
+[data-theme="dark"] .metric-card {
+  background: var(--color-bg-alt);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .featured-card {
+  background: linear-gradient(135deg, var(--color-bg-alt) 0%, #243447 100%);
+}
+
+[data-theme="dark"] .card-icon {
+  background: rgba(20, 145, 155, 0.2);
+}
+
+[data-theme="dark"] .timeline-dot {
+  background: var(--color-bg);
+  border-color: var(--color-primary);
+}
+
+[data-theme="dark"] .post-preview:hover {
+  background: var(--color-bg-alt);
+}
+
+[data-theme="dark"] .post-content pre {
+  background: #000;
+}
+
+[data-theme="dark"] h1, 
+[data-theme="dark"] h2, 
+[data-theme="dark"] h3, 
+[data-theme="dark"] h4, 
+[data-theme="dark"] h5, 
+[data-theme="dark"] h6 {
+  color: #fff;
+}
+
+[data-theme="dark"] .nav-logo,
+[data-theme="dark"] .nav-links a:hover,
+[data-theme="dark"] .nav-links a.active {
+  color: #fff;
+}
+
+[data-theme="dark"] .hero::before {
+  background: radial-gradient(ellipse, rgba(20, 145, 155, 0.15) 0%, transparent 70%);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 1.25rem;
+  color: var(--color-text-muted);
+  transition: var(--transition);
+  border-radius: 8px;
+}
+
+.theme-toggle:hover {
+  color: var(--color-primary);
+  background: var(--color-bg-alt);
 }
