@@ -19,20 +19,6 @@
   --color-sage: #81b29a;         /* Soft sage */
   --color-cream: #f9f7f3;
   --color-dark: #0d1b2a;
-}
-
-/* Dark mode */
-[data-theme="dark"] {
-  --color-bg: #0d1b2a;
-  --color-bg-alt: #1a2d42;
-  --color-text: #e6e6e6;
-  --color-text-muted: #9ca3af;
-  --color-primary: #14919b;
-  --color-primary-light: #1fb4bf;
-  --color-accent: #e07a5f;
-  --color-accent-soft: #2d3a4a;
-  --color-cream: #1a2d42;
-  --color-dark: #e6e6e6;
   
   /* Typography */
   --font-heading: 'Space Grotesk', -apple-system, sans-serif;
@@ -51,6 +37,20 @@
   /* Transitions */
   --transition: 0.3s ease;
   --transition-slow: 0.6s ease;
+}
+
+/* Dark mode */
+[data-theme="dark"] {
+  --color-bg: #0d1b2a;
+  --color-bg-alt: #1a2d42;
+  --color-text: #e6e6e6;
+  --color-text-muted: #9ca3af;
+  --color-primary: #14919b;
+  --color-primary-light: #1fb4bf;
+  --color-accent: #e07a5f;
+  --color-accent-soft: #2d3a4a;
+  --color-cream: #1a2d42;
+  --color-dark: #e6e6e6;
 }
 
 /* ============================================
