@@ -4,45 +4,66 @@ title: Work
 permalink: /work/
 ---
 
-# What I Do
+<section class="about-intro">
+  <div class="about-content">
+    <h1>Work</h1>
+    <p class="lead">I lead engineering teams at Google Cloud, building the interfaces for some of the most powerful database systems on the planet.</p>
+  </div>
+</section>
 
-I lead the frontend teams for Google Cloud's database products — Spanner, Bigtable, and Firestore. My job is making incredibly complex systems feel approachable. Petabytes of data, globally distributed, millisecond latency... and it should still be intuitive to use.
+<section class="section">
+  <div class="section-container">
+    <div class="work-intro">
+      <p>My teams work on the Google Cloud Console experiences for <strong>Spanner</strong>, <strong>Bigtable</strong>, and <strong>Firestore</strong>. These are databases that power some of the world's largest applications — and our job is to make them feel approachable.</p>
+      <p>It's a fascinating challenge: how do you build interfaces for systems that handle petabytes of data, millions of operations per second, global distribution — and still make them intuitive enough that a developer can get started in minutes?</p>
+    </div>
 
----
+    <div class="team-grid stagger">
+      <div class="team-card">
+        <h3>Cloud Spanner</h3>
+        <p class="team-type">Global Relational</p>
+        <p>The world's first horizontally scalable, globally consistent relational database. SQL semantics with NoSQL scale. It shouldn't be possible, and yet.</p>
+      </div>
+      <div class="team-card">
+        <h3>Cloud Bigtable</h3>
+        <p class="team-type">NoSQL at Scale</p>
+        <p>Google's massively scalable NoSQL database service. The same technology that powers Search, Maps, and Gmail. Petabytes of data with single-digit millisecond latency.</p>
+      </div>
+      <div class="team-card">
+        <h3>Firestore</h3>
+        <p class="team-type">Serverless Document DB</p>
+        <p>Firebase's flexible, scalable database for mobile and web. Real-time sync, offline support, and the simplicity developers need to move fast.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-## The Fun Stuff
+<section class="section section-alt">
+  <div class="about-content">
+    <div class="about-section">
+      <h2>The Fun Stuff</h2>
+      <p>Some highlights from recent work:</p>
+      <ul>
+        <li><strong>AI that actually helps.</strong> Led the integration of generative AI into Google Cloud databases — making it possible to query your data in plain English. Built a testing framework to catch when LLMs hallucinate your queries into oblivion. The central NL2SQL team ended up adopting it.</li>
+        <li><strong>Strategic partnerships.</strong> Led the UX side of a big Oracle partnership bringing Exadata to Google Cloud. No dedicated manager, aggressive deadlines, high stakes. The kind of project where you learn what you're capable of.</li>
+        <li><strong>Making databases less scary.</strong> Redesigned Spanner's trial experience — pre-loaded sample data, one-click imports, zero friction. Trial creations went up 32%, conversions jumped 50% in the first month.</li>
+        <li><strong>Graph visualization.</strong> Shipped Spanner Graph at Cloud Next. Navigated complex security, legal, and technical integration of a third-party library — instrumental in landing a new strategic customer in APAC.</li>
+      </ul>
+    </div>
 
-### AI That Actually Helps
+    <div class="about-section">
+      <h2>How I Lead</h2>
+      <p>I still write code. I still review PRs. I think the best engineering leaders never fully leave the craft — you lose something important when you do.</p>
+      <p>But I've also learned that the multiplier effect of growing others is huge. Some of my proudest moments are watching engineers I've mentored step into bigger roles themselves.</p>
+      <p>I organized the first Spanner UI Summit. I co-built an on-call training program that nearly doubled team confidence. I care about process when it enables people, and I kill process when it gets in the way.</p>
+    </div>
 
-I've been deep in the AI integration work at Google Cloud — figuring out how to make generative AI genuinely useful for database developers, not just a gimmick. We built systems that let you query your data in plain English, and I spent a lot of time making sure the AI doesn't hallucinate your queries into oblivion.
-
-One of my favorite projects was building a testing pipeline to catch when LLM-generated queries would do something unexpected. The central NL2SQL team ended up adopting the framework.
-
-### Strategic Partnerships
-
-I led the UX side of a big Oracle partnership — bringing Oracle Exadata to Google Cloud. No dedicated manager, aggressive deadlines, high stakes. The kind of project where you learn a lot about what you're capable of.
-
-### Making Databases Less Scary
-
-Product-led growth is a fancy way of saying "let people try the thing without talking to sales first." I led a redesign of Spanner's trial experience — pre-loaded sample data, one-click imports, zero friction. Trial creations went up 32%, conversions jumped 50% in the first month.
-
----
-
-## How I Lead
-
-I still write code. I still review PRs. I think the best engineering leaders never fully leave the craft — you lose something important when you do.
-
-But I've also learned that the multiplier effect of growing others is huge. Some of my proudest moments are watching engineers I've mentored step into bigger roles themselves.
-
-I organized the first Spanner UI Summit. I co-built an on-call training program that doubled team confidence. I care about process when it enables people, and I kill process when it gets in the way.
-
----
-
-## The Philosophy
-
-- **Products over features** — Does this actually make someone's life better?
-- **Clarity over cleverness** — If it needs a manual, we failed
-- **Speed with intention** — Move fast, but know why you're moving
-- **Growing people** — A team that learns together wins together
-
-[← Back home](/)
+    <div class="about-section">
+      <h2>Things I Believe</h2>
+      <p><strong>Products over features.</strong> Does this actually make someone's life better?</p>
+      <p><strong>Clarity over cleverness.</strong> If it needs a manual, we failed.</p>
+      <p><strong>Speed with intention.</strong> Move fast, but know why you're moving.</p>
+      <p><strong>Growing people.</strong> A team that learns together wins together.</p>
+    </div>
+  </div>
+</section>

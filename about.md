@@ -4,37 +4,54 @@ title: About
 permalink: /about/
 ---
 
-# About Me
+<section class="about-intro">
+  <div class="about-content">
+    <h1>About Me</h1>
+    <p class="lead">I'm Masha — an engineering leader, perpetual student, and someone who believes the best technology feels invisible.</p>
+  </div>
+</section>
 
-I'm Masha. I lead engineering teams at Google Cloud, working on the UI for Spanner, Bigtable, and Firestore — databases that power some of the most demanding applications on the planet.
+<section class="section">
+  <div class="about-content">
+    <div class="about-section">
+      <h2>The Short Version</h2>
+      <p>By day, I lead engineering teams at Google Cloud building UI for some of the most demanding database products on the planet: <strong>Spanner</strong>, <strong>Bigtable</strong>, and <strong>Firestore</strong>. We make petabyte-scale data feel approachable.</p>
+      <p>By night (and early mornings, and weekends), I'm pursuing an <strong>MS in Cybersecurity at NYU</strong>. Current obsession: applied cryptography. There's something deeply satisfying about math that keeps secrets.</p>
+    </div>
 
-I'm also slowly losing my mind (in the best way) pursuing an MS in Cybersecurity at NYU while working full-time. Currently obsessed with applied cryptography. The math is beautiful and the stakes are real.
+    <div class="about-section">
+      <h2>The Longer Version</h2>
+      <p>I grew up in <strong>Moscow</strong>, where I developed a love for puzzles, systems, and understanding how things work. Eventually, that curiosity brought me to <strong>New York City</strong>, which I now call home.</p>
+      <p>My path into tech wasn't linear — it rarely is — but I've always been drawn to the intersection of complex systems and human experience. How do you make powerful tools feel intuitive? How do you build things that scale without losing their soul?</p>
+      <p>At Google, I've gone from engineer to tech lead to leading multiple teams. I've shipped AI integrations, led strategic partnerships, and built features that made databases less intimidating. But I've also learned that leadership is mostly about creating space for other people to do their best work.</p>
+    </div>
 
----
+    <div class="about-section">
+      <h2>When I'm Not Working</h2>
+      <p><strong>Running.</strong> There's something meditative about moving through the city on foot. It's when I do my best thinking — or my best not-thinking.</p>
+      <p><strong>Writing.</strong> Mostly poetry, though I rarely share it. The act of writing is the point.</p>
+      <p><strong>Learning guitar.</strong> I miss playing piano, but my NYC apartment only has room for so many hobbies.</p>
+      <p><strong>Thinking about sustainability.</strong> How do we build a future that actually works? This question lives rent-free in my head.</p>
+      <p><strong>Building community.</strong> I believe technology should bring people together, and I try to practice that in my own life.</p>
+    </div>
 
-## The Journey
+    <div class="about-section">
+      <h2>Side Projects</h2>
+      <p>When I find the time (which is rare), I tinker with ideas like:</p>
+      <ul>
+        <li>A friend reminder app to help people stay connected</li>
+        <li>Tools for job seekers navigating the tech industry</li>
+        <li>Various half-finished experiments in my GitHub</li>
+      </ul>
+    </div>
 
-I grew up in Moscow and eventually made my way to New York, which is now home. My path into tech wasn't a straight line — it rarely is — but I've always been drawn to building things and solving puzzles.
-
-At Google, I've grown from engineer to tech lead to leading multiple teams. I've shipped AI integrations, led strategic partnerships, and built features that made databases feel less intimidating to developers. I've also learned that leadership is mostly about creating space for other people to do their best work.
-
----
-
-## When I'm Not Working
-
-- **Running** through NYC — it's how I think
-- **Cryptography** — the NYU degree is eating my weekends and I don't regret it
-- **Poetry** — I write it, rarely share it
-- **Guitar** — learning, slowly
-- **Sustainability** — how do we build things that don't cost the earth?
-
-I also tinker with side projects when I can. A friend reminder app. Tools for job seekers. Things that scratch an itch.
-
----
-
-## Find Me
-
-- Twitter: [@ocean_ragess](https://twitter.com/ocean_ragess)
-- GitHub: [Masha-L](https://github.com/Masha-L)
-
-[← Back home](/)
+    <div class="about-section">
+      <h2>Let's Connect</h2>
+      <p>I'm always happy to chat about engineering leadership, security, the joys and frustrations of grad school, or just life in tech.</p>
+      <p>
+        <a href="https://twitter.com/ocean_ragess">Twitter</a> · 
+        <a href="https://github.com/Masha-L">GitHub</a>
+      </p>
+    </div>
+  </div>
+</section>
