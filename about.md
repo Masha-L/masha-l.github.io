@@ -36,10 +36,11 @@ permalink: /about/
 <section class="section section-alt">
   <div class="about-content">
     <div class="about-section">
-      <h2>The Journey</h2>
-      <p>At <strong>Mount Holyoke</strong>, I chaired the <strong>ACM-W chapter</strong>, won HackHolyoke with a meal planning app, and discovered I love building things that solve real problems.</p>
-      <p>At <strong>ActionIQ</strong> (3+ years), I learned startup life — shipping fast, wearing many hats, and caring deeply about users.</p>
-      <p>At <strong>Google</strong>, I've grown from engineer to tech lead to leading multiple teams. AI integrations, strategic partnerships, making databases less scary. But mostly: creating space for people to do their best work.</p>
+      <h2>The (Non-Linear) Journey</h2>
+      <p>In Russia, I started with <strong>literature and history</strong>. Then <strong>psychology and neuroscience</strong> — I spent years in <strong>Alzheimer's research labs</strong> during college because I wanted to be a neuroscientist.</p>
+      <p>But I was coding on the side, building apps, falling in love with making things. Made it a <strong>double major</strong>. Ran the <strong>computer science society</strong>, organized <strong>hackathons</strong>, chaired <strong>ACM-W</strong>. Also worked as a <strong>news supervisor</strong> — which taught me how to coordinate chaos and communicate under pressure.</p>
+      <p>First internship at <strong>ActionIQ</strong> turned into 3+ years of startup life — shipping fast, wearing many hats, handling trillions of rows of data.</p>
+      <p>Now at <strong>Google</strong>, leading teams building database systems. The research background, the humanities foundation, the neuroscience training — it all feeds into how I think about products and people.</p>
     </div>
   </div>
 </section>
