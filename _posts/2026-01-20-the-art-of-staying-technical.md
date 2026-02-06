@@ -1,6 +1,6 @@
 ---
 title: "The Art of Staying Technical (As a Manager)"
-date: 2023-11-20
+date: 2026-01-20
 layout: post
 ---
 

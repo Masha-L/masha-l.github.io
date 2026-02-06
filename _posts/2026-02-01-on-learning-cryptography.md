@@ -1,6 +1,6 @@
 ---
 title: "On Learning Cryptography (While Managing Three Teams)"
-date: 2024-01-15
+date: 2026-02-01
 layout: post
 ---
 

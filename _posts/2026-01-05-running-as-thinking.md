@@ -1,6 +1,6 @@
 ---
 title: "Running as Thinking"
-date: 2023-09-05
+date: 2026-01-05
 layout: post
 ---
 
