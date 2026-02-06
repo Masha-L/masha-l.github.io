@@ -36,7 +36,7 @@ permalink: /uses/
     <div class="about-section">
       <h2>☁️ Infrastructure</h2>
       <ul>
-        <li><strong>Google Cloud</strong> — obvious reasons</li>
+        <li><strong>google cloud</strong> — obvious reasons</li>
         <li><strong>Vercel</strong> — for side projects</li>
         <li><strong>Firebase</strong> — quick prototypes</li>
         <li><strong>Terraform</strong> — when I need IaC</li>

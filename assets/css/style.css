@@ -647,6 +647,8 @@ p {
 
 .section-header {
   margin-bottom: var(--space-lg);
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .section-label {
@@ -677,8 +679,10 @@ p {
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: var(--transition);
+  transition: box-shadow var(--transition), border-color var(--transition);
   border: 1px solid rgba(0, 0, 0, 0.04);
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .card:hover {
@@ -799,6 +803,8 @@ p {
   padding: 2rem;
   border-left: 4px solid var(--color-primary);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .team-card h3 {

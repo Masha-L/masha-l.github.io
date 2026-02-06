@@ -6,7 +6,7 @@ permalink: /work/
 
 <section class="about-intro">
   <div class="about-content">
-    <h1>Work</h1>
+    <h1>work</h1>
     <p class="lead">Leading full-stack engineering for Google Cloud's database management systems.</p>
   </div>
 </section>
@@ -198,7 +198,7 @@ permalink: /work/
       <div class="timeline-item current">
         <div class="timeline-dot"></div>
         <div class="timeline-date">Nov 2021 – Present</div>
-        <h3 class="timeline-title">Google Cloud</h3>
+        <h3 class="timeline-title">google cloud</h3>
         <p class="timeline-subtitle">Tech Lead Manager → Engineering Lead</p>
         <div class="timeline-content">
           <p>Leading 3 full-stack teams across Spanner, Bigtable, and Firestore. Building the developer experience for Google's flagship databases.</p>

@@ -183,6 +183,28 @@
         heroContent.style.opacity = Math.max(0, 1 - (scrolled * 0.0015));
       }
       
+      // Parallax for all sections
+      document.querySelectorAll('.section').forEach(section => {
+        const rect = section.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+        
+        if (inView) {
+          const progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+          const offset = (progress - 0.5) * 30;
+          
+          const header = section.querySelector('.section-header');
+          if (header) {
+            header.style.transform = `translate3d(0, ${offset * -0.5}px, 0)`;
+          }
+          
+          const cards = section.querySelectorAll('.card, .team-card, .featured-card, .interest-card, .now-item, .timeline-item');
+          cards.forEach((card, i) => {
+            const cardOffset = offset * (0.3 + (i % 3) * 0.1);
+            card.style.transform = `translate3d(0, ${cardOffset}px, 0)`;
+          });
+        }
+      });
+      
       // Keep animating if not caught up
       if (Math.abs(currentY - lastScrollY) > 0.5) {
         requestAnimationFrame(updateParallax);
