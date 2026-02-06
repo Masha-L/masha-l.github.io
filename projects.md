@@ -59,7 +59,7 @@ permalink: /projects/
       <div class="team-card">
         <h3>Compiler</h3>
         <p class="team-type">C</p>
-        <p>A complete C compiler: lexer, parser, AST, symbol table, code generator. Most CS students don't finish one of these.</p>
+        <p>A complete C compiler from scratch: lexer, parser, AST, symbol table, code generator. One of my favorite deep dives into how programming languages actually work.</p>
         <p><a href="https://github.com/Masha-L/compiler">View on GitHub →</a></p>
       </div>
     </div>
