@@ -1,0 +1,38 @@
+title: Masha Lifshits
+description: Engineering leader, cybersecurity student, and occasional poet. Building things that matter.
+url: "https://masha-l.github.io"
+baseurl: ""
+
+# Theme
+remote_theme: pages-themes/minimal@v0.2.0
+plugins:
+  - jekyll-remote-theme
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Author
+author:
+  name: Masha Lifshits
+  email: masha.lifsh@gmail.com
+
+# Social
+twitter_username: ocean_ragess
+github_username: Masha-L
+
+# Build settings
+markdown: kramdown
+permalink: /blog/:title/
+
+# Collections
+collections:
+  posts:
+    output: true
+    permalink: /blog/:title/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
