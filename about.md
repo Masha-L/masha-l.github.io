@@ -6,7 +6,7 @@ permalink: /about/
 
 <section class="about-intro">
   <div class="about-content">
-    <h1>About Me</h1>
+    <h1>About me</h1>
     <p class="lead">I'm Masha — an engineering leader, perpetual student, and someone who believes the best technology feels invisible.</p>
   </div>
 </section>
@@ -36,7 +36,7 @@ permalink: /about/
 <section class="section section-alt">
   <div class="about-content">
     <div class="about-section">
-      <h2>The (Non-Linear) Journey</h2>
+      <h2>The non-linear journey</h2>
       <p>In Russia, I started with <strong>literature and history</strong>. Then <strong>psychology and neuroscience</strong> — I spent years in <strong>Alzheimer's research labs</strong> during college because I wanted to be a neuroscientist.</p>
       <p>But I was coding on the side, building apps, falling in love with making things. Made it a <strong>double major</strong>. Ran the <strong>computer science society</strong>, organized <strong>hackathons</strong>, chaired <strong>ACM-W</strong>. Also worked as a <strong>news supervisor</strong> — which taught me how to coordinate chaos and communicate under pressure.</p>
       <p>First internship at <strong>ActionIQ</strong> turned into 3+ years of startup life — shipping fast, wearing many hats, handling trillions of rows of data.</p>
@@ -48,7 +48,7 @@ permalink: /about/
 <section class="section">
   <div class="section-container">
     <div class="section-header">
-      <h2>When I'm Not Working</h2>
+      <h2>When I'm not working</h2>
     </div>
     <div class="interests-grid stagger">
       <div class="interest-card">
@@ -100,7 +100,7 @@ permalink: /about/
 <section class="section">
   <div class="about-content">
     <div class="about-section">
-      <h2>Let's Connect</h2>
+      <h2>Let's connect</h2>
       <p>Happy to chat about engineering leadership, security, grad school struggles, or life in tech.</p>
       <p>
         <a href="https://twitter.com/ocean_ragess" class="btn btn-secondary">Twitter</a>

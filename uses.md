@@ -14,7 +14,7 @@ permalink: /uses/
 <section class="section">
   <div class="about-content">
     <div class="about-section">
-      <h2>💻 Development</h2>
+      <h2>Development</h2>
       <ul>
         <li><strong>VS Code</strong> — tried others, always come back</li>
         <li><strong>iTerm2</strong> + zsh + oh-my-zsh</li>
@@ -24,7 +24,7 @@ permalink: /uses/
     </div>
 
     <div class="about-section">
-      <h2>🛠️ Languages & frameworks</h2>
+      <h2>Languages & frameworks</h2>
       <ul>
         <li><strong>Python</strong> — my comfort zone</li>
         <li><strong>TypeScript</strong> — for anything frontend</li>
@@ -34,7 +34,7 @@ permalink: /uses/
     </div>
 
     <div class="about-section">
-      <h2>☁️ Infrastructure</h2>
+      <h2>Infrastructure</h2>
       <ul>
         <li><strong>google cloud</strong> — obvious reasons</li>
         <li><strong>Vercel</strong> — for side projects</li>
@@ -44,7 +44,7 @@ permalink: /uses/
     </div>
 
     <div class="about-section">
-      <h2>📱 Apps</h2>
+      <h2>Apps</h2>
       <ul>
         <li><strong>Notion</strong> — notes, docs, second brain</li>
         <li><strong>Spotify</strong> — always playing something</li>
@@ -54,7 +54,7 @@ permalink: /uses/
     </div>
 
     <div class="about-section">
-      <h2>🎧 Hardware</h2>
+      <h2>Hardware</h2>
       <ul>
         <li><strong>MacBook Pro</strong> — work machine</li>
         <li><strong>AirPods Pro</strong> — noise canceling saves my sanity on the subway</li>
@@ -63,7 +63,7 @@ permalink: /uses/
     </div>
 
     <div class="about-section">
-      <h2>🏠 Workspace</h2>
+      <h2>Workspace</h2>
       <ul>
         <li>Standing desk (I actually use it standing sometimes)</li>
         <li>External monitor — one big one, not two</li>

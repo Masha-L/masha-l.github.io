@@ -383,31 +383,37 @@ p {
 
 /* Typing effect */
 .typing-container {
-  display: inline-block;
-  min-width: 180px;
-  text-align: left;
+  display: inline-flex;
+  align-items: baseline;
+  min-width: 220px;
 }
 
 @media (max-width: 768px) {
+  .hero-title {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+  }
+  
   .typing-container {
-    display: block;
+    display: flex;
     min-width: auto;
-    min-height: 1.5em;
+    width: 100%;
+    min-height: 1.4em;
   }
 }
 
 .typing-text {
-  display: inline;
+  display: inline-block;
+  min-width: 1px;
 }
 
 .typing-cursor {
   display: inline-block;
   width: 3px;
-  height: 1em;
+  height: 0.9em;
   background: var(--color-primary);
   margin-left: 2px;
   animation: blink 1s step-end infinite;
-  vertical-align: text-bottom;
+  flex-shrink: 0;
 }
 
 @keyframes blink {

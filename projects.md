@@ -47,7 +47,7 @@ permalink: /projects/
   <div class="section-container">
     <div class="category-header">
       <span class="category-icon">☁️</span>
-      <h2>Cloud & Research</h2>
+      <h2>Cloud & research</h2>
     </div>
     <div class="team-grid stagger">
       <div class="team-card">
@@ -93,7 +93,7 @@ permalink: /projects/
   <div class="section-container">
     <div class="category-header">
       <span class="category-icon">👥</span>
-      <h2>For Real People</h2>
+      <h2>For real people</h2>
     </div>
     <div class="team-grid stagger">
       <div class="team-card">
@@ -130,7 +130,7 @@ permalink: /projects/
   <div class="section-container">
     <div class="category-header">
       <span class="category-icon">🧪</span>
-      <h2>Experiments & Fun</h2>
+      <h2>Experiments & fun</h2>
     </div>
     <div class="team-grid stagger">
       <div class="team-card">
@@ -166,7 +166,7 @@ permalink: /projects/
   <div class="section-container">
     <div class="category-header">
       <span class="category-icon">💚</span>
-      <h2>Accessibility & Social Good</h2>
+      <h2>Accessibility & social good</h2>
     </div>
     <div class="team-grid stagger">
       <div class="team-card">

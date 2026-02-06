@@ -6,7 +6,7 @@ permalink: /work/
 
 <section class="about-intro">
   <div class="about-content">
-    <h1>work</h1>
+    <h1>Work</h1>
     <p class="lead">Leading full-stack engineering for Google Cloud's database management systems.</p>
   </div>
 </section>
