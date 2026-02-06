@@ -65,5 +65,11 @@ permalink: /work/
       <p><strong>Speed with intention.</strong> Move fast, but know why you're moving.</p>
       <p><strong>Growing people.</strong> A team that learns together wins together.</p>
     </div>
+
+    <div class="about-section">
+      <h2>Before Google</h2>
+      <p>I spent 3+ years at <strong>ActionIQ</strong>, a NYC startup building customer data platforms. SaaS implementations, cross-functional teams, platform expansion — startup life taught me to ship fast, wear many hats, and never lose sight of what users actually need.</p>
+      <p>That's where I learned that the best products come from understanding the full stack and caring deeply about the people who use what you build.</p>
+    </div>
   </div>
 </section>

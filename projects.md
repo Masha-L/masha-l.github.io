@@ -46,6 +46,12 @@ permalink: /projects/
         <p><a href="https://github.com/Masha-L/hybrid_autoscaler_research">View on GitHub →</a></p>
       </div>
       <div class="team-card">
+        <h3>Posner Cueing Paradigm</h3>
+        <p class="team-type">Java · Swing · Psychology Research</p>
+        <p>Visual attention research tool implementing the classic Posner experiment. Fixation crosses, directional cues, response time measurement. Psychology meets code.</p>
+        <p><a href="https://github.com/Masha-L/Posner">View on GitHub →</a></p>
+      </div>
+      <div class="team-card">
         <h3>CloudSecurity</h3>
         <p class="team-type">Terraform · Python Lambda · AWS</p>
         <p>Infrastructure as code for encryption and security workflows. Production-grade IaC patterns.</p>

@@ -22,7 +22,8 @@ permalink: /about/
     <div class="about-section">
       <h2>The Longer Version</h2>
       <p>I grew up in <strong>Moscow</strong>, where I developed a love for puzzles, systems, and understanding how things work. Eventually, that curiosity brought me to <strong>New York City</strong>, which I now call home.</p>
-      <p>My path into tech wasn't linear — it rarely is — but I've always been drawn to the intersection of complex systems and human experience. How do you make powerful tools feel intuitive? How do you build things that scale without losing their soul?</p>
+      <p>I studied at <strong>Mount Holyoke College</strong>, where I chaired the <strong>ACM-W chapter</strong> (women in computing), won HackHolyoke with a meal planning app, and was recognized for outstanding academic and research contributions. That's where I caught the building bug.</p>
+      <p>Before Google, I spent 3+ years at <strong>ActionIQ</strong>, a NYC startup building customer data platforms. Startup life taught me to ship fast, wear many hats, and work across the full stack. It also taught me that I love building products that solve real problems.</p>
       <p>At Google, I've gone from engineer to tech lead to leading multiple teams. I've shipped AI integrations, led strategic partnerships, and built features that made databases less intimidating. But I've also learned that leadership is mostly about creating space for other people to do their best work.</p>
     </div>
 
