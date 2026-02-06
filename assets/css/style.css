@@ -382,6 +382,20 @@ p {
 }
 
 /* Typing effect */
+.typing-container {
+  display: inline-block;
+  min-width: 180px;
+  text-align: left;
+}
+
+@media (max-width: 768px) {
+  .typing-container {
+    display: block;
+    min-width: auto;
+    min-height: 1.5em;
+  }
+}
+
 .typing-text {
   display: inline;
 }
@@ -391,7 +405,7 @@ p {
   width: 3px;
   height: 1em;
   background: var(--color-primary);
-  margin-left: 4px;
+  margin-left: 2px;
   animation: blink 1s step-end infinite;
   vertical-align: text-bottom;
 }

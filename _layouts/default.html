@@ -242,7 +242,7 @@
         if (isPaused) {
           isPaused = false;
           isDeleting = true;
-          setTimeout(type, 1500);
+          setTimeout(type, 2000);
           return;
         }
         
@@ -267,7 +267,7 @@
           }
         }
         
-        setTimeout(type, isDeleting ? 50 : 100);
+        setTimeout(type, isDeleting ? 80 : 120);
       }
       
       setTimeout(type, 1000);
