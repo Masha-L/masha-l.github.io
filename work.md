@@ -7,32 +7,101 @@ permalink: /work/
 <section class="about-intro">
   <div class="about-content">
     <h1>Work</h1>
-    <p class="lead">I lead engineering teams at Google Cloud, building the interfaces for some of the most powerful database systems on the planet.</p>
+    <p class="lead">Building interfaces for some of the most powerful database systems on the planet.</p>
   </div>
 </section>
 
 <section class="section">
   <div class="section-container">
-    <div class="work-intro">
-      <p>My teams work on the Google Cloud Console experiences for <strong>Spanner</strong>, <strong>Bigtable</strong>, and <strong>Firestore</strong>. These are databases that power some of the world's largest applications — and our job is to make them feel approachable.</p>
-      <p>It's a fascinating challenge: how do you build interfaces for systems that handle petabytes of data, millions of operations per second, global distribution — and still make them intuitive enough that a developer can get started in minutes?</p>
+    <div class="section-header">
+      <p class="section-label">Google Cloud</p>
+      <h2 class="section-title">The Products</h2>
     </div>
+    <div class="card-grid stagger">
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <h3 class="card-title">Cloud Spanner</h3>
+        <p class="card-text">The world's first horizontally scalable, globally consistent relational database. SQL semantics with NoSQL scale.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3 class="card-title">Cloud Bigtable</h3>
+        <p class="card-text">Powering Search, Maps, and Gmail. Petabytes of data with single-digit millisecond latency.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔥</div>
+        <h3 class="card-title">Firestore</h3>
+        <p class="card-text">Firebase's serverless database. Real-time sync, offline support, developer simplicity.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <div class="team-grid stagger">
-      <div class="team-card">
-        <h3>Cloud Spanner</h3>
-        <p class="team-type">Global Relational</p>
-        <p>The world's first horizontally scalable, globally consistent relational database. SQL semantics with NoSQL scale. It shouldn't be possible, and yet.</p>
+<section class="section section-alt">
+  <div class="section-container">
+    <div class="section-header">
+      <p class="section-label">Highlights</p>
+      <h2 class="section-title">Recent Wins</h2>
+    </div>
+    <div class="card-grid stagger">
+      <div class="card">
+        <div class="card-icon">🤖</div>
+        <h3 class="card-title">AI Integration</h3>
+        <p class="card-text">Led generative AI integration into Cloud databases. Query your data in plain English. Built LLM testing framework adopted by central NL2SQL team.</p>
       </div>
-      <div class="team-card">
-        <h3>Cloud Bigtable</h3>
-        <p class="team-type">NoSQL at Scale</p>
-        <p>Google's massively scalable NoSQL database service. The same technology that powers Search, Maps, and Gmail. Petabytes of data with single-digit millisecond latency.</p>
+      <div class="card">
+        <div class="card-icon">🤝</div>
+        <h3 class="card-title">Oracle Partnership</h3>
+        <p class="card-text">UX lead for Oracle Exadata on GCP. No manager, aggressive deadlines, high stakes. Shipped it.</p>
       </div>
-      <div class="team-card">
-        <h3>Firestore</h3>
-        <p class="team-type">Serverless Document DB</p>
-        <p>Firebase's flexible, scalable database for mobile and web. Real-time sync, offline support, and the simplicity developers need to move fast.</p>
+      <div class="card">
+        <div class="card-icon">📈</div>
+        <h3 class="card-title">Product-Led Growth</h3>
+        <p class="card-text">Redesigned Spanner trials. 32% more signups, 50% better conversion. One-click data loading, sample datasets, zero friction.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3 class="card-title">Graph Visualization</h3>
+        <p class="card-text">Shipped Spanner Graph at Cloud Next. Complex third-party integration. Landed a strategic APAC customer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-container">
+    <div class="section-header">
+      <p class="section-label">Philosophy</p>
+      <h2 class="section-title">How I Lead</h2>
+    </div>
+    <div class="interests-grid stagger">
+      <div class="interest-card">
+        <span class="interest-icon">💻</span>
+        <div class="interest-content">
+          <h3>Stay Technical</h3>
+          <p>Still write code. Still review PRs. Leaders who leave the craft lose something.</p>
+        </div>
+      </div>
+      <div class="interest-card">
+        <span class="interest-icon">🌱</span>
+        <div class="interest-content">
+          <h3>Grow People</h3>
+          <p>Proudest moments: watching mentees step into bigger roles.</p>
+        </div>
+      </div>
+      <div class="interest-card">
+        <span class="interest-icon">🎯</span>
+        <div class="interest-content">
+          <h3>Products > Features</h3>
+          <p>Does this actually make someone's life better?</p>
+        </div>
+      </div>
+      <div class="interest-card">
+        <span class="interest-icon">✂️</span>
+        <div class="interest-content">
+          <h3>Kill Bad Process</h3>
+          <p>Process should enable. When it doesn't, cut it.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -41,35 +110,9 @@ permalink: /work/
 <section class="section section-alt">
   <div class="about-content">
     <div class="about-section">
-      <h2>The Fun Stuff</h2>
-      <p>Some highlights from recent work:</p>
-      <ul>
-        <li><strong>AI that actually helps.</strong> Led the integration of generative AI into Google Cloud databases — making it possible to query your data in plain English. Built a testing framework to catch when LLMs hallucinate your queries into oblivion. The central NL2SQL team ended up adopting it.</li>
-        <li><strong>Strategic partnerships.</strong> Led the UX side of a big Oracle partnership bringing Exadata to Google Cloud. No dedicated manager, aggressive deadlines, high stakes. The kind of project where you learn what you're capable of.</li>
-        <li><strong>Making databases less scary.</strong> Redesigned Spanner's trial experience — pre-loaded sample data, one-click imports, zero friction. Trial creations went up 32%, conversions jumped 50% in the first month.</li>
-        <li><strong>Graph visualization.</strong> Shipped Spanner Graph at Cloud Next. Navigated complex security, legal, and technical integration of a third-party library — instrumental in landing a new strategic customer in APAC.</li>
-      </ul>
-    </div>
-
-    <div class="about-section">
-      <h2>How I Lead</h2>
-      <p>I still write code. I still review PRs. I think the best engineering leaders never fully leave the craft — you lose something important when you do.</p>
-      <p>But I've also learned that the multiplier effect of growing others is huge. Some of my proudest moments are watching engineers I've mentored step into bigger roles themselves.</p>
-      <p>I organized the first Spanner UI Summit. I co-built an on-call training program that nearly doubled team confidence. I care about process when it enables people, and I kill process when it gets in the way.</p>
-    </div>
-
-    <div class="about-section">
-      <h2>Things I Believe</h2>
-      <p><strong>Products over features.</strong> Does this actually make someone's life better?</p>
-      <p><strong>Clarity over cleverness.</strong> If it needs a manual, we failed.</p>
-      <p><strong>Speed with intention.</strong> Move fast, but know why you're moving.</p>
-      <p><strong>Growing people.</strong> A team that learns together wins together.</p>
-    </div>
-
-    <div class="about-section">
       <h2>Before Google</h2>
-      <p>I spent 3+ years at <strong>ActionIQ</strong>, a NYC startup building customer data platforms. SaaS implementations, cross-functional teams, platform expansion — startup life taught me to ship fast, wear many hats, and never lose sight of what users actually need.</p>
-      <p>That's where I learned that the best products come from understanding the full stack and caring deeply about the people who use what you build.</p>
+      <p><strong>ActionIQ</strong> — 3+ years at a NYC startup building customer data platforms. Startup life: ship fast, wear many hats, never lose sight of what users actually need.</p>
+      <p>That's where I learned the best products come from understanding the full stack and caring deeply about the people who use what you build.</p>
     </div>
   </div>
 </section>

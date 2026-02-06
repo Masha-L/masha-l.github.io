@@ -12,46 +12,85 @@ permalink: /about/
 </section>
 
 <section class="section">
+  <div class="section-container">
+    <div class="card-grid stagger">
+      <div class="card">
+        <div class="card-icon">💼</div>
+        <h3 class="card-title">By Day</h3>
+        <p class="card-text">Leading engineering teams at Google Cloud building UI for Spanner, Bigtable, and Firestore. Making petabyte-scale data feel approachable.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎓</div>
+        <h3 class="card-title">By Night</h3>
+        <p class="card-text">Pursuing an MS in Cybersecurity at NYU. Current obsession: applied cryptography. Math that keeps secrets.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌍</div>
+        <h3 class="card-title">Background</h3>
+        <p class="card-text">Moscow → Mount Holyoke → NYC. Puzzles, systems, and understanding how things work.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
   <div class="about-content">
     <div class="about-section">
-      <h2>The Short Version</h2>
-      <p>By day, I lead engineering teams at Google Cloud building UI for some of the most demanding database products on the planet: <strong>Spanner</strong>, <strong>Bigtable</strong>, and <strong>Firestore</strong>. We make petabyte-scale data feel approachable.</p>
-      <p>By night (and early mornings, and weekends), I'm pursuing an <strong>MS in Cybersecurity at NYU</strong>. Current obsession: applied cryptography. There's something deeply satisfying about math that keeps secrets.</p>
+      <h2>The Journey</h2>
+      <p>At <strong>Mount Holyoke</strong>, I chaired the <strong>ACM-W chapter</strong>, won HackHolyoke with a meal planning app, and discovered I love building things that solve real problems.</p>
+      <p>At <strong>ActionIQ</strong> (3+ years), I learned startup life — shipping fast, wearing many hats, and caring deeply about users.</p>
+      <p>At <strong>Google</strong>, I've grown from engineer to tech lead to leading multiple teams. AI integrations, strategic partnerships, making databases less scary. But mostly: creating space for people to do their best work.</p>
     </div>
+  </div>
+</section>
 
-    <div class="about-section">
-      <h2>The Longer Version</h2>
-      <p>I grew up in <strong>Moscow</strong>, where I developed a love for puzzles, systems, and understanding how things work. Eventually, that curiosity brought me to <strong>New York City</strong>, which I now call home.</p>
-      <p>I studied at <strong>Mount Holyoke College</strong>, where I chaired the <strong>ACM-W chapter</strong> (women in computing), won HackHolyoke with a meal planning app, and was recognized for outstanding academic and research contributions. That's where I caught the building bug.</p>
-      <p>Before Google, I spent 3+ years at <strong>ActionIQ</strong>, a NYC startup building customer data platforms. Startup life taught me to ship fast, wear many hats, and work across the full stack. It also taught me that I love building products that solve real problems.</p>
-      <p>At Google, I've gone from engineer to tech lead to leading multiple teams. I've shipped AI integrations, led strategic partnerships, and built features that made databases less intimidating. But I've also learned that leadership is mostly about creating space for other people to do their best work.</p>
-    </div>
-
-    <div class="about-section">
+<section class="section">
+  <div class="section-container">
+    <div class="section-header">
       <h2>When I'm Not Working</h2>
-      <p><strong>Running.</strong> There's something meditative about moving through the city on foot. It's when I do my best thinking — or my best not-thinking.</p>
-      <p><strong>Writing.</strong> Mostly poetry, though I rarely share it. The act of writing is the point.</p>
-      <p><strong>Learning guitar.</strong> I miss playing piano, but my NYC apartment only has room for so many hobbies.</p>
-      <p><strong>Thinking about sustainability.</strong> How do we build a future that actually works? This question lives rent-free in my head.</p>
-      <p><strong>Building community.</strong> I believe technology should bring people together, and I try to practice that in my own life.</p>
     </div>
-
-    <div class="about-section">
-      <h2>Side Projects</h2>
-      <p>When I find the time (which is rare), I tinker with ideas like:</p>
-      <ul>
-        <li>A friend reminder app to help people stay connected</li>
-        <li>Tools for job seekers navigating the tech industry</li>
-        <li>Various half-finished experiments in my GitHub</li>
-      </ul>
+    <div class="interests-grid stagger">
+      <div class="interest-card">
+        <span class="interest-icon">🏃</span>
+        <div class="interest-content">
+          <h3>Running</h3>
+          <p>Moving through NYC on foot. Best thinking happens mid-stride.</p>
+        </div>
+      </div>
+      <div class="interest-card">
+        <span class="interest-icon">📝</span>
+        <div class="interest-content">
+          <h3>Poetry</h3>
+          <p>I write it, rarely share it. The act is the point.</p>
+        </div>
+      </div>
+      <div class="interest-card">
+        <span class="interest-icon">🎸</span>
+        <div class="interest-content">
+          <h3>Guitar</h3>
+          <p>Learning slowly. Miss piano. NYC apartments are small.</p>
+        </div>
+      </div>
+      <div class="interest-card">
+        <span class="interest-icon">🌱</span>
+        <div class="interest-content">
+          <h3>Sustainability</h3>
+          <p>How do we build a future that actually works?</p>
+        </div>
+      </div>
     </div>
+  </div>
+</section>
 
+<section class="section section-alt">
+  <div class="about-content">
     <div class="about-section">
       <h2>Let's Connect</h2>
-      <p>I'm always happy to chat about engineering leadership, security, the joys and frustrations of grad school, or just life in tech.</p>
+      <p>Happy to chat about engineering leadership, security, grad school struggles, or life in tech.</p>
       <p>
-        <a href="https://twitter.com/ocean_ragess">Twitter</a> · 
-        <a href="https://github.com/Masha-L">GitHub</a>
+        <a href="https://twitter.com/ocean_ragess" class="btn btn-secondary">Twitter</a>
+        <a href="https://github.com/Masha-L" class="btn btn-secondary">GitHub</a>
+        <a href="https://linkedin.com/in/masha-lifshits" class="btn btn-secondary">LinkedIn</a>
       </p>
     </div>
   </div>
