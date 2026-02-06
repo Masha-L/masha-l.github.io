@@ -496,10 +496,11 @@ p {
 /* Interactive quote rotator */
 .quote-rotator {
   position: relative;
-  min-height: 120px;
+  min-height: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 2rem 0;
 }
 
 .quote-item {
@@ -522,6 +523,11 @@ p {
   font-style: italic;
   color: var(--color-text);
   margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+[data-theme="dark"] .quote-text {
+  color: #e6e6e6;
 }
 
 .quote-author {
