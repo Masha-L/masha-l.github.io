@@ -4,90 +4,64 @@ title: Work
 permalink: /work/
 ---
 
-# Work
+<section class="section">
+<div class="section-container">
 
-<p class="lead">Product-focused, full-stack engineering leader specializing in AI/ML integrations and strategic user experience at Google Cloud.</p>
+# What I Do
 
----
+I lead the frontend teams for Google Cloud's database products — Spanner, Bigtable, and Firestore. My job is making incredibly complex systems feel approachable. Petabytes of data, globally distributed, millisecond latency... and it should still be intuitive to use.
 
-## Current Role
+</div>
+</section>
 
-### TLM, Front Row Databases
-**Google Cloud** · Sep 2025 – Present
+<section class="section section-alt">
+<div class="section-container">
 
-Leading the engineering teams responsible for **Cloud Spanner**, **Bigtable**, and **Firestore** frontend platforms and API integrations. Overseeing product development, team growth, hiring, and cross-functional planning with a 200-person backend organization.
+## The Fun Stuff
 
----
+### AI That Actually Helps
 
-## Previous Role
+I've been deep in the AI integration work at Google Cloud — figuring out how to make generative AI genuinely useful for database developers, not just a gimmick. We built systems that let you query your data in plain English, and I spent a lot of time making sure the AI doesn't hallucinate your queries into oblivion.
 
-### Tech Lead, Frontend Platform – Spanner
-**Google Cloud** · Nov 2021 – Sep 2025
+One of my favorite projects was building a testing pipeline to catch when LLM-generated queries would do something unexpected. The central NL2SQL team ended up adopting the framework.
 
-Led the Spanner frontend platform team through the successful delivery of 10+ major features, including Spanner Editions, Scheduled Backups, and Graph Visualization. Established team processes for sprint planning, backlog grooming, and quarterly roadmapping.
+### Strategic Partnerships
 
----
+I led the UX side of a big Oracle partnership — bringing Oracle Exadata to Google Cloud. No dedicated manager, aggressive deadlines, high stakes. The kind of project where you learn a lot about what you're capable of.
 
-## Key Projects
+### Making Databases Less Scary
 
-### AI/ML Integration & Innovation
+Product-led growth is a fancy way of saying "let people try the thing without talking to sales first." I led a redesign of Spanner's trial experience — pre-loaded sample data, one-click imports, zero friction. Trial creations went up 32%, conversions jumped 50% in the first month.
 
-**Duet AI / Gemini for Databases**
-Led the full-stack integration of generative AI into Google Cloud database products. Designed a novel query regression testing pipeline to evaluate accuracy of LLM-generated queries—a framework later adopted by the central NL2SQL team.
+</div>
+</section>
 
-**Conversational AI Agent (Project "Debbie")**
-Led end-to-end UI/UX and agent development, including backend integration and API definition.
+<section class="section">
+<div class="section-container">
 
-**Bias Busting Initiative**
-Initiated and led threat modeling sessions with executives to identify and mitigate risks of AI-generated bias in NL2SQL.
+## How I Lead
 
----
+I still write code. I still review PRs. I think the best engineering leaders never fully leave the craft — you lose something important when you do.
 
-### Strategic Initiatives
+But I've also learned that the multiplier effect of growing others is huge. Some of my proudest moments are watching engineers I've mentored step into bigger roles themselves.
 
-**Project Oasis (Oracle @ Google Cloud)**
-Full-stack engineering lead for UX aspects of a strategic cross-company partnership bringing Oracle Exadata Infrastructure to GCP. In the absence of a dedicated manager, assumed leadership responsibilities for a new team, driving API contracts, project planning, and core development to meet aggressive launch deadlines.
+I organized the first Spanner UI Summit. I co-built an on-call training program that doubled team confidence. I care about process when it enables people, and I kill process when it gets in the way.
 
-**Spanner Product-Led Growth**
-Spearheaded the full-stack UI strategy for a multi-quarter PLG initiative:
-- **32% YoY increase** in free trial creations
-- **50% increase** in conversion rate in first month
-- Launched revamped "Zero-State" and Free Trial experience with pre-loaded sample datasets
-- Built "one-click" data loading feature (CSV, Avro, mysqldump)
+</div>
+</section>
 
-**Spanner Editions Launch**
-Led Front Row engineering through a complex, high-risk 7-month project introducing a tiered pricing model critical for revenue growth. Received Spot Bonus for exceptional leadership and execution speed.
+<section class="section section-alt">
+<div class="section-container">
 
----
+## The Philosophy
 
-### Core Feature Delivery
+I believe in:
+- **Products over features** — Does this actually make someone's life better?
+- **Clarity over cleverness** — If it needs a manual, we failed
+- **Speed with intention** — Move fast, but know why you're moving
+- **Growing people** — A team that learns together wins together
 
-**Schema Insights & Analysis (Spanalyze)**
-Led full-stack development of an internal tool providing deep schema insights, performance analysis, and optimization recommendations for Spanner databases.
+</div>
+</section>
 
-**Spanner Graph Visualization**
-Led end-to-end UI development for a high-visibility feature for Google Cloud Next. Spearheaded complex security, legal, and technical integration of a third-party library (Ogma.js)—instrumental in securing a new strategic customer in APAC.
-
-**Data Protection Features**
-Led UI development for Scheduled Backups and Incremental Backups from implementation to GA launch. Received two Spot Bonuses for strong partnership and leadership.
-
----
-
-## Leadership & Impact
-
-**Developer Advocacy**
-Partnered with DevRel and product teams to shape external messaging and create technical content for key product launches.
-
-**Mentorship**
-Actively mentored junior engineers on technical growth, project ownership, and promotion readiness. Recognized as an "amazing team lead" for building strong team community.
-
-**Process Innovation**
-- Organized the first-ever Spanner UI Summit to align leadership on UI strategy
-- Co-led creation of comprehensive on-call training program, nearly doubling team confidence in on-call readiness
-
-**Cross-Team Influence**
-Championed reusable components (graph visualization library) adopted by the Dataplex team, saving significant development time.
-
----
-
-<p><a href="/">← Home</a></p>
+<p class="text-center"><a href="/">← Back home</a></p>

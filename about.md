@@ -4,58 +4,55 @@ title: About
 permalink: /about/
 ---
 
+<section class="section">
+<div class="section-container">
+
 # About Me
 
-I'm Masha — a product-focused engineering leader at Google Cloud, where I lead the frontend teams for some of the most demanding database products on the planet: Spanner, Bigtable, and Firestore.
+I'm Masha. I lead engineering teams at Google Cloud, working on the UI for Spanner, Bigtable, and Firestore — databases that power some of the most demanding applications on the planet.
 
-I specialize in AI/ML integrations and strategic user experience. I've led the full-stack integration of generative AI into Google Cloud databases, built query regression testing pipelines for LLM-generated queries, and shipped features that drove a 32% increase in trial creations and 50% boost in conversion.
+I'm also slowly losing my mind (in the best way) pursuing an MS in Cybersecurity at NYU while working full-time. Currently obsessed with applied cryptography. The math is beautiful and the stakes are real.
 
-I'm also pursuing an MS in Cybersecurity at NYU part-time. Current obsession: applied cryptography.
+</div>
+</section>
 
----
+<section class="section section-alt">
+<div class="section-container">
 
-## Background
+## The Journey
 
-I grew up in Moscow and eventually made my way to New York City, which I now call home. My path into tech wasn't linear — it rarely is — but I've always been drawn to building things and solving puzzles.
+I grew up in Moscow and eventually made my way to New York, which is now home. My path into tech wasn't a straight line — it rarely is — but I've always been drawn to building things and solving puzzles.
 
-At Google, I've grown from engineer to tech lead to leading multiple teams, always staying close to the code while taking on bigger challenges. I believe the best engineering leaders never stop being engineers.
+At Google, I've grown from engineer to tech lead to leading multiple teams. I've shipped AI integrations, led strategic partnerships, and built features that made databases feel less intimidating to developers. I've also learned that leadership is mostly about creating space for other people to do their best work.
 
----
+</div>
+</section>
 
-## What I Care About
+<section class="section">
+<div class="section-container">
 
-**Building things that matter**
-Not features for the sake of features. Products that actually make developers' lives better.
+## When I'm Not Working
 
-**Staying technical**
-I still write code. I still review PRs. Leading teams doesn't mean leaving the craft behind.
+- **Running** through NYC — it's how I think
+- **Cryptography** — the NYU degree is eating my weekends and I don't regret it
+- **Poetry** — I write it, rarely share it
+- **Guitar** — learning, slowly
+- **Sustainability** — how do we build things that don't cost the earth?
 
-**Growing people**
-Some of my proudest moments are watching engineers I've mentored get promoted and take on bigger challenges themselves.
+I also tinker with side projects when I can. A friend reminder app. Tools for job seekers. Things that scratch an itch.
 
----
+</div>
+</section>
 
-## Outside Work
+<section class="section section-alt">
+<div class="section-container">
 
-- **Running** — There's something meditative about moving through NYC on foot
-- **Cybersecurity** — Currently deep in applied cryptography at NYU
-- **Sustainability** — How do we build a future that actually works?
-- **Poetry** — I write it, though I rarely share it
-- **Music** — Learning guitar, miss playing piano
+## Find Me
 
----
+- **Twitter:** [@ocean_ragess](https://twitter.com/ocean_ragess)
+- **GitHub:** [Masha-L](https://github.com/Masha-L)
 
-## Side Projects
+</div>
+</section>
 
-When I have time (which is rare), I tinker with ideas like:
-- A friend reminder app to help people stay connected
-- Tools for job seekers to tailor their resumes
-
----
-
-## Let's Connect
-
-- Twitter: [@ocean_ragess](https://twitter.com/ocean_ragess)
-- GitHub: [Masha-L](https://github.com/Masha-L)
-
-<p><a href="/">← Home</a></p>
+<p class="text-center"><a href="/">← Back home</a></p>
