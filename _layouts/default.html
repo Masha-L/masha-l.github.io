@@ -45,11 +45,12 @@
         <div class="footer-links">
           <a href="{{ '/now/' | relative_url }}">Now</a>
           <a href="{{ '/uses/' | relative_url }}">Uses</a>
+          <a href="{{ '/running/' | relative_url }}">Running</a>
           <a href="https://twitter.com/ocean_ragess" target="_blank" rel="noopener">Twitter</a>
           <a href="https://github.com/Masha-L" target="_blank" rel="noopener">GitHub</a>
         </div>
       </div>
-      <p class="footer-copy">© {{ 'now' | date: "%Y" }} Masha Lifshits · Made with curiosity</p>
+      <p class="footer-copy">© {{ 'now' | date: "%Y" }} Masha Lifshits · Built with Jekyll, hosted on GitHub Pages, designed with <a href="https://github.com/Masha-L/masha-l.github.io" style="color: inherit; text-decoration: underline;">curiosity</a></p>
     </div>
   </footer>
   <script>
@@ -91,6 +92,26 @@
       });
     }, observerOptions);
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    
+    // Easter egg: Konami code
+    const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let konamiIndex = 0;
+    document.addEventListener('keydown', (e) => {
+      if (e.key === konamiCode[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konamiCode.length) {
+          document.body.style.fontFamily = 'Comic Sans MS, cursive';
+          document.querySelectorAll('*').forEach(el => {
+            el.style.transition = 'transform 0.5s ease';
+            el.style.transform = `rotate(${Math.random() * 6 - 3}deg)`;
+          });
+          setTimeout(() => alert('🎮 You found the easter egg! Refresh to restore sanity.'), 100);
+          konamiIndex = 0;
+        }
+      } else {
+        konamiIndex = 0;
+      }
+    });
   </script>
 </body>
 </html>
