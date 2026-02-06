@@ -137,7 +137,12 @@ permalink: /work/
       <div class="card">
         <div class="card-icon">🛠️</div>
         <h3 class="card-title">Full Stack</h3>
-        <p class="card-text">React · Angular · Flask · FastAPI · REST APIs · gRPC · System Design</p>
+        <p class="card-text">React · Next.js · Angular · Flask · FastAPI · REST · gRPC · SOAP · Microservices · System Design</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔗</div>
+        <h3 class="card-title">Enterprise & Integrations</h3>
+        <p class="card-text">Third-party integrations · Trillions of rows · Facebook · Salesforce · Email channels · Data exports at scale</p>
       </div>
       <div class="card">
         <div class="card-icon">📋</div>
