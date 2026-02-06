@@ -14,8 +14,8 @@ permalink: /work/
 <section class="section">
   <div class="section-container">
     <div class="section-header">
-      <p class="section-label">Google Cloud</p>
-      <h2 class="section-title">The Products</h2>
+      <p class="section-label">google cloud</p>
+      <h2 class="section-title">The products</h2>
     </div>
     <div class="card-grid stagger">
       <div class="card">
@@ -40,8 +40,8 @@ permalink: /work/
 <section class="section section-alt">
   <div class="section-container">
     <div class="section-header">
-      <p class="section-label">Impact</p>
-      <h2 class="section-title">By the Numbers</h2>
+      <p class="section-label">impact</p>
+      <h2 class="section-title">By the numbers</h2>
     </div>
     <div class="metrics-grid stagger">
       <div class="metric-card">
@@ -67,8 +67,8 @@ permalink: /work/
 <section class="section">
   <div class="section-container">
     <div class="section-header">
-      <p class="section-label">Highlights</p>
-      <h2 class="section-title">Recent Wins</h2>
+      <p class="section-label">highlights</p>
+      <h2 class="section-title">Recent wins</h2>
     </div>
     <div class="featured-grid stagger">
       <div class="featured-card">
@@ -109,7 +109,7 @@ permalink: /work/
 <section class="section section-alt">
   <div class="section-container">
     <div class="section-header">
-      <p class="section-label">Writing</p>
+      <p class="section-label">writing</p>
       <h2 class="section-title">Publications</h2>
     </div>
     <div class="stagger">
@@ -152,8 +152,8 @@ permalink: /work/
 <section class="section">
   <div class="section-container">
     <div class="section-header">
-      <p class="section-label">Philosophy</p>
-      <h2 class="section-title">How I Lead</h2>
+      <p class="section-label">philosophy</p>
+      <h2 class="section-title">How I lead</h2>
     </div>
     <div class="interests-grid stagger">
       <div class="interest-card">
@@ -191,8 +191,8 @@ permalink: /work/
 <section class="section section-alt">
   <div class="section-container">
     <div class="section-header">
-      <p class="section-label">Journey</p>
-      <h2 class="section-title">Career Path</h2>
+      <p class="section-label">journey</p>
+      <h2 class="section-title">Career path</h2>
     </div>
     <div class="timeline stagger">
       <div class="timeline-item current">
@@ -229,8 +229,8 @@ permalink: /work/
 <section class="section">
   <div class="section-container">
     <div class="section-header">
-      <p class="section-label">Toolkit</p>
-      <h2 class="section-title">Skills & Experience</h2>
+      <p class="section-label">toolkit</p>
+      <h2 class="section-title">Skills & experience</h2>
     </div>
     <div class="card-grid stagger">
       <div class="card">
