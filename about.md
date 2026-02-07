@@ -115,7 +115,6 @@ permalink: /about/
       <h2>Let's connect</h2>
       <p>Want to talk engineering, security, grad school survival, or just commiserate about tech? I'm around.</p>
       <p>
-        <a href="https://twitter.com/ocean_ragess" class="btn btn-secondary">Twitter</a>
         <a href="https://github.com/Masha-L" class="btn btn-secondary">GitHub</a>
         <a href="https://linkedin.com/in/masha-lifshits" class="btn btn-secondary">LinkedIn</a>
       </p>
