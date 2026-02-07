@@ -108,8 +108,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 { font-size: clamp(2.5rem, 6vw, 4rem); }
-h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
-h3 { font-size: clamp(1.25rem, 3vw, 1.5rem); }
+h2 { font-size: clamp(1.375rem, 3vw, 1.75rem); }
+h3 { font-size: clamp(1.125rem, 2vw, 1.25rem); }
 
 p {
   margin-bottom: 1.5rem;
@@ -758,13 +758,15 @@ a.card-link:hover .card-cta {
 
 .card-title {
   font-family: var(--font-heading);
-  font-size: 1.375rem;
+  font-size: 1.125rem;
   font-weight: 600;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .card-text {
   color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
   margin-bottom: 0;
 }
 
@@ -2024,10 +2026,11 @@ a.card-link:hover .card-cta {
 /* Section intro text */
 .section-intro {
   color: var(--color-text-muted);
-  font-size: 1.1rem;
+  font-size: 1rem;
   line-height: 1.6;
-  max-width: 600px;
-  margin: 0 auto 2rem;
+  max-width: 100%;
+  margin: 0 0 2rem;
+  text-align: left;
 }
 
 /* Flip card - two sides of the same coin */
