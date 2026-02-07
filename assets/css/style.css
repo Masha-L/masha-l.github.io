@@ -1825,6 +1825,14 @@ a.card-link:hover .card-cta {
   margin-bottom: 0.75rem;
 }
 
+.hero-label-aside {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  opacity: 0.7;
+  font-size: 0.7rem;
+}
+
 .hero-block p {
   margin: 0;
   font-size: 1rem;
