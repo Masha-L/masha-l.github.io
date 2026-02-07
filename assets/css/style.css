@@ -2202,6 +2202,12 @@ a.card-link:hover .card-cta {
 
 /* Nerd mode base - works with both light and dark */
 [data-nerd="true"] {
+  --nerd-accent: #00ff88;
+  --nerd-secondary: #ff6b9d;
+}
+
+/* Nerd mode + Dark = Terminal aesthetic */
+[data-nerd="true"][data-theme="dark"] {
   --color-primary: #9b59b6;
   --color-text: #e6edf3;
   --color-text-muted: #8b949e;
@@ -2209,65 +2215,145 @@ a.card-link:hover .card-cta {
   --color-bg-alt: #161b22;
   --color-dark: #e6edf3;
   --color-border: rgba(255, 255, 255, 0.1);
-  --nerd-accent: #00ff88;
-  --nerd-secondary: #ff6b9d;
 }
 
-/* Nerd mode in light theme */
+/* Nerd mode + Light = Gravity Falls Journal aesthetic */
+[data-nerd="true"]:not([data-theme="dark"]) {
+  --color-primary: #8B0000;
+  --color-text: #3d2914;
+  --color-text-muted: #6b5344;
+  --color-bg: #f4e4bc;
+  --color-bg-alt: #e8d5a3;
+  --color-dark: #3d2914;
+  --color-border: rgba(61, 41, 20, 0.2);
+  --journal-red: #8B0000;
+  --journal-gold: #c9a227;
+}
+
+/* Nerd mode + Light = Gravity Falls Journal */
 [data-nerd="true"]:not([data-theme="dark"]) body {
-  background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #1a1a2e 100%);
+  background: 
+    repeating-linear-gradient(
+      transparent,
+      transparent 27px,
+      rgba(139, 0, 0, 0.1) 27px,
+      rgba(139, 0, 0, 0.1) 28px
+    ),
+    linear-gradient(135deg, #f4e4bc 0%, #e8d5a3 50%, #f0deb8 100%);
   background-attachment: fixed;
-  color: #e6edf3;
+  color: #3d2914;
 }
 
-/* Nerd mode always forces dark aesthetic */
-[data-nerd="true"] body {
+[data-nerd="true"]:not([data-theme="dark"]) .hero-greeting {
+  color: var(--journal-red);
+  font-style: italic;
+}
+
+[data-nerd="true"]:not([data-theme="dark"]) .hero-greeting::before {
+  content: '📖 ';
+}
+
+[data-nerd="true"]:not([data-theme="dark"]) .hero-title {
+  background: none;
+  -webkit-text-fill-color: var(--journal-red);
+  color: var(--journal-red);
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+}
+
+[data-nerd="true"]:not([data-theme="dark"]) .section-label {
+  color: var(--journal-red);
+}
+
+[data-nerd="true"]:not([data-theme="dark"]) .section-label::before {
+  content: '✦ ';
+}
+
+[data-nerd="true"]:not([data-theme="dark"]) .card,
+[data-nerd="true"]:not([data-theme="dark"]) .carousel-card,
+[data-nerd="true"]:not([data-theme="dark"]) .interest-card {
+  background: rgba(244, 228, 188, 0.8);
+  border: 1px solid rgba(61, 41, 20, 0.3);
+  box-shadow: 2px 2px 8px rgba(61, 41, 20, 0.15);
+}
+
+[data-nerd="true"]:not([data-theme="dark"]) .card:hover,
+[data-nerd="true"]:not([data-theme="dark"]) .carousel-card:hover,
+[data-nerd="true"]:not([data-theme="dark"]) .interest-card:hover {
+  border-color: var(--journal-red);
+  box-shadow: 3px 3px 12px rgba(139, 0, 0, 0.2);
+}
+
+[data-nerd="true"]:not([data-theme="dark"]) .nav {
+  background: rgba(244, 228, 188, 0.95);
+  border-bottom: 2px solid var(--journal-red);
+}
+
+[data-nerd="true"]:not([data-theme="dark"]) .section-alt {
+  background: rgba(232, 213, 163, 0.6);
+}
+
+[data-nerd="true"]:not([data-theme="dark"]) .btn-primary {
+  background: var(--journal-red);
+  border-color: var(--journal-red);
+}
+
+[data-nerd="true"]:not([data-theme="dark"]) a {
+  color: var(--journal-red);
+}
+
+[data-nerd="true"]:not([data-theme="dark"]) .footer {
+  background: rgba(232, 213, 163, 0.95);
+  border-top: 2px solid var(--journal-red);
+}
+
+/* Nerd mode + Dark = Terminal aesthetic */
+[data-nerd="true"][data-theme="dark"] body {
   background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #1a1a2e 100%) !important;
   background-attachment: fixed;
   color: #e6edf3 !important;
 }
 
-/* Nerd mode: ensure all text is visible */
-[data-nerd="true"] p,
-[data-nerd="true"] li,
-[data-nerd="true"] span,
-[data-nerd="true"] .lead,
-[data-nerd="true"] .about-content,
-[data-nerd="true"] .about-section p,
-[data-nerd="true"] .timeline-content p,
-[data-nerd="true"] .text-muted {
-  color: #c9d1d9 !important;
+/* Nerd mode dark: ensure all text is visible */
+[data-nerd="true"][data-theme="dark"] p,
+[data-nerd="true"][data-theme="dark"] li,
+[data-nerd="true"][data-theme="dark"] span,
+[data-nerd="true"][data-theme="dark"] .lead,
+[data-nerd="true"][data-theme="dark"] .about-content,
+[data-nerd="true"][data-theme="dark"] .about-section p,
+[data-nerd="true"][data-theme="dark"] .timeline-content p,
+[data-nerd="true"][data-theme="dark"] .text-muted {
+  color: #c9d1d9;
 }
 
-[data-nerd="true"] h1,
-[data-nerd="true"] h2,
-[data-nerd="true"] h3,
-[data-nerd="true"] h4,
-[data-nerd="true"] h5,
-[data-nerd="true"] h6,
-[data-nerd="true"] strong,
-[data-nerd="true"] .section-title,
-[data-nerd="true"] .card-title,
-[data-nerd="true"] .carousel-title,
-[data-nerd="true"] .timeline-title,
-[data-nerd="true"] .about-section h2,
-[data-nerd="true"] .flip-card-front .card-title,
-[data-nerd="true"] .flip-card-back .card-title,
-[data-nerd="true"] .interest-content h3 {
-  color: #e6edf3 !important;
+[data-nerd="true"][data-theme="dark"] h1,
+[data-nerd="true"][data-theme="dark"] h2,
+[data-nerd="true"][data-theme="dark"] h3,
+[data-nerd="true"][data-theme="dark"] h4,
+[data-nerd="true"][data-theme="dark"] h5,
+[data-nerd="true"][data-theme="dark"] h6,
+[data-nerd="true"][data-theme="dark"] strong,
+[data-nerd="true"][data-theme="dark"] .section-title,
+[data-nerd="true"][data-theme="dark"] .card-title,
+[data-nerd="true"][data-theme="dark"] .carousel-title,
+[data-nerd="true"][data-theme="dark"] .timeline-title,
+[data-nerd="true"][data-theme="dark"] .about-section h2,
+[data-nerd="true"][data-theme="dark"] .flip-card-front .card-title,
+[data-nerd="true"][data-theme="dark"] .flip-card-back .card-title,
+[data-nerd="true"][data-theme="dark"] .interest-content h3 {
+  color: #e6edf3;
 }
 
-[data-nerd="true"] a {
-  color: var(--nerd-accent) !important;
+[data-nerd="true"][data-theme="dark"] a {
+  color: var(--nerd-accent);
 }
 
-[data-nerd="true"] a:hover {
-  color: var(--nerd-secondary) !important;
+[data-nerd="true"][data-theme="dark"] a:hover {
+  color: var(--nerd-secondary);
 }
 
-[data-nerd="true"] .about-intro,
-[data-nerd="true"] .section-alt {
-  background: rgba(22, 27, 34, 0.6) !important;
+[data-nerd="true"][data-theme="dark"] .about-intro,
+[data-nerd="true"][data-theme="dark"] .section-alt {
+  background: rgba(22, 27, 34, 0.6);
 }
 
 [data-nerd="true"] .hero {
