@@ -18,7 +18,7 @@ permalink: /about/
         <div class="flip-card-front">
           <div class="card-icon">💼</div>
           <h3 class="card-title">By Day</h3>
-          <p class="card-text">Leading full-stack engineering at Google Cloud for Spanner, Bigtable, and Firestore — APIs, services, and the tools developers use to manage petabyte-scale data.</p>
+          <p class="card-text">Staff engineer at Google Cloud. I lead three teams building Spanner, Bigtable, and Firestore — the databases under the databases.</p>
           <span class="flip-hint">hover to flip ↻</span>
         </div>
         <div class="flip-card-back">
@@ -113,7 +113,7 @@ permalink: /about/
   <div class="about-content">
     <div class="about-section">
       <h2>Let's connect</h2>
-      <p>Happy to chat about engineering leadership, security, grad school struggles, or life in tech.</p>
+      <p>Want to talk engineering, security, grad school survival, or just commiserate about tech? I'm around.</p>
       <p>
         <a href="https://twitter.com/ocean_ragess" class="btn btn-secondary">Twitter</a>
         <a href="https://github.com/Masha-L" class="btn btn-secondary">GitHub</a>

@@ -167,7 +167,7 @@ permalink: /work/
         <span class="interest-icon">🌱</span>
         <div class="interest-content">
           <h3>Grow People</h3>
-          <p>Proudest moments: watching mentees step into bigger roles.</p>
+          <p>My favorite part: when someone I mentored outgrows the role I hired them for.</p>
         </div>
       </div>
       <div class="interest-card">
@@ -201,7 +201,7 @@ permalink: /work/
         <h3 class="timeline-title">google cloud</h3>
         <p class="timeline-subtitle">Tech Lead Manager → Engineering Lead</p>
         <div class="timeline-content">
-          <p>Leading 3 full-stack teams across Spanner, Bigtable, and Firestore. Building the developer experience for Google's flagship databases.</p>
+          <p>Three teams, three flagship databases, thousands of developers relying on what we ship. Currently figuring out how to make AI feel native to database workflows — not like we duct-taped a chatbot to the side.</p>
         </div>
       </div>
       <div class="timeline-item">
@@ -261,7 +261,7 @@ permalink: /work/
       <div class="card">
         <div class="card-icon">👥</div>
         <h3 class="card-title">Leadership</h3>
-        <p class="card-text">Team Building · Mentorship · Cross-functional Collaboration · Hiring · On-call Programs · PRDs & Roadmapping</p>
+        <p class="card-text">Building teams that trust each other. Mentoring. Hiring. Writing PRDs people actually read. Running on-call programs that don't burn people out.</p>
       </div>
     </div>
   </div>
