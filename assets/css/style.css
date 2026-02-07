@@ -814,6 +814,18 @@ a.card-link:hover .card-cta {
   gap: 1.5rem;
 }
 
+.interests-2x2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .interests-2x2 {
+    grid-template-columns: 1fr;
+  }
+}
+
 .interests-featured {
   display: flex;
   flex-direction: column;
