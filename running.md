@@ -29,11 +29,11 @@ permalink: /running/
       </div>
       <div class="timeline-item">
         <div class="timeline-dot"></div>
-        <div class="timeline-date">Training</div>
-        <h3 class="timeline-title">What's next</h3>
-        <p class="timeline-subtitle">Always looking for the next challenge</p>
+        <div class="timeline-date">2025</div>
+        <h3 class="timeline-title">NYC Half Marathon</h3>
+        <p class="timeline-subtitle">March 2025 — 13.1 miles</p>
         <div class="timeline-content">
-          <p>Currently training for my next race. NYC has no shortage of beautiful routes to explore.</p>
+          <p>Goal: sub-2:00. Training through the NYC winter, which builds character (and frostbite resilience).</p>
         </div>
       </div>
     </div>

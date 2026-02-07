@@ -36,7 +36,11 @@ permalink: /now/
 
     <div class="about-section">
       <h2>Reading</h2>
-      <p>Always too many books at once. Currently somewhere in the middle of three different things.</p>
+      <ul style="margin: 0; padding-left: 1.2rem;">
+        <li><strong>Database Internals</strong> by Alex Petrov — the distributed systems deep dive</li>
+        <li><strong>Madly, Deeply</strong> — Alan Rickman's diaries (slowly, savoring)</li>
+        <li>Too many half-finished sci-fi novels on my Kindle</li>
+      </ul>
     </div>
 
     <div class="about-section">

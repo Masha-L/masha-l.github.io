@@ -82,20 +82,6 @@ permalink: /about/
   </div>
 </section>
 
-<section class="section section-alt">
-  <div class="about-content">
-    <div class="about-section">
-      <h2>Publications</h2>
-      <p><strong>"Introducing Spanner Schema Insights: Optimizing Your Global Database Design"</strong><br>
-      <em>Google Cloud Blog</em>, January 2026<br>
-      <a href="https://medium.com/google-cloud/introducing-spanner-schema-insights-optimizing-your-global-database-design-aa0ae7d4843f">Read on Medium →</a></p>
-      <p style="margin-top: 1.5rem;"><strong>"Methods of Computational Linguistics and Natural Language Processing: Opportunities and Limitations for Personality Psychology Tasks"</strong><br>
-      Kuzmina A.A., Lifshits M.A., Kostenko V.Y. — <em>Journal of Modern Foreign Psychology</em>, 2022<br>
-      Independent research · <a href="https://www.researchgate.net/publication/359960231">Read on ResearchGate →</a></p>
-    </div>
-  </div>
-</section>
-
 <section class="section">
   <div class="section-container">
     <div class="section-header">
@@ -128,6 +114,9 @@ permalink: /about/
     <div class="about-section">
       <h2>Let's connect</h2>
       <p>Happy to chat about engineering leadership, security, grad school struggles, or life in tech.</p>
+      <p style="margin-bottom: 1rem;">
+        <a href="mailto:hello@masha-l.dev" class="btn btn-primary">Email me</a>
+      </p>
       <p>
         <a href="https://twitter.com/ocean_ragess" class="btn btn-secondary">Twitter</a>
         <a href="https://github.com/Masha-L" class="btn btn-secondary">GitHub</a>
