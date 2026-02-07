@@ -27,7 +27,7 @@
         <a href="{{ '/projects/' | relative_url }}" {% if page.url == '/projects/' %}class="active"{% endif %}>Projects</a>
         <a href="{{ '/blog/' | relative_url }}" {% if page.url contains '/blog' %}class="active"{% endif %}>Writing</a>
         <button class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
-        <button class="nerd-toggle" aria-label="Toggle nerd mode" title="Toggle nerd mode">🤓</button>
+        <button class="nerd-toggle" aria-label="Toggle nerd mode" aria-pressed="false" title="Toggle nerd mode">🤓</button>
       </div>
       <button class="nav-toggle" aria-label="Toggle menu">
         <span></span>
@@ -104,15 +104,19 @@
     ];
     
     const activeWalkers = [];
+    let spawnIntervalId = null;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     
     function spawnCharacter() {
       if (document.documentElement.getAttribute('data-nerd') !== 'true') return;
+      if (prefersReducedMotion) return; // Respect reduced motion preference
       if (activeWalkers.length >= 3) return; // Max 3 characters at once
       
       const char = nerdCharacters[Math.floor(Math.random() * nerdCharacters.length)];
       const walker = document.createElement('div');
       walker.className = 'walking-character';
-      walker.innerHTML = `<img src="${char.src}" alt="${char.name}" style="width:${char.width}px;height:${char.height}px;">`;
+      walker.setAttribute('aria-hidden', 'true'); // Decorative
+      walker.innerHTML = `<img src="${char.src}" alt="" style="width:${char.width}px;height:${char.height}px;">`;
       
       // Random starting position on any edge
       const edge = Math.floor(Math.random() * 4);
@@ -186,12 +190,28 @@
       }, 30);
     }
     
-    // Spawn characters occasionally in nerd mode
-    setInterval(() => {
-      if (document.documentElement.getAttribute('data-nerd') === 'true' && Math.random() < 0.4) {
-        spawnCharacter();
+    function clearAllWalkers() {
+      activeWalkers.forEach(w => {
+        if (w.interval) clearInterval(w.interval);
+        if (w.el) w.el.remove();
+      });
+      activeWalkers.length = 0;
+    }
+    
+    function startSpawnInterval() {
+      if (spawnIntervalId) return;
+      spawnIntervalId = setInterval(() => {
+        if (Math.random() < 0.4) spawnCharacter();
+      }, 15000);
+    }
+    
+    function stopSpawnInterval() {
+      if (spawnIntervalId) {
+        clearInterval(spawnIntervalId);
+        spawnIntervalId = null;
       }
-    }, 15000);
+      clearAllWalkers();
+    }
     
     const nerdContent = {
       '.hero-greeting': { nerd: "Oh, hello there!" },
@@ -217,6 +237,7 @@
       localStorage.setItem('nerdMode', enabled ? 'true' : 'false');
       nerdToggle.textContent = enabled ? '👔' : '🤓';
       nerdToggle.title = enabled ? 'Back to normal mode' : 'Toggle nerd mode';
+      nerdToggle.setAttribute('aria-pressed', enabled ? 'true' : 'false');
       
       // Swap content
       Object.entries(nerdContent).forEach(([selector, content]) => {
@@ -225,7 +246,7 @@
           if (!el.dataset.normalContent) {
             el.dataset.normalContent = el.innerHTML;
           }
-          el.innerHTML = enabled ? content.nerd : (content.normal || el.dataset.normalContent);
+          el.innerHTML = enabled ? content.nerd : el.dataset.normalContent;
         }
       });
       
@@ -246,9 +267,12 @@
         });
       }
       
-      // Spawn a character on enable
+      // Start/stop character spawning
       if (enabled) {
+        startSpawnInterval();
         setTimeout(spawnCharacter, 1000);
+      } else {
+        stopSpawnInterval();
       }
     }
     
