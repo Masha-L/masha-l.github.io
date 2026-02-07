@@ -2373,3 +2373,79 @@ a.card-link:hover .card-cta {
   from { transform: translateY(0) rotate(-5deg); }
   to { transform: translateY(-5px) rotate(5deg); }
 }
+
+/* Speech bubbles for walking characters */
+.speech-bubble {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  color: #1a1a1a;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  font-size: 0.85rem;
+  max-width: 200px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  animation: bubblePop 0.3s ease-out;
+  z-index: 10000;
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid white;
+}
+
+.bubble-text {
+  display: block;
+  font-style: italic;
+  margin-bottom: 0.25rem;
+}
+
+.bubble-author {
+  display: block;
+  font-size: 0.75rem;
+  color: #666;
+  text-align: right;
+}
+
+@keyframes bubblePop {
+  0% { opacity: 0; transform: translateX(-50%) scale(0.8) translateY(10px); }
+  100% { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
+}
+
+/* Walking character hover effect */
+.walking-character:hover {
+  filter: drop-shadow(0 0 10px rgba(155, 89, 182, 0.5));
+}
+
+[data-nerd="true"] .speech-bubble {
+  background: #161b22;
+  color: #e6edf3;
+  border: 1px solid #30363d;
+}
+
+[data-nerd="true"] .speech-bubble::after {
+  border-top-color: #161b22;
+}
+
+[data-nerd="true"] .bubble-author {
+  color: var(--nerd-accent);
+}
+
+/* Nerd mode nav indicator */
+[data-nerd="true"] .nav-logo {
+  text-shadow: 0 0 10px var(--nerd-accent), 0 0 20px var(--nerd-accent);
+  animation: nerdGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes nerdGlow {
+  from { text-shadow: 0 0 10px var(--nerd-accent), 0 0 20px var(--nerd-accent); }
+  to { text-shadow: 0 0 15px var(--nerd-secondary), 0 0 30px var(--nerd-secondary); }
+}

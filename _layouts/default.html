@@ -96,11 +96,41 @@
     
     // Character wandering animation (maze-like)
     const nerdCharacters = [
-      { src: '/assets/images/mabel.svg', name: 'Mabel', width: 60, height: 80, speed: 2.5 },
-      { src: '/assets/images/jack-sparrow.svg', name: 'Jack', width: 60, height: 90, speed: 2 },
-      { src: '/assets/images/loki.svg', name: 'Loki', width: 60, height: 90, speed: 3 },
-      { src: '/assets/images/ron-swanson.svg', name: 'Ron', width: 60, height: 90, speed: 1.5 },
-      { src: '/assets/images/bill-cipher.svg', name: 'Bill', width: 60, height: 80, speed: 3.5 },
+      { src: '/assets/images/mabel.svg', name: 'Mabel', width: 60, height: 80, speed: 2.5, quotes: [
+        "When life gives you lemons, draw faces on them!",
+        "Everything is different now.",
+        "I'm legalizing everything!",
+        "Mabel's the name, fun's my game!",
+        "My shooting star is always rising!"
+      ]},
+      { src: '/assets/images/jack-sparrow.svg', name: 'Jack', width: 60, height: 90, speed: 2, quotes: [
+        "The problem is not the problem.",
+        "Not all treasure is silver and gold, mate.",
+        "Why is the rum always gone?",
+        "This is the day you will always remember!",
+        "I'm Captain Jack Sparrow. Savvy?"
+      ]},
+      { src: '/assets/images/loki.svg', name: 'Loki', width: 60, height: 90, speed: 3, quotes: [
+        "I am burdened with glorious purpose.",
+        "You call it failure, I call it experience.",
+        "The sun will shine on us again.",
+        "Trust is for children and fools.",
+        "I assure you, brother..."
+      ]},
+      { src: '/assets/images/ron-swanson.svg', name: 'Ron', width: 60, height: 90, speed: 1.5, quotes: [
+        "Never half-ass two things. Whole-ass one thing.",
+        "Clear alcohols are for rich women on diets.",
+        "Give me all the bacon and eggs you have.",
+        "Fishing relaxes me. It's like yoga, except I still get to kill something.",
+        "I know what I'm about, son."
+      ]},
+      { src: '/assets/images/bill-cipher.svg', name: 'Bill', width: 60, height: 85, speed: 3.5, quotes: [
+        "Reality is an illusion, the universe is a hologram!",
+        "Buy gold! BYE!",
+        "Remember: reality is an illusion!",
+        "I'll be watching you...",
+        "A-X-O-L-O-T-L! My time has come!"
+      ]},
     ];
     
     const activeWalkers = [];
@@ -131,9 +161,27 @@
         left: ${x}px;
         top: ${y}px;
         z-index: 9999;
-        pointer-events: none;
+        pointer-events: auto;
+        cursor: pointer;
         transition: transform 0.1s ease;
       `;
+      
+      // Speech bubble on click
+      walker.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Remove any existing speech bubbles
+        document.querySelectorAll('.speech-bubble').forEach(b => b.remove());
+        
+        const quote = char.quotes[Math.floor(Math.random() * char.quotes.length)];
+        const bubble = document.createElement('div');
+        bubble.className = 'speech-bubble';
+        bubble.innerHTML = `<span class="bubble-text">${quote}</span><span class="bubble-author">— ${char.name}</span>`;
+        walker.appendChild(bubble);
+        
+        // Remove after 4 seconds
+        setTimeout(() => bubble.remove(), 4000);
+      });
+      
       document.body.appendChild(walker);
       
       // Random initial direction
