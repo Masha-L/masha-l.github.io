@@ -2162,3 +2162,139 @@ a.card-link:hover .card-cta {
   background: var(--color-bg-alt);
   border-color: var(--color-border);
 }
+
+/* ============================================
+   NERD MODE 🤓
+   ============================================ */
+.nerd-toggle {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  opacity: 0.7;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.nerd-toggle:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+[data-nerd="true"] {
+  --font-body: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  --font-heading: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+[data-nerd="true"] body {
+  background: #0d1117;
+  color: #c9d1d9;
+}
+
+[data-nerd="true"] .hero {
+  background: #0d1117;
+}
+
+[data-nerd="true"] .hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 255, 0, 0.03) 2px,
+      rgba(0, 255, 0, 0.03) 4px
+    );
+  pointer-events: none;
+}
+
+[data-nerd="true"] .hero-greeting {
+  color: #58a6ff;
+  font-family: monospace;
+}
+
+[data-nerd="true"] .hero-greeting::before {
+  content: '$ ';
+  color: #7ee787;
+}
+
+[data-nerd="true"] .hero-title {
+  color: #7ee787;
+  text-shadow: 0 0 10px rgba(126, 231, 135, 0.3);
+}
+
+[data-nerd="true"] .section-label {
+  color: #7ee787;
+}
+
+[data-nerd="true"] .section-label::before {
+  content: '// ';
+}
+
+[data-nerd="true"] .section-title {
+  color: #58a6ff;
+}
+
+[data-nerd="true"] .section-title::before {
+  content: '# ';
+  color: #7ee787;
+}
+
+[data-nerd="true"] .card,
+[data-nerd="true"] .section-alt .card {
+  background: #161b22;
+  border-color: #30363d;
+}
+
+[data-nerd="true"] .card-title::before {
+  content: '> ';
+  color: #7ee787;
+}
+
+[data-nerd="true"] .card:hover {
+  border-color: #58a6ff;
+  box-shadow: 0 0 20px rgba(88, 166, 255, 0.2);
+}
+
+[data-nerd="true"] .nav {
+  background: #0d1117;
+  border-bottom: 1px solid #30363d;
+}
+
+[data-nerd="true"] .section-alt {
+  background: #161b22;
+}
+
+[data-nerd="true"] .btn-primary {
+  background: #238636;
+  border-color: #238636;
+}
+
+[data-nerd="true"] .btn-primary:hover {
+  background: #2ea043;
+}
+
+[data-nerd="true"] .btn-secondary {
+  border-color: #30363d;
+  color: #58a6ff;
+}
+
+[data-nerd="true"] .footer {
+  background: #0d1117;
+  border-top: 1px solid #30363d;
+}
+
+[data-nerd="true"] .carousel-card {
+  background: #161b22;
+  border-color: #30363d;
+}
+
+[data-nerd="true"] .interest-card {
+  background: #161b22;
+  border-color: #30363d;
+}

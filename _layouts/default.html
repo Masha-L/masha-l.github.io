@@ -8,7 +8,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <!-- Styles -->
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
   <!-- Favicon -->
@@ -27,6 +27,7 @@
         <a href="{{ '/projects/' | relative_url }}" {% if page.url == '/projects/' %}class="active"{% endif %}>Projects</a>
         <a href="{{ '/blog/' | relative_url }}" {% if page.url contains '/blog' %}class="active"{% endif %}>Writing</a>
         <button class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+        <button class="nerd-toggle" aria-label="Toggle nerd mode" title="Toggle nerd mode">🤓</button>
       </div>
       <button class="nav-toggle" aria-label="Toggle menu">
         <span></span>
@@ -75,6 +76,43 @@
     themeToggle.addEventListener('click', () => {
       const current = document.documentElement.getAttribute('data-theme');
       setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    // Nerd mode toggle
+    const nerdToggle = document.querySelector('.nerd-toggle');
+    const savedNerd = localStorage.getItem('nerdMode');
+    
+    const nerdContent = {
+      '.hero-greeting': { normal: "Hi, I'm Masha", nerd: '> whoami' },
+      '.hero-title': { normal: null, nerd: 'I make databases <span class="highlight typing-container"><span class="typing-text"></span><span class="typing-cursor"></span></span>' },
+      '.section-subtitle': { normal: 'Staff engineer at Google Cloud, leading three teams:', nerd: '$ ps aux | grep masha → 3 database teams running' },
+    };
+    
+    function setNerdMode(enabled) {
+      document.documentElement.setAttribute('data-nerd', enabled ? 'true' : 'false');
+      localStorage.setItem('nerdMode', enabled ? 'true' : 'false');
+      nerdToggle.textContent = enabled ? '👔' : '🤓';
+      nerdToggle.title = enabled ? 'Back to normal mode' : 'Toggle nerd mode';
+      
+      // Swap content
+      Object.entries(nerdContent).forEach(([selector, content]) => {
+        const el = document.querySelector(selector);
+        if (el && content.nerd) {
+          if (!el.dataset.normalContent) {
+            el.dataset.normalContent = el.innerHTML;
+          }
+          el.innerHTML = enabled ? content.nerd : (content.normal || el.dataset.normalContent);
+        }
+      });
+    }
+    
+    if (savedNerd === 'true') {
+      setNerdMode(true);
+    }
+    
+    nerdToggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-nerd') === 'true';
+      setNerdMode(!current);
     });
 
     // Mobile nav toggle
