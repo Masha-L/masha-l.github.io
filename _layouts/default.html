@@ -94,51 +94,104 @@
       { text: "Not all treasure is silver and gold, mate.", author: "Captain Jack Sparrow" },
     ];
     
-    // Character walking animation
+    // Character wandering animation (maze-like)
     const nerdCharacters = [
-      { src: '/assets/images/mabel.svg', name: 'Mabel', width: 60, height: 80, speed: 4, bounce: 3 },
-      { src: '/assets/images/jack-sparrow.svg', name: 'Jack', width: 60, height: 90, speed: 3, bounce: 5 },
-      { src: '/assets/images/loki.svg', name: 'Loki', width: 60, height: 90, speed: 5, bounce: 2 },
-      { src: '/assets/images/ron-swanson.svg', name: 'Ron', width: 60, height: 90, speed: 2, bounce: 1 },
-      { src: '/assets/images/bill-cipher.svg', name: 'Bill', width: 60, height: 80, speed: 6, bounce: 8, float: true },
+      { src: '/assets/images/mabel.svg', name: 'Mabel', width: 60, height: 80, speed: 2.5 },
+      { src: '/assets/images/jack-sparrow.svg', name: 'Jack', width: 60, height: 90, speed: 2 },
+      { src: '/assets/images/loki.svg', name: 'Loki', width: 60, height: 90, speed: 3 },
+      { src: '/assets/images/ron-swanson.svg', name: 'Ron', width: 60, height: 90, speed: 1.5 },
+      { src: '/assets/images/bill-cipher.svg', name: 'Bill', width: 60, height: 80, speed: 3.5 },
     ];
+    
+    const activeWalkers = [];
     
     function spawnCharacter() {
       if (document.documentElement.getAttribute('data-nerd') !== 'true') return;
+      if (activeWalkers.length >= 3) return; // Max 3 characters at once
+      
       const char = nerdCharacters[Math.floor(Math.random() * nerdCharacters.length)];
       const walker = document.createElement('div');
       walker.className = 'walking-character';
       walker.innerHTML = `<img src="${char.src}" alt="${char.name}" style="width:${char.width}px;height:${char.height}px;">`;
+      
+      // Random starting position on any edge
+      const edge = Math.floor(Math.random() * 4);
+      let x, y;
+      if (edge === 0) { x = -char.width; y = Math.random() * (window.innerHeight - char.height); }
+      else if (edge === 1) { x = window.innerWidth; y = Math.random() * (window.innerHeight - char.height); }
+      else if (edge === 2) { x = Math.random() * (window.innerWidth - char.width); y = -char.height; }
+      else { x = Math.random() * (window.innerWidth - char.width); y = window.innerHeight; }
+      
       walker.style.cssText = `
         position: fixed;
-        bottom: ${char.float ? 100 + Math.random() * 200 : 20}px;
-        left: -${char.width + 20}px;
+        left: ${x}px;
+        top: ${y}px;
         z-index: 9999;
-        transition: none;
         pointer-events: none;
+        transition: transform 0.1s ease;
       `;
       document.body.appendChild(walker);
       
-      let pos = -(char.width + 20);
+      // Random initial direction
+      let angle = Math.random() * Math.PI * 2;
+      let dx = Math.cos(angle) * char.speed;
+      let dy = Math.sin(angle) * char.speed;
       let frame = 0;
-      const walk = setInterval(() => {
-        pos += char.speed;
+      let lifetime = 0;
+      const maxLifetime = 800 + Math.random() * 400; // 800-1200 frames (~24-36 sec)
+      
+      const walkerObj = { el: walker, interval: null };
+      activeWalkers.push(walkerObj);
+      
+      walkerObj.interval = setInterval(() => {
         frame++;
-        const bounce = Math.sin(frame * 0.3) * char.bounce;
-        const tilt = Math.sin(frame * 0.3) * (char.bounce / 2);
-        walker.style.left = pos + 'px';
-        walker.style.transform = `translateY(${bounce}px) rotate(${tilt}deg)`;
-        if (pos > window.innerWidth + char.width) {
-          clearInterval(walk);
-          walker.remove();
+        lifetime++;
+        
+        // Randomly change direction occasionally
+        if (Math.random() < 0.02) {
+          angle += (Math.random() - 0.5) * Math.PI / 2;
+          dx = Math.cos(angle) * char.speed;
+          dy = Math.sin(angle) * char.speed;
+        }
+        
+        x += dx;
+        y += dy;
+        
+        // Bounce off walls
+        if (x < -char.width / 2) { x = -char.width / 2; dx = Math.abs(dx); angle = Math.atan2(dy, dx); }
+        if (x > window.innerWidth - char.width / 2) { x = window.innerWidth - char.width / 2; dx = -Math.abs(dx); angle = Math.atan2(dy, dx); }
+        if (y < -char.height / 2) { y = -char.height / 2; dy = Math.abs(dy); angle = Math.atan2(dy, dx); }
+        if (y > window.innerHeight - char.height / 2) { y = window.innerHeight - char.height / 2; dy = -Math.abs(dy); angle = Math.atan2(dy, dx); }
+        
+        // Walking animation
+        const bounce = Math.sin(frame * 0.3) * 3;
+        const tilt = Math.sin(frame * 0.3) * 4;
+        const flip = dx < 0 ? 'scaleX(-1)' : '';
+        
+        walker.style.left = x + 'px';
+        walker.style.top = y + 'px';
+        walker.style.transform = `translateY(${bounce}px) rotate(${tilt}deg) ${flip}`;
+        
+        // Remove after lifetime expires
+        if (lifetime > maxLifetime) {
+          clearInterval(walkerObj.interval);
+          walker.style.transition = 'opacity 0.5s';
+          walker.style.opacity = '0';
+          setTimeout(() => {
+            walker.remove();
+            const idx = activeWalkers.indexOf(walkerObj);
+            if (idx > -1) activeWalkers.splice(idx, 1);
+          }, 500);
         }
       }, 30);
     }
     
     // Spawn characters occasionally in nerd mode
     setInterval(() => {
-      if (Math.random() < 0.3) spawnCharacter();
-    }, 25000);
+      if (document.documentElement.getAttribute('data-nerd') === 'true' && Math.random() < 0.4) {
+        spawnCharacter();
+      }
+    }, 15000);
     
     const nerdContent = {
       '.hero-greeting': { nerd: "Oh, hello there!" },
