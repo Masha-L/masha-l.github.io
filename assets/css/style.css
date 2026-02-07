@@ -2221,6 +2221,39 @@ a.card-link:hover .card-cta {
   color: #e6edf3 !important;
 }
 
+/* Nerd mode: ensure all text is visible */
+[data-nerd="true"] p,
+[data-nerd="true"] li,
+[data-nerd="true"] span,
+[data-nerd="true"] .lead,
+[data-nerd="true"] .about-content,
+[data-nerd="true"] .about-section p,
+[data-nerd="true"] .timeline-content p,
+[data-nerd="true"] .text-muted {
+  color: #c9d1d9 !important;
+}
+
+[data-nerd="true"] h1,
+[data-nerd="true"] h2,
+[data-nerd="true"] h3,
+[data-nerd="true"] h4,
+[data-nerd="true"] strong {
+  color: #e6edf3 !important;
+}
+
+[data-nerd="true"] a {
+  color: var(--nerd-accent) !important;
+}
+
+[data-nerd="true"] a:hover {
+  color: var(--nerd-secondary) !important;
+}
+
+[data-nerd="true"] .about-intro,
+[data-nerd="true"] .section-alt {
+  background: rgba(22, 27, 34, 0.6) !important;
+}
+
 [data-nerd="true"] .hero {
   background: transparent !important;
 }
