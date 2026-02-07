@@ -7,7 +7,7 @@ permalink: /work/
 <section class="about-intro">
   <div class="about-content">
     <h1>Work</h1>
-    <p class="lead">Leading full-stack engineering for Google Cloud's database management systems.</p>
+    <p class="lead">I lead database teams at Google Cloud. Three products, thousands of developers depending on our APIs, petabytes of everyone's data.</p>
   </div>
 </section>
 

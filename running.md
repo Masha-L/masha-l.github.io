@@ -33,7 +33,7 @@ permalink: /running/
         <h3 class="timeline-title">NYC Half Marathon</h3>
         <p class="timeline-subtitle">March 2025 — 13.1 miles</p>
         <div class="timeline-content">
-          <p>Goal: sub-2:00. Training through the NYC winter, which builds character (and frostbite resilience).</p>
+          <p>Finished in 1:58:32. The NYC winter training was brutal, but crossing that finish line? Worth every frozen mile.</p>
         </div>
       </div>
     </div>
