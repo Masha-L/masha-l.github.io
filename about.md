@@ -98,6 +98,33 @@ permalink: /about/
 </section>
 
 <section class="section">
+  <div class="section-container">
+    <div class="section-header">
+      <p class="section-label">things I believe</p>
+      <h2 class="section-title">Hot takes</h2>
+    </div>
+    <div class="quote-rotator" id="quote-rotator">
+      <div class="quote-item active">
+        <p class="quote-text">"There's no layer where abstraction 'doesn't apply.' There's only being intentional about when you do and don't."</p>
+      </div>
+      <div class="quote-item">
+        <p class="quote-text">"Building for reuse often takes the same effort as hardcoding—but refactoring later takes forever."</p>
+      </div>
+      <div class="quote-item">
+        <p class="quote-text">"The fastest teams are the ones that trust each other enough to be wrong."</p>
+      </div>
+      <div class="quote-item">
+        <p class="quote-text">"Doing just what's assigned to you is always a fail. Do what it takes."</p>
+      </div>
+      <div class="quote-item">
+        <p class="quote-text">"Some decisions need to be right. Some don't. I don't have enough ego to fight for the ones that don't matter."</p>
+      </div>
+    </div>
+    <div class="quote-dots" id="quote-dots"></div>
+  </div>
+</section>
+
+<section class="section section-alt">
   <div class="about-content">
     <div class="about-section">
       <h2>Let's connect</h2>
