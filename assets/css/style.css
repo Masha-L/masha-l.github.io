@@ -2203,6 +2203,12 @@ a.card-link:hover .card-cta {
 /* Nerd mode base - works with both light and dark */
 [data-nerd="true"] {
   --color-primary: #9b59b6;
+  --color-text: #e6edf3;
+  --color-text-muted: #8b949e;
+  --color-bg: #0d1117;
+  --color-bg-alt: #161b22;
+  --color-dark: #e6edf3;
+  --color-border: rgba(255, 255, 255, 0.1);
   --nerd-accent: #00ff88;
   --nerd-secondary: #ff6b9d;
 }
@@ -2237,7 +2243,17 @@ a.card-link:hover .card-cta {
 [data-nerd="true"] h2,
 [data-nerd="true"] h3,
 [data-nerd="true"] h4,
-[data-nerd="true"] strong {
+[data-nerd="true"] h5,
+[data-nerd="true"] h6,
+[data-nerd="true"] strong,
+[data-nerd="true"] .section-title,
+[data-nerd="true"] .card-title,
+[data-nerd="true"] .carousel-title,
+[data-nerd="true"] .timeline-title,
+[data-nerd="true"] .about-section h2,
+[data-nerd="true"] .flip-card-front .card-title,
+[data-nerd="true"] .flip-card-back .card-title,
+[data-nerd="true"] .interest-content h3 {
   color: #e6edf3 !important;
 }
 
