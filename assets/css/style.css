@@ -814,6 +814,70 @@ a.card-link:hover .card-cta {
   gap: 1.5rem;
 }
 
+.interests-featured {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.interest-card-large {
+  padding: 2rem;
+}
+
+.interest-card-large .interest-icon {
+  font-size: 2.5rem;
+}
+
+.interest-card-large .interest-content h3 {
+  font-size: 1.375rem;
+}
+
+.interest-card-large .interest-content p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.interests-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.interest-card-compact {
+  flex-direction: column;
+  text-align: center;
+  padding: 1.25rem;
+}
+
+.interest-card-compact .interest-icon {
+  font-size: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.interest-card-compact .interest-content h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.interest-card-compact .interest-content p {
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .interests-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .interest-card-compact {
+    flex-direction: row;
+    text-align: left;
+  }
+  
+  .interest-card-compact .interest-icon {
+    margin-bottom: 0;
+  }
+}
+
 .interest-card {
   display: flex;
   gap: 1.25rem;
