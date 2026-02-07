@@ -176,7 +176,19 @@
         const bubble = document.createElement('div');
         bubble.className = 'speech-bubble';
         bubble.innerHTML = `<span class="bubble-text">${quote}</span><span class="bubble-author">— ${char.name}</span>`;
-        walker.appendChild(bubble);
+        document.body.appendChild(bubble);
+        
+        // Position bubble above character, clamped to viewport
+        const rect = walker.getBoundingClientRect();
+        let bubbleX = rect.left + rect.width / 2 - 100; // 100 = half of 200px width
+        let bubbleY = rect.top - 80;
+        
+        // Clamp to viewport
+        bubbleX = Math.max(10, Math.min(bubbleX, window.innerWidth - 210));
+        bubbleY = Math.max(10, bubbleY);
+        
+        bubble.style.left = bubbleX + 'px';
+        bubble.style.top = bubbleY + 'px';
         
         // Remove after 4 seconds
         setTimeout(() => bubble.remove(), 4000);
