@@ -13,27 +13,20 @@ permalink: /about/
 
 <section class="section">
   <div class="section-container">
-    <div class="about-intro-grid">
-      <div class="flip-card">
-        <div class="flip-card-inner">
-          <div class="flip-card-front">
-            <div class="card-icon">💼</div>
-            <h3 class="card-title">By Day</h3>
-            <p class="card-text">Leading full-stack engineering at Google Cloud for Spanner, Bigtable, and Firestore — APIs, services, and the tools developers use to manage petabyte-scale data.</p>
-            <span class="flip-hint">hover to flip ↻</span>
-          </div>
-          <div class="flip-card-back">
-            <div class="card-icon">🎓</div>
-            <h3 class="card-title">By Night</h3>
-            <p class="card-subtitle">(and weekends, and mornings)</p>
-            <p class="card-text">Pursuing an MS in Cybersecurity at NYU. Current obsession: applied cryptography. Math that keeps secrets.</p>
-          </div>
+    <div class="flip-card flip-card-centered">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <div class="card-icon">💼</div>
+          <h3 class="card-title">By Day</h3>
+          <p class="card-text">Leading full-stack engineering at Google Cloud for Spanner, Bigtable, and Firestore — APIs, services, and the tools developers use to manage petabyte-scale data.</p>
+          <span class="flip-hint">hover to flip ↻</span>
         </div>
-      </div>
-      <div class="card">
-        <div class="card-icon">🌍</div>
-        <h3 class="card-title">Background</h3>
-        <p class="card-text">Moscow → Mount Holyoke → NYC. Puzzles, systems, and understanding how things work.</p>
+        <div class="flip-card-back">
+          <div class="card-icon">🎓</div>
+          <h3 class="card-title">By Night</h3>
+          <p class="card-subtitle">(and weekends, and mornings)</p>
+          <p class="card-text">Pursuing an MS in Cybersecurity at NYU. Current obsession: applied cryptography. Math that keeps secrets.</p>
+        </div>
       </div>
     </div>
   </div>

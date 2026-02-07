@@ -2110,3 +2110,8 @@ a.card-link:hover .card-cta {
     height: 320px;
   }
 }
+
+.flip-card-centered {
+  max-width: 500px;
+  margin: 0 auto;
+}
