@@ -2020,3 +2020,12 @@ a.card-link:hover .card-cta {
     margin-bottom: 0;
   }
 }
+
+/* Section intro text */
+.section-intro {
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
