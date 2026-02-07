@@ -38,6 +38,16 @@
   /* Transitions */
   --transition: 0.3s ease;
   --transition-slow: 0.6s ease;
+  
+  /* Semantic colors */
+  --color-success: #2d8a5e;
+  --color-warning: #b8860b;
+  --color-github: #24292e;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.08);
 }
 
 /* Dark mode */
@@ -53,6 +63,11 @@
   --color-cream: #1a2d42;
   --color-dark: #e6e6e6;
   --color-border: rgba(255, 255, 255, 0.1);
+  
+  /* Shadows - darker for dark mode */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.4);
 }
 
 /* ============================================
@@ -792,7 +807,7 @@ a.card-link:hover .card-cta {
   align-items: flex-start;
   gap: 1rem;
   padding: 1.25rem;
-  background: white;
+  background: var(--color-bg);
   border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.04);
 }
@@ -955,7 +970,7 @@ a.card-link:hover .card-cta {
   border-radius: 16px;
   padding: 2rem;
   border-left: 4px solid var(--color-primary);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-sm);
   will-change: transform;
   backface-visibility: hidden;
 }
@@ -1210,12 +1225,12 @@ a.card-link:hover .card-cta {
   animation: fadeInUp 0.6s ease forwards;
 }
 
-.stagger > *:nth-child(1) {  }
-.stagger > *:nth-child(2) {  }
-.stagger > *:nth-child(3) {  }
-.stagger > *:nth-child(4) {  }
-.stagger > *:nth-child(5) {  }
-.stagger > *:nth-child(6) {  }
+.stagger > *:nth-child(1) { animation-delay: 0s; }
+.stagger > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger > *:nth-child(3) { animation-delay: 0.2s; }
+.stagger > *:nth-child(4) { animation-delay: 0.3s; }
+.stagger > *:nth-child(5) { animation-delay: 0.4s; }
+.stagger > *:nth-child(6) { animation-delay: 0.5s; }
 
 @keyframes fadeInUp {
   to {
@@ -1314,7 +1329,7 @@ a.card-link:hover .card-cta {
 
 .badge-shipped {
   background: rgba(129, 178, 154, 0.2);
-  color: #2d8a5e;
+  color: var(--color-success);
 }
 
 .badge-google {
@@ -1339,7 +1354,7 @@ a.card-link:hover .card-cta {
 
 .badge-hackathon {
   background: rgba(255, 215, 0, 0.2);
-  color: #b8860b;
+  color: var(--color-warning);
 }
 
 /* ============================================
@@ -1357,7 +1372,7 @@ a.card-link:hover .card-cta {
   border-radius: 20px;
   padding: 2.5rem;
   border: 2px solid rgba(13, 115, 119, 0.1);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-md);
   transition: var(--transition);
   position: relative;
   overflow: hidden;
@@ -1551,12 +1566,12 @@ a.card-link:hover .card-cta {
 .pub-card {
   display: flex;
   gap: 1.5rem;
-  background: white;
+  background: var(--color-bg);
   border-radius: 16px;
   padding: 1.75rem;
   margin-bottom: 1.5rem;
   border: 1px solid rgba(0, 0, 0, 0.04);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-sm);
   transition: var(--transition);
 }
 
@@ -1590,11 +1605,11 @@ a.card-link:hover .card-cta {
    HIGHLIGHT CARDS WITH METRICS
    ============================================ */
 .metric-card {
-  background: white;
+  background: var(--color-bg);
   border-radius: 16px;
   padding: 2rem;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-sm);
   border: 1px solid rgba(0, 0, 0, 0.04);
   transition: var(--transition);
 }
