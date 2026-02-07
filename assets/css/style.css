@@ -2298,3 +2298,16 @@ a.card-link:hover .card-cta {
   background: #161b22;
   border-color: #30363d;
 }
+
+.nerd-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.4rem;
+  background: #238636;
+  color: white;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  font-weight: 500;
+  text-transform: uppercase;
+}
