@@ -292,6 +292,113 @@
         konamiIndex = 0;
       }
     });
+
+    // 3D Tilt effect on cards
+    document.querySelectorAll('.card, .interest-card, .now-item').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / 10;
+        const rotateY = (centerX - x) / 10;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+      });
+    });
+
+    // Secret terminal - type 'help' anywhere
+    let secretBuffer = '';
+    const secretCommands = {
+      'help': '🖥️ Secret terminal! Try: whoami, skills, joke, matrix, coffee',
+      'whoami': '👩‍💻 Masha Lifshits — Engineering Lead @ Google Cloud, Crypto Student @ NYU, Human Being',
+      'skills': '⚡ TypeScript, Go, Python, SQL, distributed systems, making databases less scary',
+      'joke': '💾 Why do programmers prefer dark mode? Because light attracts bugs.',
+      'matrix': null, // special handler
+      'coffee': '☕ *brewing sounds* Here you go! ████████████ 100%',
+      'ls': '📁 about.md  work.md  projects.md  secrets/  .hidden-talents',
+      'cd secrets': '🔐 Permission denied. Nice try though.',
+      'sudo': '🚫 Masha is not in the sudoers file. This incident will be reported.',
+      'exit': '👋 Goodbye! (just kidding, you can\'t escape)'
+    };
+    
+    document.addEventListener('keypress', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      secretBuffer += e.key.toLowerCase();
+      if (secretBuffer.length > 20) secretBuffer = secretBuffer.slice(-20);
+      
+      for (const [cmd, response] of Object.entries(secretCommands)) {
+        if (secretBuffer.endsWith(cmd)) {
+          if (cmd === 'matrix') {
+            document.body.style.background = '#000';
+            document.body.style.color = '#0f0';
+            document.querySelectorAll('*').forEach(el => el.style.color = '#0f0');
+            setTimeout(() => alert('🟢 Wake up, Neo...'), 500);
+          } else {
+            // Create floating notification
+            const notif = document.createElement('div');
+            notif.style.cssText = `
+              position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+              background: var(--color-bg-alt, #1a1a2e); color: var(--color-text, #fff);
+              padding: 1rem 2rem; border-radius: 12px; font-family: monospace;
+              box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 10000;
+              animation: slideUp 0.3s ease, fadeOut 0.3s ease 3s forwards;
+              border: 1px solid var(--color-primary, #6c63ff);
+            `;
+            notif.textContent = response;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3500);
+          }
+          secretBuffer = '';
+          break;
+        }
+      }
+    });
+
+    // Add CSS for terminal animations
+    const terminalStyle = document.createElement('style');
+    terminalStyle.textContent = `
+      @keyframes slideUp {
+        from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+        to { transform: translateX(-50%) translateY(0); opacity: 1; }
+      }
+      @keyframes fadeOut {
+        to { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+      }
+      .card, .interest-card, .now-item {
+        transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+      }
+      .card:hover, .interest-card:hover, .now-item:hover {
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      }
+      .btn {
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+      .btn:active {
+        transform: translateY(0) scale(0.98);
+      }
+      .nav-logo:hover {
+        animation: wiggle 0.5s ease;
+      }
+      @keyframes wiggle {
+        0%, 100% { transform: rotate(0); }
+        25% { transform: rotate(-5deg); }
+        75% { transform: rotate(5deg); }
+      }
+      .card-icon, .now-icon, .interest-icon {
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .card:hover .card-icon, .now-item:hover .now-icon, .interest-card:hover .interest-icon {
+        transform: scale(1.2) rotate(5deg);
+      }
+    `;
+    document.head.appendChild(terminalStyle);
   </script>
 </body>
 </html>
