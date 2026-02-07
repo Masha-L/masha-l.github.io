@@ -2165,6 +2165,7 @@ a.card-link:hover .card-cta {
 
 /* ============================================
    NERD MODE 🤓 (Pop culture / fandom vibes)
+   Minimal visual changes, focus on content
    ============================================ */
 .nerd-toggle {
   background: none;
@@ -2178,113 +2179,24 @@ a.card-link:hover .card-cta {
 
 .nerd-toggle:hover {
   opacity: 1;
-  transform: scale(1.1) rotate(10deg);
+  transform: scale(1.1);
 }
 
-[data-nerd="true"] {
-  --color-primary: #9b59b6;
-  --color-bg: #1a1a2e;
-  --color-bg-alt: #16213e;
-  --color-text: #eee;
-  --color-text-muted: #a0a0b0;
-}
-
-[data-nerd="true"] body {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  background-attachment: fixed;
-}
-
-[data-nerd="true"] .hero {
-  background: transparent;
-}
-
+/* Nerd mode: subtle changes only */
 [data-nerd="true"] .hero-greeting {
-  color: #f39c12;
   font-style: italic;
 }
 
-[data-nerd="true"] .hero-title {
-  background: linear-gradient(90deg, #9b59b6, #3498db, #1abc9c);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-[data-nerd="true"] .hero-description {
-  font-style: italic;
-  line-height: 1.8;
-}
-
-[data-nerd="true"] .section-label {
-  color: #f39c12;
-}
-
-[data-nerd="true"] .section-title {
-  color: #fff;
-}
-
+[data-nerd="true"] .hero-description,
+[data-nerd="true"] .card-text,
+[data-nerd="true"] .carousel-text,
+[data-nerd="true"] .interest-content p,
 [data-nerd="true"] .section-subtitle {
   font-style: italic;
-  color: #a0a0b0;
-}
-
-[data-nerd="true"] .card,
-[data-nerd="true"] .section-alt .card {
-  background: rgba(255,255,255,0.05);
-  border-color: rgba(255,255,255,0.1);
-  backdrop-filter: blur(10px);
 }
 
 [data-nerd="true"] .card:hover {
-  border-color: #9b59b6;
-  box-shadow: 0 0 30px rgba(155, 89, 182, 0.3);
-  transform: translateY(-4px) rotate(1deg);
-}
-
-[data-nerd="true"] .nav {
-  background: rgba(26, 26, 46, 0.95);
-  backdrop-filter: blur(10px);
-}
-
-[data-nerd="true"] .section-alt {
-  background: rgba(22, 33, 62, 0.5);
-}
-
-[data-nerd="true"] .btn-primary {
-  background: linear-gradient(135deg, #9b59b6, #3498db);
-  border: none;
-}
-
-[data-nerd="true"] .btn-primary:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 20px rgba(155, 89, 182, 0.4);
-}
-
-[data-nerd="true"] .btn-secondary {
-  border-color: #9b59b6;
-  color: #9b59b6;
-}
-
-[data-nerd="true"] .footer {
-  background: rgba(26, 26, 46, 0.95);
-}
-
-[data-nerd="true"] .carousel-card,
-[data-nerd="true"] .interest-card {
-  background: rgba(255,255,255,0.05);
-  border-color: rgba(255,255,255,0.1);
-}
-
-[data-nerd="true"] .carousel-card:hover,
-[data-nerd="true"] .interest-card:hover {
-  border-color: #f39c12;
-  box-shadow: 0 0 20px rgba(243, 156, 18, 0.2);
-}
-
-[data-nerd="true"] .card-text,
-[data-nerd="true"] .carousel-text,
-[data-nerd="true"] .interest-content p {
-  font-style: italic;
+  transform: translateY(-4px) rotate(0.5deg);
 }
 
 .nerd-badge {
