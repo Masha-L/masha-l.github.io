@@ -2157,3 +2157,8 @@ a.card-link:hover .card-cta {
   font-size: 1rem;
   margin-top: 0.5rem;
 }
+
+.section-alt .card {
+  background: transparent;
+  border-color: var(--color-border);
+}
