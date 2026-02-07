@@ -94,43 +94,51 @@
       { text: "Not all treasure is silver and gold, mate.", author: "Captain Jack Sparrow" },
     ];
     
-    // Mabel walking animation
-    function spawnMabel() {
+    // Character walking animation
+    const nerdCharacters = [
+      { src: '/assets/images/mabel.svg', name: 'Mabel', width: 60, height: 80, speed: 4, bounce: 3 },
+      { src: '/assets/images/jack-sparrow.svg', name: 'Jack', width: 60, height: 90, speed: 3, bounce: 5 },
+      { src: '/assets/images/loki.svg', name: 'Loki', width: 60, height: 90, speed: 5, bounce: 2 },
+      { src: '/assets/images/ron-swanson.svg', name: 'Ron', width: 60, height: 90, speed: 2, bounce: 1 },
+      { src: '/assets/images/bill-cipher.svg', name: 'Bill', width: 60, height: 80, speed: 6, bounce: 8, float: true },
+    ];
+    
+    function spawnCharacter() {
       if (document.documentElement.getAttribute('data-nerd') !== 'true') return;
-      const mabel = document.createElement('div');
-      mabel.className = 'walking-mabel';
-      mabel.innerHTML = '<img src="/assets/images/mabel.svg" alt="Mabel" style="width:60px;height:80px;">';
-      mabel.style.cssText = `
+      const char = nerdCharacters[Math.floor(Math.random() * nerdCharacters.length)];
+      const walker = document.createElement('div');
+      walker.className = 'walking-character';
+      walker.innerHTML = `<img src="${char.src}" alt="${char.name}" style="width:${char.width}px;height:${char.height}px;">`;
+      walker.style.cssText = `
         position: fixed;
-        bottom: 20px;
-        left: -80px;
+        bottom: ${char.float ? 100 + Math.random() * 200 : 20}px;
+        left: -${char.width + 20}px;
         z-index: 9999;
         transition: none;
         pointer-events: none;
       `;
-      document.body.appendChild(mabel);
+      document.body.appendChild(walker);
       
-      let pos = -80;
+      let pos = -(char.width + 20);
       let frame = 0;
       const walk = setInterval(() => {
-        pos += 4;
+        pos += char.speed;
         frame++;
-        // Bouncy walk animation
-        const bounce = Math.sin(frame * 0.3) * 3;
-        const tilt = Math.sin(frame * 0.3) * 5;
-        mabel.style.left = pos + 'px';
-        mabel.style.transform = `translateY(${bounce}px) rotate(${tilt}deg)`;
-        if (pos > window.innerWidth + 80) {
+        const bounce = Math.sin(frame * 0.3) * char.bounce;
+        const tilt = Math.sin(frame * 0.3) * (char.bounce / 2);
+        walker.style.left = pos + 'px';
+        walker.style.transform = `translateY(${bounce}px) rotate(${tilt}deg)`;
+        if (pos > window.innerWidth + char.width) {
           clearInterval(walk);
-          mabel.remove();
+          walker.remove();
         }
       }, 30);
     }
     
-    // Spawn Mabel occasionally in nerd mode
+    // Spawn characters occasionally in nerd mode
     setInterval(() => {
-      if (Math.random() < 0.3) spawnMabel();
-    }, 30000);
+      if (Math.random() < 0.3) spawnCharacter();
+    }, 25000);
     
     const nerdContent = {
       '.hero-greeting': { nerd: "Oh, hello there!" },
@@ -185,9 +193,9 @@
         });
       }
       
-      // Spawn Mabel on enable
+      // Spawn a character on enable
       if (enabled) {
-        setTimeout(spawnMabel, 1000);
+        setTimeout(spawnCharacter, 1000);
       }
     }
     

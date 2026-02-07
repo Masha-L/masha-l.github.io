@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 90" width="60" height="90">
+  <!-- Ron Swanson -->
+  <!-- Hair (receding, dark) -->
+  <path d="M18 25 Q20 15 30 14 Q40 15 42 25" fill="#3E2723"/>
+  <!-- Face (square jaw) -->
+  <path d="M16 25 L16 50 L22 55 L38 55 L44 50 L44 25 Q30 22 16 25" fill="#DEB887"/>
+  <!-- Magnificent mustache -->
+  <path d="M18 42 Q22 38 30 40 Q38 38 42 42 Q38 46 30 44 Q22 46 18 42" fill="#5D4037"/>
+  <!-- Eyes (stern) -->
+  <rect x="21" y="32" width="6" height="4" rx="2" fill="white"/>
+  <rect x="33" y="32" width="6" height="4" rx="2" fill="white"/>
+  <circle cx="24" cy="34" r="1.5" fill="#3E2723"/>
+  <circle cx="36" cy="34" r="1.5" fill="#3E2723"/>
+  <!-- Stern eyebrows -->
+  <path d="M20 30 L28 31" stroke="#3E2723" stroke-width="2"/>
+  <path d="M32 31 L40 30" stroke="#3E2723" stroke-width="2"/>
+  <!-- Slight frown of disapproval -->
+  <path d="M26 48 L34 48" stroke="#8B4513" stroke-width="1.5"/>
+  <!-- Neck -->
+  <rect x="24" y="55" width="12" height="8" fill="#DEB887"/>
+  <!-- Polo shirt (red) -->
+  <path d="M10 63 L10 90 L50 90 L50 63 Q30 70 10 63" fill="#8B0000"/>
+  <!-- Collar -->
+  <path d="M24 60 L30 68 L36 60" fill="#8B0000" stroke="#6B0000" stroke-width="1"/>
+  <!-- Buttons -->
+  <circle cx="30" cy="72" r="1.5" fill="#DEB887"/>
+  <circle cx="30" cy="78" r="1.5" fill="#DEB887"/>
+  <!-- Short sleeves -->
+  <path d="M10 63 L5 75 L12 75 L10 63" fill="#8B0000"/>
+  <path d="M50 63 L55 75 L48 75 L50 63" fill="#8B0000"/>
+  <!-- Arms -->
+  <rect x="5" y="75" width="8" height="4" fill="#DEB887"/>
+  <rect x="47" y="75" width="8" height="4" fill="#DEB887"/>
+</svg>

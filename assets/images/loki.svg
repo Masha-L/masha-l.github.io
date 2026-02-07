@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 90" width="60" height="90">
+  <!-- Loki -->
+  <!-- Horns -->
+  <path d="M15 30 Q5 10 12 0" stroke="#CFB53B" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M45 30 Q55 10 48 0" stroke="#CFB53B" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <!-- Helmet base -->
+  <path d="M12 35 Q12 20 30 18 Q48 20 48 35" fill="#CFB53B"/>
+  <!-- Hair (slicked back black) -->
+  <ellipse cx="30" cy="28" rx="16" ry="12" fill="#1a1a1a"/>
+  <!-- Face -->
+  <ellipse cx="30" cy="38" rx="14" ry="12" fill="#F5DEB3"/>
+  <!-- Eyes (mischievous) -->
+  <ellipse cx="24" cy="36" rx="3" ry="2" fill="white"/>
+  <ellipse cx="36" cy="36" rx="3" ry="2" fill="white"/>
+  <circle cx="25" cy="36" r="1.5" fill="#2E8B57"/>
+  <circle cx="37" cy="36" r="1.5" fill="#2E8B57"/>
+  <!-- Raised eyebrow -->
+  <path d="M20 32 Q24 30 28 32" stroke="#1a1a1a" stroke-width="1.5" fill="none"/>
+  <path d="M32 31 Q36 29 40 32" stroke="#1a1a1a" stroke-width="1.5" fill="none"/>
+  <!-- Smirk -->
+  <path d="M24 44 Q30 47 36 43" stroke="#8B4513" stroke-width="1.5" fill="none"/>
+  <!-- Asgardian collar -->
+  <path d="M18 50 Q30 55 42 50 L45 52 Q30 58 15 52 Z" fill="#CFB53B"/>
+  <!-- Green cape/coat -->
+  <path d="M12 52 L8 90 L52 90 L48 52 Q30 58 12 52" fill="#006400"/>
+  <!-- Gold trim -->
+  <path d="M12 52 L8 90" stroke="#CFB53B" stroke-width="2"/>
+  <path d="M48 52 L52 90" stroke="#CFB53B" stroke-width="2"/>
+  <!-- Black leather underneath -->
+  <path d="M20 55 L22 85 L38 85 L40 55" fill="#1a1a1a"/>
+  <!-- Green accents -->
+  <rect x="28" y="60" width="4" height="20" fill="#006400"/>
+  <!-- Belt -->
+  <rect x="18" y="75" width="24" height="3" fill="#CFB53B"/>
+</svg>
