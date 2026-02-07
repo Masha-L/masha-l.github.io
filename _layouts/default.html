@@ -77,9 +77,19 @@
       setTheme(current === 'dark' ? 'light' : 'dark');
     });
 
-    // Nerd mode toggle
+    // Nerd mode toggle with theme cycling
     const nerdToggle = document.querySelector('.nerd-toggle');
     const savedNerd = localStorage.getItem('nerdMode');
+    const savedNerdTheme = localStorage.getItem('nerdTheme');
+    
+    // Nerd themes cycle: journal → terminal → matrix → synthwave → (off)
+    const nerdThemes = ['journal', 'terminal', 'matrix', 'synthwave'];
+    const nerdThemeEmojis = {
+      'journal': '📖',
+      'terminal': '💻',
+      'matrix': '🟢',
+      'synthwave': '🌆'
+    };
     
     // Nerd mode quotes (pop culture)
     const nerdQuotes = [
@@ -297,11 +307,21 @@
       '[data-interest="music"] p': { nerd: "Learning guitar, dramatically mourning my lack of piano, always down to share a playlist. Music is my emotional support hobby." },
     };
     
-    function setNerdMode(enabled) {
+    function setNerdMode(enabled, theme = null) {
       document.documentElement.setAttribute('data-nerd', enabled ? 'true' : 'false');
       localStorage.setItem('nerdMode', enabled ? 'true' : 'false');
-      nerdToggle.textContent = enabled ? '👔' : '🤓';
-      nerdToggle.title = enabled ? 'Back to normal mode' : 'Toggle nerd mode';
+      
+      if (enabled && theme) {
+        document.documentElement.setAttribute('data-nerd-theme', theme);
+        localStorage.setItem('nerdTheme', theme);
+        nerdToggle.textContent = nerdThemeEmojis[theme] || '🤓';
+        nerdToggle.title = `Nerd mode: ${theme} (click to cycle)`;
+      } else if (!enabled) {
+        document.documentElement.removeAttribute('data-nerd-theme');
+        nerdToggle.textContent = '🤓';
+        nerdToggle.title = 'Toggle nerd mode';
+      }
+      
       nerdToggle.setAttribute('aria-pressed', enabled ? 'true' : 'false');
       
       // Swap content
@@ -341,13 +361,32 @@
       }
     }
     
+    // Initialize nerd mode from saved state
     if (savedNerd === 'true') {
-      setNerdMode(true);
+      const theme = savedNerdTheme || 'journal';
+      setNerdMode(true, theme);
     }
     
     nerdToggle.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-nerd') === 'true';
-      setNerdMode(!current);
+      const isNerd = document.documentElement.getAttribute('data-nerd') === 'true';
+      const currentTheme = document.documentElement.getAttribute('data-nerd-theme');
+      
+      if (!isNerd) {
+        // Turn on nerd mode with first theme
+        setNerdMode(true, 'journal');
+      } else {
+        // Cycle to next theme, or turn off after last
+        const currentIndex = nerdThemes.indexOf(currentTheme);
+        const nextIndex = currentIndex + 1;
+        
+        if (nextIndex >= nerdThemes.length) {
+          // Cycled through all themes, turn off
+          setNerdMode(false);
+        } else {
+          // Go to next theme
+          setNerdMode(true, nerdThemes[nextIndex]);
+        }
+      }
     });
 
     // Mobile nav toggle
