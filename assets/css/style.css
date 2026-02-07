@@ -2299,3 +2299,22 @@ a.card-link:hover .card-cta {
   font-weight: 500;
   text-transform: uppercase;
 }
+
+/* Nerd mode quote author */
+[data-nerd="true"] .quote-author {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #f39c12;
+  font-style: normal;
+}
+
+/* Walking Mabel animation */
+.walking-mabel {
+  animation: mabelBounce 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes mabelBounce {
+  from { transform: translateY(0) rotate(-5deg); }
+  to { transform: translateY(-5px) rotate(5deg); }
+}

@@ -82,6 +82,52 @@
     const nerdToggle = document.querySelector('.nerd-toggle');
     const savedNerd = localStorage.getItem('nerdMode');
     
+    // Nerd mode quotes (pop culture)
+    const nerdQuotes = [
+      { text: "The problem is not the problem. The problem is your attitude about the problem.", author: "Captain Jack Sparrow" },
+      { text: "I assure you, brother, the sun will shine on us again.", author: "Loki" },
+      { text: "I call it 'experience.'", author: "Loki, on failure" },
+      { text: "Never half-ass two things. Whole-ass one thing.", author: "Ron Swanson" },
+      { text: "I am big enough to admit I am often inspired by myself.", author: "Leslie Knope" },
+      { text: "When life gives you lemons, draw faces on them and wrap them in a blanket.", author: "Mabel Pines" },
+      { text: "Reality is an illusion, the universe is a hologram, buy gold!", author: "Bill Cipher" },
+      { text: "Not all treasure is silver and gold, mate.", author: "Captain Jack Sparrow" },
+    ];
+    
+    // Mabel walking animation
+    function spawnMabel() {
+      if (document.documentElement.getAttribute('data-nerd') !== 'true') return;
+      const mabel = document.createElement('div');
+      mabel.className = 'walking-mabel';
+      mabel.innerHTML = '🧶✨';
+      mabel.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: -60px;
+        font-size: 2.5rem;
+        z-index: 9999;
+        transition: none;
+        pointer-events: none;
+      `;
+      document.body.appendChild(mabel);
+      
+      let pos = -60;
+      const walk = setInterval(() => {
+        pos += 3;
+        mabel.style.left = pos + 'px';
+        mabel.style.transform = `translateY(${Math.sin(pos / 20) * 5}px)`;
+        if (pos > window.innerWidth + 60) {
+          clearInterval(walk);
+          mabel.remove();
+        }
+      }, 30);
+    }
+    
+    // Spawn Mabel occasionally in nerd mode
+    setInterval(() => {
+      if (Math.random() < 0.3) spawnMabel();
+    }, 30000);
+    
     const nerdContent = {
       '.hero-greeting': { nerd: "Oh, hello there!" },
       '.hero-description': { nerd: "I'm something of a database engineer myself. Staff engineer at Google, which is a fancy way of saying I fix things nobody else wants to touch. Also studying cryptography because apparently I needed more chaos in my life. I contain multitudes (and also several terabytes of data)." },
@@ -117,6 +163,28 @@
           el.innerHTML = enabled ? content.nerd : (content.normal || el.dataset.normalContent);
         }
       });
+      
+      // Swap quotes on About page
+      const quoteItems = document.querySelectorAll('.quote-item');
+      if (quoteItems.length > 0) {
+        quoteItems.forEach((item, i) => {
+          const textEl = item.querySelector('.quote-text');
+          if (!textEl) return;
+          if (!textEl.dataset.normalQuote) {
+            textEl.dataset.normalQuote = textEl.innerHTML;
+          }
+          if (enabled && nerdQuotes[i]) {
+            textEl.innerHTML = `"${nerdQuotes[i].text}" <span class="quote-author">— ${nerdQuotes[i].author}</span>`;
+          } else {
+            textEl.innerHTML = textEl.dataset.normalQuote;
+          }
+        });
+      }
+      
+      // Spawn Mabel on enable
+      if (enabled) {
+        setTimeout(spawnMabel, 1000);
+      }
     }
     
     if (savedNerd === 'true') {
