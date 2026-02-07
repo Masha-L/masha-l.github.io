@@ -358,9 +358,95 @@
       }
     });
 
+    // Mobile Easter Egg: Shake for confetti
+    let shakeThreshold = 15;
+    let lastX, lastY, lastZ;
+    let shakeCount = 0;
+    
+    if (window.DeviceMotionEvent) {
+      window.addEventListener('devicemotion', (e) => {
+        const acc = e.accelerationIncludingGravity;
+        if (!acc.x) return;
+        
+        if (lastX !== undefined) {
+          const deltaX = Math.abs(acc.x - lastX);
+          const deltaY = Math.abs(acc.y - lastY);
+          const deltaZ = Math.abs(acc.z - lastZ);
+          
+          if (deltaX + deltaY + deltaZ > shakeThreshold) {
+            shakeCount++;
+            if (shakeCount > 3) {
+              triggerConfetti();
+              shakeCount = 0;
+            }
+          }
+        }
+        lastX = acc.x; lastY = acc.y; lastZ = acc.z;
+      });
+    }
+    
+    function triggerConfetti() {
+      const colors = ['#6c63ff', '#ff6b6b', '#4ecdc4', '#ffe66d', '#95e1d3'];
+      for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.cssText = `
+          position: fixed;
+          width: ${Math.random() * 10 + 5}px;
+          height: ${Math.random() * 10 + 5}px;
+          background: ${colors[Math.floor(Math.random() * colors.length)]};
+          left: ${Math.random() * 100}vw;
+          top: -20px;
+          border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+          pointer-events: none;
+          z-index: 10001;
+          animation: confettiFall ${Math.random() * 2 + 2}s linear forwards;
+        `;
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 4000);
+      }
+    }
+    
+    // Mobile Easter Egg: Landscape secret message
+    let landscapeMessageShown = false;
+    function checkOrientation() {
+      const isLandscape = window.innerWidth > window.innerHeight && window.innerWidth < 1024;
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      
+      if (isLandscape && isMobile && !landscapeMessageShown) {
+        landscapeMessageShown = true;
+        const secret = document.createElement('div');
+        secret.style.cssText = `
+          position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+          background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+          display: flex; align-items: center; justify-content: center;
+          flex-direction: column; z-index: 10002; color: #fff;
+          font-family: var(--font-heading); text-align: center; padding: 2rem;
+        `;
+        secret.innerHTML = `
+          <div style="font-size: 4rem; margin-bottom: 1rem;">🍪</div>
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">You rotated your phone for this?</div>
+          <div style="font-size: 1rem; opacity: 0.7;">Here's a cookie. You've earned it.</div>
+          <div style="font-size: 0.8rem; opacity: 0.5; margin-top: 2rem;">Rotate back to continue...</div>
+        `;
+        secret.id = 'landscape-secret';
+        document.body.appendChild(secret);
+      } else if (!isLandscape) {
+        const existing = document.getElementById('landscape-secret');
+        if (existing) existing.remove();
+      }
+    }
+    
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+    checkOrientation();
+
     // Add CSS for terminal animations
     const terminalStyle = document.createElement('style');
     terminalStyle.textContent = `
+      @keyframes confettiFall {
+        0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+      }
       @keyframes slideUp {
         from { transform: translateX(-50%) translateY(20px); opacity: 0; }
         to { transform: translateX(-50%) translateY(0); opacity: 1; }
