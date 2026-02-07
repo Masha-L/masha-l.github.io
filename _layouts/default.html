@@ -151,7 +151,12 @@
       if (prefersReducedMotion) return; // Respect reduced motion preference
       if (activeWalkers.length >= 3) return; // Max 3 characters at once
       
-      const char = nerdCharacters[Math.floor(Math.random() * nerdCharacters.length)];
+      // Filter out characters already on screen
+      const activeNames = activeWalkers.map(w => w.charName);
+      const available = nerdCharacters.filter(c => !activeNames.includes(c.name));
+      if (available.length === 0) return; // All characters already on screen
+      
+      const char = available[Math.floor(Math.random() * available.length)];
       const walker = document.createElement('div');
       walker.className = 'walking-character';
       walker.setAttribute('aria-hidden', 'true'); // Decorative
@@ -218,7 +223,7 @@
       let lifetime = 0;
       const maxLifetime = 800 + Math.random() * 400; // 800-1200 frames (~24-36 sec)
       
-      const walkerObj = { el: walker, interval: null };
+      const walkerObj = { el: walker, interval: null, charName: char.name };
       activeWalkers.push(walkerObj);
       
       walkerObj.interval = setInterval(() => {
