@@ -83,32 +83,22 @@
     const savedNerd = localStorage.getItem('nerdMode');
     
     const nerdContent = {
-      '.hero-greeting': { nerd: '> whoami' },
-      '.hero-description': { nerd: 'root@google-cloud:~$ ./masha --role="staff-eng" --teams=3 --side-quest="MS Cybersecurity @ NYU" --hobby="marathon && guitar"' },
-      '.section-subtitle': { nerd: '$ ps aux | grep masha → 3 database processes running' },
+      '.hero-greeting': { nerd: "Oh, hello there!" },
+      '.hero-description': { nerd: "I'm something of a database engineer myself. Staff engineer at Google, which is a fancy way of saying I fix things nobody else wants to touch. Also studying cryptography because apparently I needed more chaos in my life. I contain multitudes (and also several terabytes of data)." },
+      '.section-subtitle': { nerd: "Look, someone has to make sure your data doesn't vanish into the void:" },
       // Work section cards
-      '[data-product="bigtable"] .card-title': { nerd: 'Cloud Bigtable <span class="nerd-badge">NoSQL</span>' },
-      '[data-product="bigtable"] .card-text': { nerd: 'Wide-column store. O(1) lookups at PB scale. HBase API compatible. I make the UI not suck.' },
-      '[data-product="spanner"] .card-title': { nerd: 'Cloud Spanner <span class="nerd-badge">NewSQL</span>' },
-      '[data-product="spanner"] .card-text': { nerd: 'Globally distributed + strongly consistent + SQL. Google\'s TrueTime magic. External consistency go brrrr.' },
-      '[data-product="firestore"] .card-title': { nerd: 'Firestore <span class="nerd-badge">Document</span>' },
-      '[data-product="firestore"] .card-text': { nerd: 'Document-oriented, real-time sync, offline-first. Firebase\'s evolved final form.' },
-      // Projects section
-      '[data-project="ronald"] .carousel-title': { nerd: 'R.O.N.A.L.D. <span class="nerd-badge">TF-IDF</span>' },
-      '[data-project="ronald"] .carousel-text': { nerd: 'Book recommender using custom TF-IDF vectorization. cosine_similarity() but make it literary.' },
-      '[data-project="spanner-agent"] .carousel-title': { nerd: 'Spanner Agent <span class="nerd-badge">LLM</span>' },
-      '[data-project="spanner-agent"] .carousel-text': { nerd: 'NL→SQL pipeline for Spanner. Prompt engineering + schema introspection + query validation.' },
-      '[data-project="marathon"] .carousel-title': { nerd: 'Race Tracker <span class="nerd-badge">GPS</span>' },
-      '[data-project="marathon"] .carousel-text': { nerd: 'Real-time location tracking with pace predictions. Friends.find(masha).subscribe()' },
+      '[data-product="bigtable"] .card-text': { nerd: "NoSQL database that handles petabytes like it's nothing. *adjusts glasses* Yes, I made the interface. You're welcome." },
+      '[data-product="spanner"] .card-text': { nerd: "A database that's somehow everywhere at once AND consistent? It's basically the Doctor Who of databases. I make it less confusing." },
+      '[data-product="firestore"] .card-text': { nerd: "The friendly neighborhood database for apps. Real-time sync, works offline, doesn't judge your code. We've all been there." },
+      // Projects section  
+      '[data-project="ronald"] .carousel-text': { nerd: "Book recommender that actually Gets It™. Unlike that one friend who keeps suggesting self-help books when you asked for fantasy." },
+      '[data-project="spanner-agent"] .carousel-text': { nerd: "Talk to your database in plain English. 'Hey, create me an instance' actually works now. Living in the future is wild." },
+      '[data-project="marathon"] .carousel-text': { nerd: "Built so my friends could track me during a marathon. 26.2 miles is a lot of time to be dramatically unreachable." },
       // Interests
-      '[data-interest="sustainability"] h3': { nerd: 'Sustainability <span class="nerd-badge">O(1) planet</span>' },
-      '[data-interest="sustainability"] p': { nerd: 'while(earth.resources > 0) { consume(); } // TODO: fix this loop' },
-      '[data-interest="community"] h3': { nerd: 'Community <span class="nerd-badge">P2P</span>' },
-      '[data-interest="community"] p': { nerd: 'Distributed social networks > centralized isolation. NAT traversal for humans.' },
-      '[data-interest="poetry"] h3': { nerd: 'Poetry <span class="nerd-badge">NLP</span>' },
-      '[data-interest="poetry"] p': { nerd: 'Human.write(feelings, { format: "verse" }); // private repo, sorry' },
-      '[data-interest="music"] h3': { nerd: 'Music <span class="nerd-badge">FFT</span>' },
-      '[data-interest="music"] p': { nerd: 'guitar.learn() || piano.miss() || playlist.shuffle().play()' },
+      '[data-interest="sustainability"] p': { nerd: "How do we build cool things without, you know, destroying the planet? Asking for 8 billion friends." },
+      '[data-interest="community"] p': { nerd: "The real treasure was the friends we made along the way. Unironically. Tech should help with that." },
+      '[data-interest="poetry"] p': { nerd: "I write poetry but sharing it? In THIS economy? It's giving vulnerability and I'm not ready." },
+      '[data-interest="music"] p': { nerd: "Learning guitar, dramatically mourning my lack of piano, always down to share a playlist. Music is my emotional support hobby." },
     };
     
     function setNerdMode(enabled) {

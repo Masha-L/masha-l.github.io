@@ -2164,7 +2164,7 @@ a.card-link:hover .card-cta {
 }
 
 /* ============================================
-   NERD MODE 🤓
+   NERD MODE 🤓 (Pop culture / fandom vibes)
    ============================================ */
 .nerd-toggle {
   background: none;
@@ -2178,125 +2178,113 @@ a.card-link:hover .card-cta {
 
 .nerd-toggle:hover {
   opacity: 1;
-  transform: scale(1.1);
+  transform: scale(1.1) rotate(10deg);
 }
 
 [data-nerd="true"] {
-  --font-body: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
-  --font-heading: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  --color-primary: #9b59b6;
+  --color-bg: #1a1a2e;
+  --color-bg-alt: #16213e;
+  --color-text: #eee;
+  --color-text-muted: #a0a0b0;
 }
 
 [data-nerd="true"] body {
-  background: #0d1117;
-  color: #c9d1d9;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background-attachment: fixed;
 }
 
 [data-nerd="true"] .hero {
-  background: #0d1117;
-}
-
-[data-nerd="true"] .hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0, 255, 0, 0.03) 2px,
-      rgba(0, 255, 0, 0.03) 4px
-    );
-  pointer-events: none;
+  background: transparent;
 }
 
 [data-nerd="true"] .hero-greeting {
-  color: #58a6ff;
-  font-family: monospace;
-}
-
-[data-nerd="true"] .hero-greeting::before {
-  content: '$ ';
-  color: #7ee787;
+  color: #f39c12;
+  font-style: italic;
 }
 
 [data-nerd="true"] .hero-title {
-  color: #7ee787;
-  text-shadow: 0 0 10px rgba(126, 231, 135, 0.3);
+  background: linear-gradient(90deg, #9b59b6, #3498db, #1abc9c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-nerd="true"] .hero-description {
+  font-style: italic;
+  line-height: 1.8;
 }
 
 [data-nerd="true"] .section-label {
-  color: #7ee787;
-}
-
-[data-nerd="true"] .section-label::before {
-  content: '// ';
+  color: #f39c12;
 }
 
 [data-nerd="true"] .section-title {
-  color: #58a6ff;
+  color: #fff;
 }
 
-[data-nerd="true"] .section-title::before {
-  content: '# ';
-  color: #7ee787;
+[data-nerd="true"] .section-subtitle {
+  font-style: italic;
+  color: #a0a0b0;
 }
 
 [data-nerd="true"] .card,
 [data-nerd="true"] .section-alt .card {
-  background: #161b22;
-  border-color: #30363d;
-}
-
-[data-nerd="true"] .card-title::before {
-  content: '> ';
-  color: #7ee787;
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
 }
 
 [data-nerd="true"] .card:hover {
-  border-color: #58a6ff;
-  box-shadow: 0 0 20px rgba(88, 166, 255, 0.2);
+  border-color: #9b59b6;
+  box-shadow: 0 0 30px rgba(155, 89, 182, 0.3);
+  transform: translateY(-4px) rotate(1deg);
 }
 
 [data-nerd="true"] .nav {
-  background: #0d1117;
-  border-bottom: 1px solid #30363d;
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(10px);
 }
 
 [data-nerd="true"] .section-alt {
-  background: #161b22;
+  background: rgba(22, 33, 62, 0.5);
 }
 
 [data-nerd="true"] .btn-primary {
-  background: #238636;
-  border-color: #238636;
+  background: linear-gradient(135deg, #9b59b6, #3498db);
+  border: none;
 }
 
 [data-nerd="true"] .btn-primary:hover {
-  background: #2ea043;
+  transform: scale(1.05);
+  box-shadow: 0 5px 20px rgba(155, 89, 182, 0.4);
 }
 
 [data-nerd="true"] .btn-secondary {
-  border-color: #30363d;
-  color: #58a6ff;
+  border-color: #9b59b6;
+  color: #9b59b6;
 }
 
 [data-nerd="true"] .footer {
-  background: #0d1117;
-  border-top: 1px solid #30363d;
+  background: rgba(26, 26, 46, 0.95);
 }
 
-[data-nerd="true"] .carousel-card {
-  background: #161b22;
-  border-color: #30363d;
-}
-
+[data-nerd="true"] .carousel-card,
 [data-nerd="true"] .interest-card {
-  background: #161b22;
-  border-color: #30363d;
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+}
+
+[data-nerd="true"] .carousel-card:hover,
+[data-nerd="true"] .interest-card:hover {
+  border-color: #f39c12;
+  box-shadow: 0 0 20px rgba(243, 156, 18, 0.2);
+}
+
+[data-nerd="true"] .card-text,
+[data-nerd="true"] .carousel-text,
+[data-nerd="true"] .interest-content p {
+  font-style: italic;
 }
 
 .nerd-badge {
