@@ -21,7 +21,7 @@ permalink: /about/
       </div>
       <div class="card">
         <div class="card-icon">🎓</div>
-        <h3 class="card-title">By Night</h3>
+        <h3 class="card-title">By Night <span style="font-weight: 400; opacity: 0.7; font-size: 0.85em;">(and weekends, and mornings)</span></h3>
         <p class="card-text">Pursuing an MS in Cybersecurity at NYU. Current obsession: applied cryptography. Math that keeps secrets.</p>
       </div>
       <div class="card">
