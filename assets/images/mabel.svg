@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 80" width="60" height="80">
+  <!-- Mabel Pines inspired character -->
+  <!-- Hair (brown with headband) -->
+  <ellipse cx="30" cy="25" rx="22" ry="20" fill="#5D4037"/>
+  <path d="M8 25 Q8 45 20 50 L20 35 Q15 30 8 25" fill="#5D4037"/>
+  <path d="M52 25 Q52 45 40 50 L40 35 Q45 30 52 25" fill="#5D4037"/>
+  <!-- Headband (pink) -->
+  <rect x="10" y="15" width="40" height="6" rx="2" fill="#E91E63"/>
+  <!-- Face -->
+  <ellipse cx="30" cy="30" rx="16" ry="14" fill="#FFCC80"/>
+  <!-- Eyes -->
+  <circle cx="24" cy="28" r="4" fill="white"/>
+  <circle cx="36" cy="28" r="4" fill="white"/>
+  <circle cx="24" cy="28" r="2" fill="#3E2723"/>
+  <circle cx="36" cy="28" r="2" fill="#3E2723"/>
+  <!-- Sparkle eyes -->
+  <circle cx="25" cy="27" r="1" fill="white"/>
+  <circle cx="37" cy="27" r="1" fill="white"/>
+  <!-- Smile -->
+  <path d="M24 36 Q30 42 36 36" stroke="#3E2723" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Braces sparkle -->
+  <rect x="26" y="37" width="8" height="2" rx="1" fill="#90CAF9"/>
+  <!-- Sweater (colorful) -->
+  <path d="M14 48 L14 70 L46 70 L46 48 Q30 55 14 48" fill="#9C27B0"/>
+  <!-- Shooting star on sweater -->
+  <polygon points="30,52 32,58 38,58 33,62 35,68 30,64 25,68 27,62 22,58 28,58" fill="#FFEB3B"/>
+  <!-- Arms -->
+  <rect x="6" y="50" width="10" height="4" rx="2" fill="#FFCC80"/>
+  <rect x="44" y="50" width="10" height="4" rx="2" fill="#FFCC80"/>
+  <!-- Skirt -->
+  <path d="M14 70 L10 80 L50 80 L46 70" fill="#E91E63"/>
+  <!-- Legs -->
+  <rect x="20" y="75" width="6" height="5" fill="#FFCC80"/>
+  <rect x="34" y="75" width="6" height="5" fill="#FFCC80"/>
+</svg>

@@ -99,24 +99,28 @@
       if (document.documentElement.getAttribute('data-nerd') !== 'true') return;
       const mabel = document.createElement('div');
       mabel.className = 'walking-mabel';
-      mabel.innerHTML = '🧶✨';
+      mabel.innerHTML = '<img src="/assets/images/mabel.svg" alt="Mabel" style="width:60px;height:80px;">';
       mabel.style.cssText = `
         position: fixed;
         bottom: 20px;
-        left: -60px;
-        font-size: 2.5rem;
+        left: -80px;
         z-index: 9999;
         transition: none;
         pointer-events: none;
       `;
       document.body.appendChild(mabel);
       
-      let pos = -60;
+      let pos = -80;
+      let frame = 0;
       const walk = setInterval(() => {
-        pos += 3;
+        pos += 4;
+        frame++;
+        // Bouncy walk animation
+        const bounce = Math.sin(frame * 0.3) * 3;
+        const tilt = Math.sin(frame * 0.3) * 5;
         mabel.style.left = pos + 'px';
-        mabel.style.transform = `translateY(${Math.sin(pos / 20) * 5}px)`;
-        if (pos > window.innerWidth + 60) {
+        mabel.style.transform = `translateY(${bounce}px) rotate(${tilt}deg)`;
+        if (pos > window.innerWidth + 80) {
           clearInterval(walk);
           mabel.remove();
         }

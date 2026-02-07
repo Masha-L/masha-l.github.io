@@ -2164,7 +2164,8 @@ a.card-link:hover .card-cta {
 }
 
 /* ============================================
-   NERD MODE 🤓 (Pop culture / fandom vibes)
+   NERD MODE 🤓 
+   Both fandom nerd AND computer nerd
    ============================================ */
 .nerd-toggle {
   background: none;
@@ -2181,123 +2182,164 @@ a.card-link:hover .card-cta {
   transform: scale(1.1) rotate(10deg);
 }
 
+/* Nerd mode base - works with both light and dark */
 [data-nerd="true"] {
   --color-primary: #9b59b6;
+  --nerd-accent: #00ff88;
+  --nerd-secondary: #ff6b9d;
 }
 
-[data-nerd="true"] body {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important;
+/* Nerd mode in light theme */
+[data-nerd="true"]:not([data-theme="dark"]) body {
+  background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #1a1a2e 100%);
   background-attachment: fixed;
-  color: #eee;
+  color: #e6edf3;
+}
+
+/* Nerd mode always forces dark aesthetic */
+[data-nerd="true"] body {
+  background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #1a1a2e 100%) !important;
+  background-attachment: fixed;
+  color: #e6edf3 !important;
 }
 
 [data-nerd="true"] .hero {
   background: transparent !important;
 }
 
+/* Terminal scanlines */
+[data-nerd="true"] .hero::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 136, 0.03) 2px,
+    rgba(0, 255, 136, 0.03) 4px
+  );
+  pointer-events: none;
+}
+
 [data-nerd="true"] .hero-greeting {
-  color: #f39c12;
-  font-style: italic;
+  color: var(--nerd-accent);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+[data-nerd="true"] .hero-greeting::before {
+  content: '> ';
 }
 
 [data-nerd="true"] .hero-title {
-  background: linear-gradient(90deg, #9b59b6, #3498db, #1abc9c);
+  background: linear-gradient(90deg, var(--nerd-accent), #58a6ff, var(--nerd-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 [data-nerd="true"] .hero-description {
-  font-style: italic;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
   line-height: 1.8;
-  color: #ccc;
+  color: #8b949e;
 }
 
 [data-nerd="true"] .section-label {
-  color: #f39c12;
+  color: var(--nerd-accent);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+[data-nerd="true"] .section-label::before {
+  content: '// ';
 }
 
 [data-nerd="true"] .section-title {
-  color: #fff;
+  color: #e6edf3;
 }
 
 [data-nerd="true"] .section-subtitle {
+  font-family: 'JetBrains Mono', monospace;
   font-style: italic;
-  color: #aaa;
+  color: #8b949e;
 }
 
 [data-nerd="true"] .card,
 [data-nerd="true"] .section-alt .card {
-  background: rgba(255,255,255,0.05) !important;
-  border-color: rgba(255,255,255,0.15) !important;
+  background: rgba(22, 27, 34, 0.8) !important;
+  border-color: #30363d !important;
 }
 
 [data-nerd="true"] .card-title,
 [data-nerd="true"] .carousel-title,
 [data-nerd="true"] .interest-content h3 {
-  color: #fff;
+  color: #e6edf3;
 }
 
 [data-nerd="true"] .card-text,
 [data-nerd="true"] .carousel-text,
 [data-nerd="true"] .interest-content p {
-  color: #bbb;
+  color: #8b949e;
   font-style: italic;
 }
 
 [data-nerd="true"] .card:hover {
-  border-color: #9b59b6 !important;
-  box-shadow: 0 0 30px rgba(155, 89, 182, 0.3);
-  transform: translateY(-4px) rotate(1deg);
+  border-color: var(--nerd-accent) !important;
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+  transform: translateY(-4px);
 }
 
 [data-nerd="true"] .nav {
-  background: rgba(26, 26, 46, 0.98) !important;
+  background: rgba(13, 17, 23, 0.98) !important;
+  border-bottom: 1px solid #30363d;
 }
 
 [data-nerd="true"] .nav a {
-  color: #ccc;
+  color: #8b949e;
 }
 
 [data-nerd="true"] .nav a:hover,
 [data-nerd="true"] .nav a.active {
-  color: #f39c12;
+  color: var(--nerd-accent);
 }
 
 [data-nerd="true"] .section-alt {
-  background: rgba(22, 33, 62, 0.6) !important;
+  background: rgba(22, 27, 34, 0.6) !important;
 }
 
 [data-nerd="true"] .btn-primary {
-  background: linear-gradient(135deg, #9b59b6, #3498db) !important;
+  background: var(--nerd-accent) !important;
   border: none !important;
+  color: #0d1117 !important;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 [data-nerd="true"] .btn-primary:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 20px rgba(155, 89, 182, 0.4);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
 }
 
 [data-nerd="true"] .btn-secondary {
-  border-color: #9b59b6 !important;
-  color: #9b59b6 !important;
+  border-color: var(--nerd-accent) !important;
+  color: var(--nerd-accent) !important;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 [data-nerd="true"] .footer {
-  background: rgba(26, 26, 46, 0.98) !important;
-  color: #aaa;
+  background: rgba(13, 17, 23, 0.98) !important;
+  color: #8b949e;
+  border-top: 1px solid #30363d;
 }
 
 [data-nerd="true"] .carousel-card,
 [data-nerd="true"] .interest-card {
-  background: rgba(255,255,255,0.05) !important;
-  border-color: rgba(255,255,255,0.15) !important;
+  background: rgba(22, 27, 34, 0.8) !important;
+  border-color: #30363d !important;
 }
 
 [data-nerd="true"] .carousel-card:hover,
 [data-nerd="true"] .interest-card:hover {
-  border-color: #f39c12 !important;
-  box-shadow: 0 0 20px rgba(243, 156, 18, 0.2);
+  border-color: var(--nerd-secondary) !important;
+  box-shadow: 0 0 20px rgba(255, 107, 157, 0.2);
 }
 
 .nerd-badge {
