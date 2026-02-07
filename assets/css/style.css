@@ -2159,6 +2159,6 @@ a.card-link:hover .card-cta {
 }
 
 .section-alt .card {
-  background: transparent;
+  background: var(--color-bg-alt);
   border-color: var(--color-border);
 }
