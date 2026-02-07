@@ -358,15 +358,35 @@
       }
     });
 
-    // Mobile Easter Egg: Shake for confetti
-    let shakeThreshold = 15;
+    // Mobile Easter Egg: Shake for confetti (with iOS permission handling)
+    let shakeThreshold = 12;
     let lastX, lastY, lastZ;
     let shakeCount = 0;
+    let motionEnabled = false;
     
-    if (window.DeviceMotionEvent) {
+    async function enableMotion() {
+      if (typeof DeviceMotionEvent.requestPermission === 'function') {
+        // iOS 13+ requires permission
+        try {
+          const permission = await DeviceMotionEvent.requestPermission();
+          if (permission === 'granted') {
+            motionEnabled = true;
+            startShakeDetection();
+          }
+        } catch (e) {
+          console.log('Motion permission denied');
+        }
+      } else {
+        // Android and older iOS
+        motionEnabled = true;
+        startShakeDetection();
+      }
+    }
+    
+    function startShakeDetection() {
       window.addEventListener('devicemotion', (e) => {
         const acc = e.accelerationIncludingGravity;
-        if (!acc.x) return;
+        if (!acc || !acc.x) return;
         
         if (lastX !== undefined) {
           const deltaX = Math.abs(acc.x - lastX);
@@ -375,14 +395,29 @@
           
           if (deltaX + deltaY + deltaZ > shakeThreshold) {
             shakeCount++;
-            if (shakeCount > 3) {
+            if (shakeCount > 2) {
               triggerConfetti();
               shakeCount = 0;
             }
+          } else {
+            shakeCount = Math.max(0, shakeCount - 0.5);
           }
         }
         lastX = acc.x; lastY = acc.y; lastZ = acc.z;
       });
+    }
+    
+    // Auto-enable on Android, or wait for first touch on iOS
+    if (window.DeviceMotionEvent) {
+      if (typeof DeviceMotionEvent.requestPermission !== 'function') {
+        enableMotion();
+      } else {
+        // iOS: enable on first user interaction
+        document.addEventListener('touchstart', function initMotion() {
+          enableMotion();
+          document.removeEventListener('touchstart', initMotion);
+        }, { once: true });
+      }
     }
     
     function triggerConfetti() {
