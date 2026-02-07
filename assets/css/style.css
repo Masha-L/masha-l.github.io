@@ -2118,3 +2118,36 @@ a.card-link:hover .card-cta {
   max-width: 500px;
   margin: 0 auto;
 }
+
+/* Work section - clean list layout */
+.work-intro {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.work-products {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.work-product {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.work-product-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.work-product-content {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.work-product-content strong {
+  color: var(--color-text);
+}
