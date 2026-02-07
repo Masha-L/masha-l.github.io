@@ -1832,6 +1832,19 @@ a.card-link:hover .card-cta {
   color: var(--color-text-muted);
 }
 
+.hero-block-wide {
+  grid-column: 1 / -1;
+  text-align: center;
+  background: transparent;
+  border: none;
+  padding-top: 0.5rem;
+}
+
+.hero-block-wide .hero-label {
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+}
+
 @media (max-width: 768px) {
   .hero-split {
     grid-template-columns: 1fr;
@@ -1839,6 +1852,11 @@ a.card-link:hover .card-cta {
   }
   
   .hero-block {
+    padding: 1.25rem;
+  }
+  
+  .hero-block-wide {
+    text-align: left;
     padding: 1.25rem;
   }
 }
