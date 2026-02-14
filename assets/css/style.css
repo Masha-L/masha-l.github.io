@@ -2041,6 +2041,11 @@ a.card-link:hover .card-cta {
   font-style: italic;
 }
 
+/* Light nerd mode hero description - dark brown for readability on journal background */
+[data-nerd="true"]:not([data-theme="dark"]) .hero-description {
+  color: #5c4033 !important;
+}
+
 [data-nerd="true"]:not([data-theme="dark"]) .nav {
   background: rgba(244, 228, 188, 0.95) !important;
   border-bottom: 2px solid var(--journal-red);
@@ -2586,7 +2591,8 @@ a.card-link:hover .card-cta {
 
 [data-nerd="true"][data-nerd-theme="terminal"]:not([data-theme="dark"]) .card-text,
 [data-nerd="true"][data-nerd-theme="terminal"]:not([data-theme="dark"]) .carousel-text,
-[data-nerd="true"][data-nerd-theme="terminal"]:not([data-theme="dark"]) p {
+[data-nerd="true"][data-nerd-theme="terminal"]:not([data-theme="dark"]) p,
+[data-nerd="true"][data-nerd-theme="terminal"]:not([data-theme="dark"]) .hero-description {
   color: #3d5c3d !important;
 }
 
