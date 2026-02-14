@@ -1172,6 +1172,174 @@ a.card-link:hover .card-cta {
 .mt-lg { margin-top: var(--space-lg); }
 .mb-lg { margin-bottom: var(--space-lg); }
 
+/* Screen reader only - visually hidden but accessible */
+.sr-only,
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip to content link */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-primary);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-heading);
+  font-weight: 500;
+  z-index: 1000;
+  transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+  top: 1rem;
+  color: white;
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   FOCUS STATES - Accessibility
+   ============================================ */
+/* Base focus style for all interactive elements */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Remove default focus for mouse users, keep for keyboard */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Links */
+a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Nav links specific styling */
+.nav-links a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.nav-logo:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+/* Buttons */
+.btn:focus-visible,
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Theme toggle */
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  background: var(--color-bg-alt);
+}
+
+/* Nerd toggle */
+.nerd-toggle:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Nav toggle (hamburger menu) */
+.nav-toggle:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Quote dots */
+.quote-dot:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 4px var(--color-bg), 0 0 0 6px var(--color-primary);
+}
+
+/* Cards as links */
+a.card-link:focus-visible {
+  outline: none;
+}
+
+a.card-link:focus-visible .card {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px rgba(13, 115, 119, 0.15);
+}
+
+/* Carousel cards */
+.carousel-card:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Interest cards, now items (if interactive) */
+.interest-card:focus-visible,
+.now-item:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Footer links */
+.footer-links a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* External links */
+.link-external:focus-visible,
+.link-github:focus-visible,
+.link-blog:focus-visible,
+.link-demo:focus-visible,
+.link-text:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   DARK MODE FOCUS STATES
+   ============================================ */
+[data-theme="dark"] :focus-visible {
+  outline-color: var(--color-primary-light);
+}
+
+[data-theme="dark"] .btn:focus-visible,
+[data-theme="dark"] .btn-primary:focus-visible {
+  outline-color: var(--color-accent);
+}
+
+[data-theme="dark"] .skip-link:focus {
+  outline-color: var(--color-accent);
+}
+
+[data-theme="dark"] a.card-link:focus-visible .card {
+  outline-color: var(--color-primary-light);
+  box-shadow: 0 0 0 6px rgba(20, 145, 155, 0.2);
+}
+
 /* ============================================
    RESPONSIVE
    ============================================ */
@@ -1443,6 +1611,7 @@ a.card-link:hover .card-cta {
 
 .timeline-item.current .timeline-dot {
   background: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(13, 115, 119, 0.2);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent);
 }
 
@@ -3552,4 +3721,136 @@ a.card-link:hover .card-cta {
 
 [data-nerd="true"][data-nerd-theme="synthwave"]:not([data-theme="dark"]) .bubble-author {
   color: var(--synth-pink);
+}
+
+/* ============================================
+   NERD MODE FOCUS STATES
+   ============================================ */
+
+/* Journal theme (default nerd) - Light mode */
+[data-nerd="true"]:not([data-theme="dark"]):not([data-nerd-theme]) :focus-visible,
+[data-nerd="true"]:not([data-theme="dark"]):not([data-nerd-theme]) a:focus-visible {
+  outline-color: var(--journal-red, #8B0000);
+}
+
+[data-nerd="true"]:not([data-theme="dark"]):not([data-nerd-theme]) .btn:focus-visible {
+  outline-color: var(--journal-gold, #c9a227);
+}
+
+[data-nerd="true"]:not([data-theme="dark"]):not([data-nerd-theme]) .skip-link:focus {
+  background: var(--journal-red, #8B0000);
+  outline-color: var(--journal-gold, #c9a227);
+}
+
+/* Journal theme (default nerd) - Dark mode */
+[data-nerd="true"][data-theme="dark"]:not([data-nerd-theme]) :focus-visible,
+[data-nerd="true"][data-theme="dark"]:not([data-nerd-theme]) a:focus-visible {
+  outline-color: var(--nerd-accent, #00ff88);
+}
+
+[data-nerd="true"][data-theme="dark"]:not([data-nerd-theme]) .btn:focus-visible {
+  outline-color: var(--nerd-secondary, #ff6b9d);
+}
+
+[data-nerd="true"][data-theme="dark"]:not([data-nerd-theme]) .skip-link:focus {
+  background: var(--nerd-accent, #00ff88);
+  color: #0d1117;
+  outline-color: var(--nerd-secondary, #ff6b9d);
+}
+
+/* TERMINAL THEME - Focus states */
+[data-nerd="true"][data-nerd-theme="terminal"]:not([data-theme="dark"]) :focus-visible {
+  outline-color: var(--terminal-green, #0a6640) !important;
+}
+
+[data-nerd="true"][data-nerd-theme="terminal"]:not([data-theme="dark"]) .btn:focus-visible {
+  outline-color: var(--terminal-bright, #00aa55) !important;
+}
+
+[data-nerd="true"][data-nerd-theme="terminal"]:not([data-theme="dark"]) .skip-link:focus {
+  background: var(--terminal-green, #0a6640) !important;
+  outline-color: var(--terminal-bright, #00aa55) !important;
+}
+
+[data-nerd="true"][data-nerd-theme="terminal"][data-theme="dark"] :focus-visible {
+  outline-color: var(--nerd-accent, #00ff88) !important;
+}
+
+[data-nerd="true"][data-nerd-theme="terminal"][data-theme="dark"] .btn:focus-visible {
+  outline-color: var(--nerd-secondary, #ff6b9d) !important;
+}
+
+[data-nerd="true"][data-nerd-theme="terminal"][data-theme="dark"] .skip-link:focus {
+  background: var(--nerd-accent, #00ff88) !important;
+  color: #0d1117 !important;
+  outline-color: var(--nerd-secondary, #ff6b9d) !important;
+}
+
+/* COMIC THEME - Focus states */
+[data-nerd="true"][data-nerd-theme="comic"]:not([data-theme="dark"]) :focus-visible {
+  outline: 3px solid var(--comic-black, #1a1a1a) !important;
+  outline-offset: 2px;
+}
+
+[data-nerd="true"][data-nerd-theme="comic"]:not([data-theme="dark"]) .btn:focus-visible {
+  outline: 4px solid var(--comic-black, #1a1a1a) !important;
+  box-shadow: 6px 6px 0 var(--comic-red, #ff0000) !important;
+}
+
+[data-nerd="true"][data-nerd-theme="comic"]:not([data-theme="dark"]) .skip-link:focus {
+  background: var(--comic-red, #ff0000) !important;
+  border: 3px solid var(--comic-black, #1a1a1a) !important;
+  outline: none !important;
+  box-shadow: 4px 4px 0 var(--comic-black, #1a1a1a) !important;
+}
+
+[data-nerd="true"][data-nerd-theme="comic"][data-theme="dark"] :focus-visible {
+  outline: 3px solid var(--comic-white, #e8e8e8) !important;
+  outline-offset: 2px;
+}
+
+[data-nerd="true"][data-nerd-theme="comic"][data-theme="dark"] .btn:focus-visible {
+  outline: 4px solid var(--comic-white, #e8e8e8) !important;
+  box-shadow: 6px 6px 0 var(--comic-red, #ff4444) !important;
+}
+
+[data-nerd="true"][data-nerd-theme="comic"][data-theme="dark"] .skip-link:focus {
+  background: var(--comic-red, #ff4444) !important;
+  border: 3px solid var(--comic-white, #e8e8e8) !important;
+  outline: none !important;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.8) !important;
+}
+
+/* SYNTHWAVE THEME - Focus states (neon glow effect) */
+[data-nerd="true"][data-nerd-theme="synthwave"]:not([data-theme="dark"]) :focus-visible {
+  outline: 2px solid var(--synth-pink, #ff77a8) !important;
+  outline-offset: 2px;
+}
+
+[data-nerd="true"][data-nerd-theme="synthwave"]:not([data-theme="dark"]) .btn:focus-visible {
+  outline: 2px solid var(--synth-cyan, #77ddff) !important;
+  box-shadow: 0 0 15px rgba(255, 119, 168, 0.4), 0 0 30px rgba(119, 221, 255, 0.2) !important;
+}
+
+[data-nerd="true"][data-nerd-theme="synthwave"]:not([data-theme="dark"]) .skip-link:focus {
+  background: linear-gradient(90deg, var(--synth-pink, #ff77a8), var(--synth-lavender, #c4a7e7)) !important;
+  outline: 2px solid var(--synth-cyan, #77ddff) !important;
+  box-shadow: 0 0 15px rgba(255, 119, 168, 0.4) !important;
+}
+
+[data-nerd="true"][data-nerd-theme="synthwave"][data-theme="dark"] :focus-visible {
+  outline: 2px solid var(--synth-cyan, #00ffff) !important;
+  outline-offset: 2px;
+  box-shadow: 0 0 10px var(--synth-cyan, #00ffff);
+}
+
+[data-nerd="true"][data-nerd-theme="synthwave"][data-theme="dark"] .btn:focus-visible {
+  outline: 2px solid var(--synth-pink, #ff00ff) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5), 0 0 40px rgba(255, 0, 255, 0.3) !important;
+}
+
+[data-nerd="true"][data-nerd-theme="synthwave"][data-theme="dark"] .skip-link:focus {
+  background: linear-gradient(90deg, var(--synth-pink, #ff00ff), var(--synth-purple, #9b59b6)) !important;
+  outline: 2px solid var(--synth-cyan, #00ffff) !important;
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.5), 0 0 40px rgba(0, 255, 255, 0.3) !important;
 }
