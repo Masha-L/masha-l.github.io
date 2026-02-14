@@ -236,7 +236,7 @@ permalink: /work/
       <div class="card">
         <div class="card-icon">💻</div>
         <h3 class="card-title">Languages</h3>
-        <p class="card-text">Python · TypeScript · JavaScript · Kotlin · Java · SQL · C · C++</p>
+        <p class="card-text">Python · TypeScript · JavaScript · Kotlin · Java · Scala · SQL · C</p>
       </div>
       <div class="card">
         <div class="card-icon">☁️</div>
@@ -251,7 +251,7 @@ permalink: /work/
       <div class="card">
         <div class="card-icon">📊</div>
         <h3 class="card-title">Data & Search</h3>
-        <p class="card-text">Spark · Flink · Vector Search · Elasticsearch · Data Pipelines · SQL · BigQuery</p>
+        <p class="card-text">Spark · Finagle · Vector Search · Elasticsearch · Data Pipelines · SQL · BigQuery</p>
       </div>
       <div class="card">
         <div class="card-icon">🛠️</div>

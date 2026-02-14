@@ -37,7 +37,7 @@ permalink: /about/
     <div class="about-section">
       <h2>The non-linear journey</h2>
       <p>In Russia, I started with <strong>literature and history</strong>. Then <strong>psychology and neuroscience</strong> — I spent years in <strong>Alzheimer's research labs</strong> during college because I wanted to be a neuroscientist.</p>
-      <p>But I was coding on the side, building apps, falling in love with making things. Made it a <strong>double major</strong>. Ran the <strong>computer science society</strong>, organized <strong>hackathons</strong>, chaired <strong>ACM-W</strong>. Also worked as a <strong>news supervisor</strong> — which taught me how to coordinate chaos and communicate under pressure.</p>
+      <p>But I was coding on the side, building apps, falling in love with making things. Made it a <strong>double major</strong>. Ran the <strong>computer science society</strong>, organized <strong>hackathons</strong>, chaired <strong>ACM-W</strong>.</p>
       <p>First internship at <strong>ActionIQ</strong> turned into 3+ years of startup life — shipping fast, wearing many hats, handling trillions of rows of data.</p>
       <p>Now at <strong>Google</strong>, leading teams building database systems. The research background, the humanities foundation, the neuroscience training — it all feeds into how I think about products and people.</p>
     </div>
