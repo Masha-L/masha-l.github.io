@@ -17,7 +17,8 @@
   {% seo %}
 </head>
 <body>
-  <nav class="nav">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <nav class="nav" aria-label="Main navigation">
     <div class="nav-container">
       <a href="{{ '/' | relative_url }}" class="nav-logo">ML</a>
       <div class="nav-links">
@@ -37,19 +38,19 @@
       </button>
     </div>
   </nav>
-  <main class="main">
+  <main id="main-content" class="main" role="main">
     {{ content }}
   </main>
-  <footer class="footer">
+  <footer class="footer" role="contentinfo">
     <div class="footer-container">
       <div class="footer-content">
         <p class="footer-tagline">Building things that matter, one line at a time.</p>
-        <div class="footer-links">
+        <nav class="footer-links" aria-label="Footer navigation">
           <a href="{{ '/now/' | relative_url }}">Now</a>
           <a href="{{ '/uses/' | relative_url }}">Uses</a>
           <a href="{{ '/running/' | relative_url }}">Running</a>
           <a href="https://github.com/Masha-L" target="_blank" rel="noopener">GitHub</a>
-        </div>
+        </nav>
       </div>
       <p class="footer-copy">© {{ 'now' | date: "%Y" }} Masha Lifshits · Built with Jekyll, hosted on GitHub Pages, designed with <a href="https://github.com/Masha-L/masha-l.github.io" style="color: inherit; text-decoration: underline;">curiosity</a></p>
     </div>

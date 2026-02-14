@@ -2950,7 +2950,10 @@ a.card-link:focus-visible .card {
 }
 
 [data-nerd="true"][data-nerd-theme="comic"]:not([data-theme="dark"]) .card-title,
-[data-nerd="true"][data-nerd-theme="comic"]:not([data-theme="dark"]) .carousel-title,
+[data-nerd="true"][data-nerd-theme="comic"]:not([data-theme="dark"]) .carousel-title {
+  color: var(--comic-black) !important;
+}
+
 [data-nerd="true"][data-nerd-theme="comic"]:not([data-theme="dark"]) .section-title,
 [data-nerd="true"][data-nerd-theme="comic"]:not([data-theme="dark"]) h1,
 [data-nerd="true"][data-nerd-theme="comic"]:not([data-theme="dark"]) h2,
@@ -3122,7 +3125,10 @@ a.card-link:focus-visible .card {
 }
 
 [data-nerd="true"][data-nerd-theme="comic"][data-theme="dark"] .card-title,
-[data-nerd="true"][data-nerd-theme="comic"][data-theme="dark"] .carousel-title,
+[data-nerd="true"][data-nerd-theme="comic"][data-theme="dark"] .carousel-title {
+  color: var(--comic-white) !important;
+}
+
 [data-nerd="true"][data-nerd-theme="comic"][data-theme="dark"] .section-title,
 [data-nerd="true"][data-nerd-theme="comic"][data-theme="dark"] h1,
 [data-nerd="true"][data-nerd-theme="comic"][data-theme="dark"] h2,
