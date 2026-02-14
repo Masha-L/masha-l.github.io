@@ -2277,7 +2277,9 @@ a.card-link:focus-visible .card {
 [data-nerd="true"][data-theme="dark"] .about-content,
 [data-nerd="true"][data-theme="dark"] .about-section p,
 [data-nerd="true"][data-theme="dark"] .timeline-content p,
-[data-nerd="true"][data-theme="dark"] .text-muted {
+[data-nerd="true"][data-theme="dark"] .text-muted,
+[data-nerd="true"][data-theme="dark"] .hero-description,
+[data-nerd="true"][data-theme="dark"] .hero-greeting {
   color: #c9d1d9;
 }
 
@@ -2365,6 +2367,11 @@ a.card-link:focus-visible .card {
 
 [data-nerd="true"] .section-title {
   color: #e6edf3;
+}
+
+/* Explicit dark mode nerd section-label - ensure visibility */
+[data-nerd="true"][data-theme="dark"] .section-label {
+  color: #00ff88 !important;
 }
 
 /* Nerd mode dark theme - terminal styling (scoped to dark mode only) */
