@@ -1,0 +1,511 @@
+---
+layout: default
+title: Games
+permalink: /games/
+---
+
+<section class="about-intro">
+  <div class="about-content">
+    <h1>Games</h1>
+    <p class="lead">Side projects I'm building when I need a break from databases. Play them here, or wait for the mobile versions.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-container">
+    <div class="games-grid">
+      <!-- Bubble Stack Game Card -->
+      <div class="game-card" id="bubble-stack-card">
+        <div class="game-preview-container">
+          <iframe 
+            id="bubble-stack-frame"
+            src="/games/bubble-stack/"
+            class="game-iframe"
+            title="Bubble Stack Game Preview"
+            sandbox="allow-scripts allow-same-origin"
+          ></iframe>
+          
+          <!-- Timer Overlay -->
+          <div class="game-overlay" id="bubble-stack-overlay">
+            <div class="overlay-content">
+              <div class="overlay-timer" id="bubble-stack-timer">10</div>
+              <div class="overlay-hint">Preview ending...</div>
+            </div>
+          </div>
+          
+          <!-- Locked Overlay -->
+          <div class="game-locked-overlay" id="bubble-stack-locked">
+            <div class="locked-content">
+              <div class="locked-icon">🫧</div>
+              <h3 class="locked-title">Bubble Stack</h3>
+              <p class="locked-subtitle">Coming soon to the App Store</p>
+              <div class="locked-buttons">
+                <button class="btn btn-primary replay-btn" onclick="replayGame('bubble-stack')">
+                  ↻ Play Again
+                </button>
+                <a href="https://github.com/Masha-L/bubble-stack" class="btn btn-outline" target="_blank">
+                  View Source
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="game-info">
+          <div class="game-header">
+            <h2 class="game-title">Bubble Stack</h2>
+            <span class="badge badge-dev">In Development</span>
+          </div>
+          <p class="game-description">
+            A bubble-themed drop-merge puzzle game. Tap to drop bubbles, merge matching ones to create bigger bubbles and rack up points. Don't let them stack above the danger line!
+          </p>
+          <div class="game-meta">
+            <span class="tech-tag">Flutter</span>
+            <span class="tech-tag">ada-game-engine</span>
+            <span class="tech-tag">Physics</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- More Games Coming Soon -->
+      <div class="game-card game-coming-soon">
+        <div class="game-preview-container coming-soon-preview">
+          <div class="coming-soon-content">
+            <div class="coming-soon-icon">🎮</div>
+            <h3>More Games Coming</h3>
+            <p>Building more puzzle games with ada-game-engine</p>
+          </div>
+        </div>
+        <div class="game-info">
+          <div class="game-header">
+            <h2 class="game-title">Coming Soon</h2>
+            <span class="badge badge-planned">Planned</span>
+          </div>
+          <p class="game-description">
+            More games are in the works. The ada-game-engine makes it easy to create new drop-merge variations with different themes and mechanics.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="section-container">
+    <div class="category-header">
+      <span class="category-icon">🎯</span>
+      <h2>About the Engine</h2>
+    </div>
+    <div class="engine-info">
+      <div class="engine-card">
+        <h3>ada-game-engine</h3>
+        <p>A flexible Flutter game engine I built for drop-merge puzzle games. It handles physics, theming, animations, and game state — so I can focus on the fun parts like bubble physics and satisfying pop animations.</p>
+        <div class="engine-features">
+          <div class="feature">
+            <span class="feature-icon">🎨</span>
+            <span>Themeable</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">⚡</span>
+            <span>Physics Engine</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">📱</span>
+            <span>Mobile-First</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">🔧</span>
+            <span>Extensible</span>
+          </div>
+        </div>
+        <a href="https://github.com/Masha-L/ada-game-engine" class="btn btn-outline" target="_blank">
+          View on GitHub →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 2rem;
+}
+
+.game-card {
+  background: var(--color-bg-alt, #fff);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+.game-preview-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9/16;
+  max-height: 480px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  overflow: hidden;
+}
+
+.game-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  pointer-events: auto;
+}
+
+.game-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 30%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.game-overlay.visible {
+  opacity: 1;
+}
+
+.overlay-content {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  text-align: right;
+}
+
+.overlay-timer {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  font-family: var(--font-mono, monospace);
+}
+
+.overlay-hint {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.game-locked-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.game-locked-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.locked-content {
+  text-align: center;
+  padding: 2rem;
+  color: #fff;
+}
+
+.locked-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.locked-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.locked-subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-bottom: 1.5rem;
+}
+
+.locked-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.locked-buttons .btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.locked-buttons .btn-primary {
+  background: #fff;
+  color: #667eea;
+  border: none;
+}
+
+.locked-buttons .btn-primary:hover {
+  background: #f0f0f0;
+  transform: scale(1.02);
+}
+
+.locked-buttons .btn-outline {
+  background: transparent;
+  color: #fff;
+  border: 2px solid rgba(255,255,255,0.5);
+}
+
+.locked-buttons .btn-outline:hover {
+  border-color: #fff;
+  background: rgba(255,255,255,0.1);
+}
+
+.game-info {
+  padding: 1.5rem;
+}
+
+.game-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.game-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.game-description {
+  color: var(--color-text-secondary, #666);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.game-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tech-tag {
+  background: var(--color-bg, #f5f5f5);
+  color: var(--color-text-secondary, #666);
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-family: var(--font-mono, monospace);
+}
+
+/* Coming Soon Card */
+.game-coming-soon {
+  opacity: 0.8;
+}
+
+.coming-soon-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+}
+
+.coming-soon-content {
+  text-align: center;
+  color: #fff;
+  padding: 2rem;
+}
+
+.coming-soon-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.coming-soon-content h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.coming-soon-content p {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+/* Engine Info Section */
+.engine-info {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.engine-card {
+  background: var(--color-bg-alt, #fff);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.engine-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.engine-card p {
+  color: var(--color-text-secondary, #666);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.engine-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-bg, #f5f5f5);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.feature-icon {
+  font-size: 1.1rem;
+}
+
+/* Badge additions */
+.badge-planned {
+  background: #718096;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .games-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .game-preview-container {
+    max-height: 400px;
+  }
+  
+  .locked-buttons {
+    flex-direction: column;
+  }
+  
+  .locked-buttons .btn {
+    width: 100%;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  initGamePreview('bubble-stack');
+});
+
+function initGamePreview(gameId) {
+  const overlay = document.getElementById(gameId + '-overlay');
+  const timer = document.getElementById(gameId + '-timer');
+  const locked = document.getElementById(gameId + '-locked');
+  const iframe = document.getElementById(gameId + '-frame');
+  
+  let timeLeft = 10;
+  let timerStarted = false;
+  let timerInterval = null;
+  
+  // Start timer when iframe loads
+  iframe.addEventListener('load', function() {
+    if (!timerStarted) {
+      timerStarted = true;
+      startCountdown();
+    }
+  });
+  
+  // Also start on first interaction with the card (fallback)
+  const card = document.getElementById(gameId + '-card');
+  card.addEventListener('mouseenter', function() {
+    if (!timerStarted) {
+      timerStarted = true;
+      setTimeout(startCountdown, 1000); // Small delay to let user see the game
+    }
+  }, { once: true });
+  
+  function startCountdown() {
+    // Show timer overlay at 7 seconds
+    setTimeout(function() {
+      if (timeLeft <= 7) {
+        overlay.classList.add('visible');
+      }
+    }, 3000);
+    
+    timerInterval = setInterval(function() {
+      timeLeft--;
+      timer.textContent = timeLeft;
+      
+      if (timeLeft <= 7) {
+        overlay.classList.add('visible');
+      }
+      
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        overlay.classList.remove('visible');
+        locked.classList.add('visible');
+        iframe.style.filter = 'blur(8px)';
+        iframe.style.pointerEvents = 'none';
+      }
+    }, 1000);
+  }
+  
+  // Store reference for replay
+  window['game_' + gameId] = {
+    reset: function() {
+      timeLeft = 10;
+      timer.textContent = timeLeft;
+      overlay.classList.remove('visible');
+      locked.classList.remove('visible');
+      iframe.style.filter = 'none';
+      iframe.style.pointerEvents = 'auto';
+      iframe.src = iframe.src; // Reload iframe
+      setTimeout(startCountdown, 1000);
+    }
+  };
+}
+
+function replayGame(gameId) {
+  if (window['game_' + gameId]) {
+    window['game_' + gameId].reset();
+  }
+}
+</script>
