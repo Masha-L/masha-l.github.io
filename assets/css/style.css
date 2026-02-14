@@ -2606,6 +2606,9 @@ a.card-link:focus-visible .card {
 [data-nerd="true"][data-nerd-theme="terminal"][data-theme="dark"] .nav a,
 [data-nerd="true"][data-nerd-theme="terminal"][data-theme="dark"] .nav-logo {
   color: #8b949e !important;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.05em;
 }
 
 [data-nerd="true"][data-nerd-theme="terminal"][data-theme="dark"] .nav a:hover,
@@ -2733,6 +2736,9 @@ a.card-link:focus-visible .card {
 [data-nerd="true"][data-nerd-theme="terminal"]:not([data-theme="dark"]) .nav a,
 [data-nerd="true"][data-nerd-theme="terminal"]:not([data-theme="dark"]) .nav-logo {
   color: #1a2b1a !important;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.05em;
 }
 
 [data-nerd="true"][data-nerd-theme="terminal"]:not([data-theme="dark"]) .nav a:hover,
@@ -3370,6 +3376,9 @@ a.card-link:focus-visible .card {
 [data-nerd="true"][data-nerd-theme="synthwave"][data-theme="dark"] .nav a,
 [data-nerd="true"][data-nerd-theme="synthwave"][data-theme="dark"] .nav-logo {
   color: #f0e6ff !important;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.05em;
 }
 
 [data-nerd="true"][data-nerd-theme="synthwave"][data-theme="dark"] .nav a:hover,
@@ -3586,6 +3595,9 @@ a.card-link:focus-visible .card {
 [data-nerd="true"][data-nerd-theme="synthwave"]:not([data-theme="dark"]) .nav a,
 [data-nerd="true"][data-nerd-theme="synthwave"]:not([data-theme="dark"]) .nav-logo {
   color: #4a3f5c !important;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.05em;
 }
 
 [data-nerd="true"][data-nerd-theme="synthwave"]:not([data-theme="dark"]) .nav a:hover,
