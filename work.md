@@ -246,7 +246,7 @@ permalink: /work/
       <div class="card">
         <div class="card-icon">🤖</div>
         <h3 class="card-title">AI & ML</h3>
-        <p class="card-text">LLM Integration · RAG · NL2SQL · Eval Sets · CNNs · LSTMs · Gemini · TF-IDF · Information Retrieval</p>
+        <p class="card-text">LLM Integration · RAG · LlamaIndex · NL2SQL · Eval Sets · CNNs · LSTMs · Gemini · TF-IDF · Information Retrieval</p>
       </div>
       <div class="card">
         <div class="card-icon">📊</div>
@@ -256,7 +256,7 @@ permalink: /work/
       <div class="card">
         <div class="card-icon">🛠️</div>
         <h3 class="card-title">Full Stack</h3>
-        <p class="card-text">React · Next.js · Angular · Flask · FastAPI · REST · gRPC · SOAP · Microservices · System Design</p>
+        <p class="card-text">React · Next.js · Angular · Flask · FastAPI · Pydantic · REST · gRPC · SOAP · Microservices · System Design</p>
       </div>
       <div class="card">
         <div class="card-icon">👥</div>
