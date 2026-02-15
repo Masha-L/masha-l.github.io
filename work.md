@@ -241,7 +241,7 @@ permalink: /work/
       <div class="card">
         <div class="card-icon">☁️</div>
         <h3 class="card-title">Cloud & Infrastructure</h3>
-        <p class="card-text">GCP · AWS · Terraform · Cloud Run · Gateway API · Load Balancing · Firebase · Spanner · Bigtable · BigQuery · Postgres</p>
+        <p class="card-text">GCP · AWS · Hadoop · Terraform · Cloud Run · Gateway API · Load Balancing · Firebase · Spanner · Bigtable · BigQuery · Postgres</p>
       </div>
       <div class="card">
         <div class="card-icon">🤖</div>
