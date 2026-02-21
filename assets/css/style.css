@@ -157,8 +157,11 @@ p {
   left: 0;
   right: 0;
   z-index: 100;
+  /* Fallback for browsers without color-mix() - uses solid theme background */
   background: var(--color-bg);
   background: color-mix(in srgb, var(--color-bg) 90%, transparent);
+  /* Fallback: solid bg above handles browsers without backdrop-filter */
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border);
 }
@@ -1611,6 +1614,7 @@ a.card-link:focus-visible .card {
 
 .timeline-item.current .timeline-dot {
   background: var(--color-primary);
+  /* Fallback for browsers without color-mix() */
   box-shadow: 0 0 0 4px rgba(13, 115, 119, 0.2);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent);
 }
