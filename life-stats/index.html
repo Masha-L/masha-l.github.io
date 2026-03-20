@@ -748,6 +748,10 @@ async function handleLogout() {
   document.getElementById('auth-error').textContent = '';
   document.getElementById('auth-info').textContent = '';
   document.getElementById('auth-password').value = '';
+  // Reset auth button state
+  const btn = document.getElementById('auth-btn');
+  btn.disabled = false;
+  btn.textContent = authMode === 'login' ? 'Log In' : 'Sign Up';
 }
 
 // ─── Auth State Listener ───
@@ -772,6 +776,12 @@ sb.auth.onAuthStateChange(async (event, session) => {
     currentUser = null;
     document.getElementById('main-app').classList.add('hidden');
     document.getElementById('auth-screen').classList.remove('hidden');
+    // Reset auth button state on sign out
+    const authBtn = document.getElementById('auth-btn');
+    if (authBtn) {
+      authBtn.disabled = false;
+      authBtn.textContent = authMode === 'login' ? 'Log In' : 'Sign Up';
+    }
   }
 });
 
