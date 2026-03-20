@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Pulse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;--surface:rgba(255,255,255,0.04);--surface2:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.08);--text:#e8e8ed;--text2:rgba(255,255,255,0.5);
+  --text3:rgba(255,255,255,0.3);--accent:#a78bfa;--accent2:#2dd4bf;--accent3:#fbbf24;
+  --green:#34d399;--yellow:#fbbf24;--red:#f87171;--radius:16px;--radius-sm:10px;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);
+  display:flex;flex-direction:column;-webkit-tap-highlight-color:transparent}
+
+/* ── App Shell ── */
+.app{display:flex;flex-direction:column;height:100%;overflow:hidden}
+.header{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;background:var(--bg);z-index:10}
+.header h1{font-size:22px;font-weight:700;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text}
+.header-actions{display:flex;gap:8px}
+.icon-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);
+  background:var(--surface);color:var(--text2);display:flex;align-items:center;
+  justify-content:center;cursor:pointer;font-size:18px;transition:all .2s}
+.icon-btn:hover{background:var(--surface2);color:var(--text)}
+
+.content{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 16px 100px;
+  scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+.content::-webkit-scrollbar{width:0}
+
+/* ── Tab Bar ── */
+.tab-bar{position:fixed;bottom:0;left:0;right:0;display:flex;
+  background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);padding:6px 0 env(safe-area-inset-bottom,8px);z-index:100}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 4px;cursor:pointer;transition:all .2s;position:relative;
+  -webkit-tap-highlight-color:transparent}
+.tab svg{width:22px;height:22px;stroke:var(--text3);fill:none;stroke-width:1.8;transition:all .2s}
+.tab span{font-size:10px;font-weight:500;color:var(--text3);transition:all .2s}
+.tab.active svg{stroke:var(--accent)}
+.tab.active span{color:var(--accent)}
+.tab .badge{position:absolute;top:4px;right:calc(50% - 18px);min-width:16px;height:16px;
+  border-radius:8px;background:var(--red);color:#fff;font-size:9px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;padding:0 4px;
+  transform:scale(0);transition:transform .2s}
+.tab .badge.show{transform:scale(1)}
+
+.page{display:none}
+.page.active{display:block}
+
+/* ── Cards ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px;margin-bottom:12px;backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);transition:all .3s}
+
+/* ── Habit Heat Map ── */
+.habit-card{position:relative;overflow:hidden}
+.habit-card .habit-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.habit-card .habit-name{font-size:16px;font-weight:600;display:flex;align-items:center;gap:8px}
+.habit-card .habit-color{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.habit-card .habit-stats{display:flex;gap:16px}
+.habit-card .stat{text-align:center}
+.habit-card .stat-val{font-size:18px;font-weight:700}
+.habit-card .stat-lbl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
+.habit-card .habit-menu-btn{cursor:pointer;padding:4px 8px;color:var(--text3);font-size:18px;
+  border:none;background:none;transition:color .2s}
+.habit-card .habit-menu-btn:hover{color:var(--text)}
+
+.heatmap-wrap{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
+  margin:0 -4px;padding:0 4px}
+.heatmap-wrap::-webkit-scrollbar{height:0}
+.heatmap{display:flex;gap:2px}
+.heatmap-col{display:flex;flex-direction:column;gap:2px}
+.heatmap-cell{width:13px;height:13px;border-radius:3px;cursor:pointer;
+  transition:all .15s ease;position:relative}
+.heatmap-cell:hover{transform:scale(1.3);z-index:2}
+.heatmap-cell.today{box-shadow:0 0 0 1.5px rgba(255,255,255,0.4)}
+.heatmap-cell.future{opacity:0.15;cursor:default}
+.heatmap-cell.future:hover{transform:none}
+.month-labels{display:flex;margin-bottom:4px;padding-left:0}
+.month-label{font-size:9px;color:var(--text3);text-align:left;white-space:nowrap}
+.day-labels{display:flex;flex-direction:column;gap:2px;margin-right:4px;flex-shrink:0;padding-top:0}
+.day-label{height:13px;font-size:8px;color:var(--text3);display:flex;align-items:center;line-height:1}
+.heatmap-container{display:flex}
+.year-selector{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:16px}
+.year-selector button{background:var(--surface2);border:1px solid var(--border);color:var(--text);
+  border-radius:8px;padding:6px 14px;cursor:pointer;font-size:13px;font-weight:500;transition:all .2s}
+.year-selector button:hover{background:rgba(255,255,255,0.1)}
+.year-selector .year-display{font-size:15px;font-weight:600;min-width:50px;text-align:center}
+
+/* ── Friend Cards ── */
+.friend-card{position:relative;overflow:hidden}
+.friend-card .friend-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.friend-avatar{width:44px;height:44px;border-radius:50%;background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;
+  flex-shrink:0;overflow:hidden;border:2px solid transparent}
+.friend-avatar img{width:100%;height:100%;object-fit:cover}
+.friend-avatar.green{border-color:var(--green)}
+.friend-avatar.yellow{border-color:var(--yellow)}
+.friend-avatar.red{border-color:var(--red)}
+.friend-info{flex:1;min-width:0}
+.friend-name{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.friend-meta{font-size:11px;color:var(--text2)}
+.friend-status{text-align:right;flex-shrink:0}
+.friend-days{font-size:20px;font-weight:700}
+.friend-days-label{font-size:10px;color:var(--text2)}
+.friend-status.green .friend-days{color:var(--green)}
+.friend-status.yellow .friend-days{color:var(--yellow)}
+.friend-status.red .friend-days{color:var(--red)}
+.friend-actions{display:flex;gap:8px;margin-top:8px}
+.friend-actions button{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--text2);font-size:12px;font-weight:500;
+  cursor:pointer;transition:all .2s}
+.friend-actions button:hover{background:rgba(255,255,255,0.1);color:var(--text)}
+.friend-history{margin-top:10px;max-height:0;overflow:hidden;transition:max-height .3s}
+.friend-history.open{max-height:300px;overflow-y:auto}
+.history-item{display:flex;align-items:center;gap:8px;padding:6px 0;
+  border-bottom:1px solid var(--border);font-size:12px}
+.history-item:last-child{border-bottom:none}
+.history-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.history-date{color:var(--text2);min-width:60px}
+.history-type{color:var(--text);font-weight:500;min-width:50px}
+.history-note{color:var(--text2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.friend-summary{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.summary-chip{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:10px 14px;flex:1;min-width:90px;text-align:center}
+.summary-chip .chip-val{font-size:22px;font-weight:700}
+.summary-chip .chip-lbl{font-size:10px;color:var(--text2);margin-top:2px}
+.summary-chip.alert .chip-val{color:var(--red)}
+
+/* ── Modals ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;
+  display:none;align-items:flex-end;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal{background:#1a1a24;border:1px solid var(--border);border-radius:20px 20px 16px 16px;
+  width:100%;max-width:440px;max-height:80vh;overflow-y:auto;padding:24px 20px}
+.modal h2{font-size:18px;font-weight:600;margin-bottom:16px}
+.modal label{display:block;font-size:12px;color:var(--text2);margin-bottom:4px;margin-top:12px}
+.modal input,.modal select,.modal textarea{width:100%;padding:10px 12px;border-radius:8px;
+  border:1px solid var(--border);background:var(--surface2);color:var(--text);
+  font-size:14px;font-family:inherit;outline:none;transition:border-color .2s}
+.modal input:focus,.modal select:focus,.modal textarea:focus{border-color:var(--accent)}
+.modal textarea{resize:vertical;min-height:60px}
+.modal-actions{display:flex;gap:8px;margin-top:20px}
+.modal-actions button{flex:1;padding:12px;border-radius:10px;border:none;font-size:14px;
+  font-weight:600;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--accent);color:#000}
+.btn-primary:hover{opacity:0.9}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border) !important}
+.btn-danger{background:rgba(248,113,113,0.15);color:var(--red);border:1px solid rgba(248,113,113,0.2) !important}
+
+/* ── Import/Export ── */
+.io-bar{display:flex;gap:8px;margin-bottom:16px;justify-content:flex-end}
+.io-bar button{padding:6px 12px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface);color:var(--text2);font-size:11px;cursor:pointer;transition:all .2s}
+.io-bar button:hover{color:var(--text);background:var(--surface2)}
+
+/* ── Sort Controls ── */
+.sort-bar{display:flex;gap:8px;margin-bottom:12px;align-items:center}
+.sort-bar span{font-size:11px;color:var(--text3)}
+.sort-bar select{padding:5px 8px;border-radius:6px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--text);font-size:11px;outline:none}
+
+/* ── Animations ── */
+@keyframes popIn{from{transform:scale(0.95);opacity:0}to{transform:scale(1);opacity:1}}
+.card{animation:popIn .3s ease}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* ── Responsive ── */
+@media(min-width:640px){
+  .content{padding:0 24px 100px}
+  .heatmap-cell{width:14px;height:14px}
+  .friend-summary{flex-wrap:nowrap}
+}
+@media(min-width:900px){
+  .content{max-width:800px;margin:0 auto;padding:0 32px 100px}
+}
+
+/* ── Tooltip ── */
+.tooltip{position:fixed;background:#2a2a3a;color:var(--text);font-size:11px;
+  padding:6px 10px;border-radius:6px;pointer-events:none;z-index:300;
+  opacity:0;transition:opacity .15s;white-space:nowrap;
+  box-shadow:0 4px 12px rgba(0,0,0,0.4)}
+.tooltip.show{opacity:1}
+
+/* Context menu */
+.ctx-menu{position:fixed;background:#1e1e2e;border:1px solid var(--border);border-radius:10px;
+  padding:4px;z-index:250;min-width:140px;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
+.ctx-menu button{display:block;width:100%;padding:8px 12px;border:none;background:none;
+  color:var(--text);font-size:13px;text-align:left;cursor:pointer;border-radius:6px;transition:all .15s}
+.ctx-menu button:hover{background:var(--surface2)}
+.ctx-menu button.danger{color:var(--red)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>Pulse</h1>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="openSettings()" title="Import/Export">&#8645;</button>
+    </div>
+  </div>
+
+  <div class="content" id="content">
+    <!-- Habits Page -->
+    <div class="page active" id="page-habits">
+      <div class="year-selector">
+        <button onclick="changeYear(-1)">&larr;</button>
+        <div class="year-display" id="year-display"></div>
+        <button onclick="changeYear(1)">&rarr;</button>
+      </div>
+      <div id="habits-list"></div>
+      <div style="text-align:center;padding:20px">
+        <button class="icon-btn" style="width:44px;height:44px;font-size:24px;margin:0 auto"
+          onclick="openAddHabit()">+</button>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px">Add habit</div>
+      </div>
+    </div>
+
+    <!-- Friends Page -->
+    <div class="page" id="page-friends">
+      <div class="friend-summary" id="friend-summary"></div>
+      <div class="sort-bar">
+        <span>Sort:</span>
+        <select id="friend-sort" onchange="renderFriends()">
+          <option value="overdue">Most overdue</option>
+          <option value="recent">Recently contacted</option>
+          <option value="name">Name</option>
+        </select>
+      </div>
+      <div id="friends-list"></div>
+      <div style="text-align:center;padding:20px">
+        <button class="icon-btn" style="width:44px;height:44px;font-size:24px;margin:0 auto"
+          onclick="openAddFriend()">+</button>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px">Add friend</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Bar -->
+  <nav class="tab-bar">
+    <div class="tab active" onclick="switchTab('habits')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      <span>Habits</span>
+    </div>
+    <div class="tab" onclick="switchTab('friends')">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span>Friends</span>
+      <div class="badge" id="friend-badge">0</div>
+    </div>
+  </nav>
+</div>
+
+<!-- Tooltip -->
+<div class="tooltip" id="tooltip"></div>
+
+<!-- Add Habit Modal -->
+<div class="modal-overlay" id="modal-habit">
+  <div class="modal">
+    <h2 id="habit-modal-title">New Habit</h2>
+    <label>Name</label>
+    <input id="habit-name" placeholder="e.g. Water, Movement, Read...">
+    <label>Color</label>
+    <div style="display:flex;gap:8px;margin-top:4px" id="color-picker"></div>
+    <input type="hidden" id="habit-color">
+    <input type="hidden" id="habit-edit-id">
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('modal-habit')">Cancel</button>
+      <button class="btn-primary" onclick="saveHabit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Friend Modal -->
+<div class="modal-overlay" id="modal-friend">
+  <div class="modal">
+    <h2 id="friend-modal-title">New Friend</h2>
+    <label>Name *</label>
+    <input id="friend-name" placeholder="Name">
+    <label>Photo URL (optional)</label>
+    <input id="friend-photo" placeholder="https://...">
+    <label>How you met</label>
+    <input id="friend-met" placeholder="College, work, etc.">
+    <label>Category</label>
+    <select id="friend-category">
+      <option value="close">Close friend</option>
+      <option value="friend">Friend</option>
+      <option value="acquaintance">Acquaintance</option>
+    </select>
+    <label>Desired contact frequency</label>
+    <select id="friend-freq">
+      <option value="7">Weekly</option>
+      <option value="14">Biweekly</option>
+      <option value="30">Monthly</option>
+      <option value="90">Quarterly</option>
+    </select>
+    <input type="hidden" id="friend-edit-id">
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('modal-friend')">Cancel</button>
+      <button class="btn-primary" onclick="saveFriend()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Log Interaction Modal -->
+<div class="modal-overlay" id="modal-interaction">
+  <div class="modal">
+    <h2>Log Interaction</h2>
+    <label>Date</label>
+    <input type="date" id="interact-date">
+    <label>Type</label>
+    <select id="interact-type">
+      <option value="text">Text</option>
+      <option value="call">Call</option>
+      <option value="hangout">Hangout</option>
+      <option value="meal">Meal</option>
+    </select>
+    <label>Note (optional)</label>
+    <textarea id="interact-note" rows="2" placeholder="What'd you do?"></textarea>
+    <input type="hidden" id="interact-friend-id">
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('modal-interaction')">Cancel</button>
+      <button class="btn-primary" onclick="saveInteraction()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings/IO Modal -->
+<div class="modal-overlay" id="modal-settings">
+  <div class="modal">
+    <h2>Data</h2>
+    <div class="modal-actions" style="flex-direction:column;gap:10px">
+      <button class="btn-secondary" onclick="exportData()" style="flex:none;padding:14px">Export JSON</button>
+      <button class="btn-secondary" onclick="document.getElementById('import-file').click()" style="flex:none;padding:14px">Import JSON</button>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+      <button class="btn-danger" onclick="if(confirm('Delete ALL data?')){localStorage.clear();location.reload()}" style="flex:none;padding:14px">Reset All Data</button>
+      <button class="btn-secondary" onclick="closeModal('modal-settings')" style="flex:none;padding:14px">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── State ───
+const COLORS = [
+  {name:'Green',val:'#34d399',bg:'rgba(52,211,153,'},
+  {name:'Blue',val:'#60a5fa',bg:'rgba(96,165,250,'},
+  {name:'Purple',val:'#a78bfa',bg:'rgba(167,139,250,'},
+  {name:'Amber',val:'#fbbf24',bg:'rgba(251,191,36,'},
+  {name:'Pink',val:'#f472b6',bg:'rgba(244,114,182,'},
+  {name:'Teal',val:'#2dd4bf',bg:'rgba(45,212,191,'},
+  {name:'Red',val:'#f87171',bg:'rgba(248,113,113,'},
+  {name:'Indigo',val:'#818cf8',bg:'rgba(129,140,248,'}
+];
+
+let state = {
+  habits: [],      // {id,name,color,colorBg,days:{YYYY-MM-DD:true}}
+  friends: [],     // {id,name,photo,met,category,freq,interactions:[{date,type,note}]}
+  currentYear: new Date().getFullYear()
+};
+
+function load(){
+  try{const s=localStorage.getItem('pulse_data');if(s)state={...state,...JSON.parse(s)}}catch(e){}
+  if(!state.currentYear)state.currentYear=new Date().getFullYear();
+}
+function save(){localStorage.setItem('pulse_data',JSON.stringify(state))}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+
+// ─── Tab Navigation ───
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    t.classList.toggle('active',['habits','friends'][i]===tab);
+  });
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+tab).classList.add('active');
+  document.getElementById('content').scrollTop=0;
+  if(tab==='friends')renderFriends();
+}
+
+// ─── Habits ───
+function changeYear(d){state.currentYear+=d;document.getElementById('year-display').textContent=state.currentYear;renderHabits()}
+
+function renderHabits(){
+  document.getElementById('year-display').textContent=state.currentYear;
+  const container=document.getElementById('habits-list');
+  container.innerHTML='';
+  state.habits.forEach(h=>{
+    const card=document.createElement('div');
+    card.className='card habit-card';
+    const streak=calcStreak(h);
+    const longest=calcLongest(h);
+    const total=Object.keys(h.days||{}).filter(d=>d.startsWith(state.currentYear+'')).length;
+    card.innerHTML=`
+      <div class="habit-header">
+        <div class="habit-name"><span class="habit-color" style="background:${h.color}"></span>${esc(h.name)}</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="habit-stats">
+            <div class="stat"><div class="stat-val" style="color:${h.color}">${streak}</div><div class="stat-lbl">Streak</div></div>
+            <div class="stat"><div class="stat-val">${longest}</div><div class="stat-lbl">Best</div></div>
+            <div class="stat"><div class="stat-val">${total}</div><div class="stat-lbl">Total</div></div>
+          </div>
+          <button class="habit-menu-btn" onclick="showHabitMenu(event,'${h.id}')">&#8942;</button>
+        </div>
+      </div>
+      <div id="heatmap-${h.id}"></div>`;
+    container.appendChild(card);
+    buildHeatmap(h);
+  });
+}
+
+function buildHeatmap(habit){
+  const wrap=document.getElementById('heatmap-'+habit.id);
+  if(!wrap)return;
+  const year=state.currentYear;
+  const today=new Date();today.setHours(0,0,0,0);
+  const todayStr=fmt(today);
+  // Find the first Monday on or before Jan 1
+  const jan1=new Date(year,0,1);
+  const startDay=jan1.getDay();// 0=Sun
+  const startOffset=(startDay===0)?-6:1-startDay;
+  const gridStart=new Date(year,0,1+startOffset);
+  // End: last Sunday on or after Dec 31
+  const dec31=new Date(year,11,31);
+  const endDay=dec31.getDay();
+  const endOffset=endDay===0?0:7-endDay;
+  const gridEnd=new Date(year,11,31+endOffset);
+
+  // Month labels
+  let monthHtml='<div class="month-labels" style="display:flex;padding-left:22px">';
+  let prevMonth=-1;
+  const weeks=[];
+  let cur=new Date(gridStart);
+  while(cur<=gridEnd){
+    const week=[];
+    for(let d=0;d<7;d++){
+      week.push(new Date(cur));
+      cur.setDate(cur.getDate()+1);
+    }
+    weeks.push(week);
+  }
+  weeks.forEach(w=>{
+    const mon=w[0].getMonth();
+    if(mon!==prevMonth){
+      monthHtml+=`<div class="month-label" style="width:${15*1}px;min-width:15px">${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][mon]}</div>`;
+      prevMonth=mon;
+    } else {
+      monthHtml+=`<div style="width:15px;min-width:15px"></div>`;
+    }
+  });
+  monthHtml+='</div>';
+
+  // Day labels
+  const dayNames=['M','T','W','T','F','S','S'];
+
+  // Grid
+  let gridHtml='<div class="heatmap-container"><div class="day-labels">';
+  dayNames.forEach(d=>{gridHtml+=`<div class="day-label">${d}</div>`});
+  gridHtml+='</div><div><div class="heatmap-wrap"><div style="display:inline-block">';
+  // month labels row
+  gridHtml+='<div style="display:flex;gap:2px;margin-bottom:3px">';
+  let pm=-1;
+  weeks.forEach(w=>{
+    const m=w[3]?w[3].getMonth():w[0].getMonth();
+    if(m!==pm){gridHtml+=`<div style="width:13px;font-size:9px;color:var(--text3);white-space:nowrap;overflow:visible">${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m]}</div>`;pm=m}
+    else gridHtml+=`<div style="width:13px"></div>`;
+  });
+  gridHtml+='</div>';
+  gridHtml+='<div class="heatmap" style="display:flex;gap:2px">';
+  weeks.forEach(w=>{
+    gridHtml+='<div class="heatmap-col">';
+    w.forEach(day=>{
+      const ds=fmt(day);
+      const done=habit.days&&habit.days[ds];
+      const isToday=ds===todayStr;
+      const isFuture=day>today;
+      const inYear=day.getFullYear()===year;
+      const opacity=done?0.9:0.08;
+      const bg=done?habit.color:'rgba(255,255,255,'+opacity+')';
+      const cls='heatmap-cell'+(isToday?' today':'')+(isFuture?' future':'')+(!inYear?' future':'');
+      gridHtml+=`<div class="${cls}" style="background:${bg}"
+        data-habit="${habit.id}" data-date="${ds}" data-day="${day.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}"
+        ${!isFuture&&inYear?'onclick="toggleDay(this)"':''}
+        onmouseenter="showTip(event,this)" onmouseleave="hideTip()"></div>`;
+    });
+    gridHtml+='</div>';
+  });
+  gridHtml+='</div></div></div></div></div>';
+  wrap.innerHTML=gridHtml;
+  // Scroll to current week
+  const hWrap=wrap.querySelector('.heatmap-wrap');
+  if(hWrap&&year===new Date().getFullYear()){
+    const weekIdx=Math.floor((today-gridStart)/(7*864e5));
+    const scrollTo=Math.max(0,weekIdx*15-hWrap.clientWidth/2);
+    requestAnimationFrame(()=>hWrap.scrollLeft=scrollTo);
+  }
+}
+
+function toggleDay(el){
+  const hid=el.dataset.habit, ds=el.dataset.date;
+  const h=state.habits.find(x=>x.id===hid);
+  if(!h)return;
+  if(!h.days)h.days={};
+  if(h.days[ds]){delete h.days[ds];el.style.background='rgba(255,255,255,0.08)'}
+  else{h.days[ds]=true;el.style.background=h.color;el.style.transform='scale(1.4)';setTimeout(()=>el.style.transform='',200)}
+  save();
+  // Update stats without full rerender
+  const card=el.closest('.habit-card');
+  if(card){
+    const vals=card.querySelectorAll('.stat-val');
+    vals[0].textContent=calcStreak(h);
+    vals[1].textContent=calcLongest(h);
+    vals[2].textContent=Object.keys(h.days).filter(d=>d.startsWith(state.currentYear+'')).length;
+  }
+}
+
+function calcStreak(h){
+  if(!h.days)return 0;
+  let streak=0,d=new Date();d.setHours(0,0,0,0);
+  // Check today first, if not done check yesterday
+  if(!h.days[fmt(d)]){d.setDate(d.getDate()-1)}
+  while(h.days[fmt(d)]){streak++;d.setDate(d.getDate()-1)}
+  return streak;
+}
+
+function calcLongest(h){
+  if(!h.days)return 0;
+  const sorted=Object.keys(h.days).sort();
+  if(!sorted.length)return 0;
+  let max=1,cur=1;
+  for(let i=1;i<sorted.length;i++){
+    const prev=new Date(sorted[i-1]+'T00:00:00');
+    const now=new Date(sorted[i]+'T00:00:00');
+    const diff=(now-prev)/(864e5);
+    if(diff===1)cur++;else cur=1;
+    if(cur>max)max=cur;
+  }
+  return max;
+}
+
+function fmt(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+
+function showTip(e,el){
+  const tip=document.getElementById('tooltip');
+  const h=state.habits.find(x=>x.id===el.dataset.habit);
+  const done=h&&h.days&&h.days[el.dataset.date];
+  tip.textContent=el.dataset.day+(done?' ✓':' ✗');
+  tip.classList.add('show');
+  const r=el.getBoundingClientRect();
+  tip.style.left=r.left+'px';tip.style.top=(r.top-30)+'px';
+}
+function hideTip(){document.getElementById('tooltip').classList.remove('show')}
+
+// Habit CRUD
+function openAddHabit(){
+  document.getElementById('habit-modal-title').textContent='New Habit';
+  document.getElementById('habit-name').value='';
+  document.getElementById('habit-edit-id').value='';
+  buildColorPicker(COLORS[0].val);
+  openModal('modal-habit');
+}
+
+function buildColorPicker(sel){
+  const p=document.getElementById('color-picker');
+  p.innerHTML='';
+  COLORS.forEach(c=>{
+    const d=document.createElement('div');
+    d.style.cssText=`width:28px;height:28px;border-radius:50%;background:${c.val};cursor:pointer;
+      border:2px solid ${c.val===sel?'#fff':'transparent'};transition:all .2s`;
+    d.onclick=()=>{document.getElementById('habit-color').value=c.val;
+      p.querySelectorAll('div').forEach(x=>x.style.borderColor='transparent');d.style.borderColor='#fff'};
+    p.appendChild(d);
+  });
+  document.getElementById('habit-color').value=sel;
+}
+
+function saveHabit(){
+  const name=document.getElementById('habit-name').value.trim();
+  if(!name)return;
+  const color=document.getElementById('habit-color').value;
+  const editId=document.getElementById('habit-edit-id').value;
+  if(editId){
+    const h=state.habits.find(x=>x.id===editId);
+    if(h){h.name=name;h.color=color}
+  } else {
+    state.habits.push({id:uid(),name,color,days:{}});
+  }
+  save();renderHabits();closeModal('modal-habit');
+}
+
+function showHabitMenu(e,hid){
+  e.stopPropagation();
+  removeCtx();
+  const menu=document.createElement('div');
+  menu.className='ctx-menu';
+  menu.innerHTML=`<button onclick="editHabit('${hid}')">Edit</button><button class="danger" onclick="deleteHabit('${hid}')">Delete</button>`;
+  document.body.appendChild(menu);
+  const r=e.target.getBoundingClientRect();
+  menu.style.top=r.bottom+4+'px';
+  menu.style.right=(window.innerWidth-r.right)+'px';
+  setTimeout(()=>document.addEventListener('click',removeCtx,{once:true}),10);
+}
+function removeCtx(){document.querySelectorAll('.ctx-menu').forEach(m=>m.remove())}
+
+function editHabit(hid){
+  removeCtx();
+  const h=state.habits.find(x=>x.id===hid);if(!h)return;
+  document.getElementById('habit-modal-title').textContent='Edit Habit';
+  document.getElementById('habit-name').value=h.name;
+  document.getElementById('habit-edit-id').value=hid;
+  buildColorPicker(h.color);
+  openModal('modal-habit');
+}
+function deleteHabit(hid){
+  removeCtx();
+  if(!confirm('Delete this habit and all its data?'))return;
+  state.habits=state.habits.filter(x=>x.id!==hid);
+  save();renderHabits();
+}
+
+// ─── Friends ───
+function renderFriends(){
+  const list=document.getElementById('friends-list');
+  const sort=document.getElementById('friend-sort').value;
+  let friends=[...state.friends];
+  const now=Date.now();
+
+  friends.forEach(f=>{
+    f._lastContact=getLastContact(f);
+    f._daysSince=f._lastContact?Math.floor((now-new Date(f._lastContact).getTime())/864e5):999;
+    f._status=f._daysSince>(f.freq*1)?'red':f._daysSince>(f.freq*0.7)?'yellow':'green';
+    f._overdue=Math.max(0,f._daysSince-f.freq);
+  });
+
+  if(sort==='overdue')friends.sort((a,b)=>b._overdue-a._overdue);
+  else if(sort==='recent')friends.sort((a,b)=>a._daysSince-b._daysSince);
+  else friends.sort((a,b)=>a.name.localeCompare(b.name));
+
+  const overdue=friends.filter(f=>f._status==='red').length;
+  const contactedThisWeek=friends.filter(f=>f._daysSince<=7).length;
+
+  // Summary
+  document.getElementById('friend-summary').innerHTML=`
+    <div class="summary-chip ${overdue?'alert':''}"><div class="chip-val">${overdue}</div><div class="chip-lbl">Overdue</div></div>
+    <div class="summary-chip"><div class="chip-val">${contactedThisWeek}</div><div class="chip-lbl">This week</div></div>
+    <div class="summary-chip"><div class="chip-val">${friends.length}</div><div class="chip-lbl">Total</div></div>`;
+
+  // Badge
+  const badge=document.getElementById('friend-badge');
+  badge.textContent=overdue;
+  badge.classList.toggle('show',overdue>0);
+
+  list.innerHTML='';
+  friends.forEach(f=>{
+    const card=document.createElement('div');
+    card.className='card friend-card';
+    const initials=f.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const avatar=f.photo?`<img src="${esc(f.photo)}" onerror="this.parentElement.innerHTML='${initials}'">`:`${initials}`;
+    const freqLabel={7:'Weekly',14:'Biweekly',30:'Monthly',90:'Quarterly'}[f.freq]||f.freq+'d';
+    const catLabel={close:'Close',friend:'Friend',acquaintance:'Acquaintance'}[f.category]||f.category;
+    const daysText=f._daysSince===999?'Never':f._daysSince;
+    const daysLabel=f._daysSince===999?'':'days ago';
+
+    let historyHtml='';
+    const interactions=(f.interactions||[]).slice().sort((a,b)=>b.date.localeCompare(a.date));
+    interactions.slice(0,10).forEach(i=>{
+      const typeColors={text:'var(--accent)',call:'var(--accent2)',hangout:'var(--accent3)',meal:'var(--pink, #f472b6)'};
+      historyHtml+=`<div class="history-item"><span class="history-dot" style="background:${typeColors[i.type]||'var(--text3)'}"></span>
+        <span class="history-date">${i.date}</span><span class="history-type">${i.type}</span>
+        <span class="history-note">${esc(i.note||'')}</span></div>`;
+    });
+
+    card.innerHTML=`
+      <div class="friend-top">
+        <div class="friend-avatar ${f._status}">${avatar}</div>
+        <div class="friend-info">
+          <div class="friend-name">${esc(f.name)}</div>
+          <div class="friend-meta">${catLabel} &middot; ${freqLabel}${f.met?' &middot; '+esc(f.met):''}</div>
+        </div>
+        <div class="friend-status ${f._status}">
+          <div class="friend-days">${daysText}</div>
+          <div class="friend-days-label">${daysLabel}</div>
+        </div>
+      </div>
+      <div class="friend-actions">
+        <button onclick="openLogInteraction('${f.id}')">Log contact</button>
+        <button onclick="toggleHistory(this)">History</button>
+        <button onclick="showFriendMenu(event,'${f.id}')">&#8942;</button>
+      </div>
+      <div class="friend-history">${historyHtml||'<div style="padding:8px 0;font-size:12px;color:var(--text3)">No interactions yet</div>'}</div>`;
+    list.appendChild(card);
+  });
+}
+
+function getLastContact(f){
+  if(!f.interactions||!f.interactions.length)return null;
+  return f.interactions.reduce((a,b)=>a.date>b.date?a:b).date;
+}
+
+function toggleHistory(btn){
+  const hist=btn.closest('.friend-card').querySelector('.friend-history');
+  hist.classList.toggle('open');
+  btn.textContent=hist.classList.contains('open')?'Hide':'History';
+}
+
+function openAddFriend(){
+  document.getElementById('friend-modal-title').textContent='New Friend';
+  document.getElementById('friend-name').value='';
+  document.getElementById('friend-photo').value='';
+  document.getElementById('friend-met').value='';
+  document.getElementById('friend-category').value='close';
+  document.getElementById('friend-freq').value='14';
+  document.getElementById('friend-edit-id').value='';
+  openModal('modal-friend');
+}
+
+function saveFriend(){
+  const name=document.getElementById('friend-name').value.trim();
+  if(!name)return;
+  const data={
+    name,
+    photo:document.getElementById('friend-photo').value.trim(),
+    met:document.getElementById('friend-met').value.trim(),
+    category:document.getElementById('friend-category').value,
+    freq:parseInt(document.getElementById('friend-freq').value)
+  };
+  const editId=document.getElementById('friend-edit-id').value;
+  if(editId){
+    const f=state.friends.find(x=>x.id===editId);
+    if(f)Object.assign(f,data);
+  } else {
+    state.friends.push({id:uid(),interactions:[],...data});
+  }
+  save();renderFriends();closeModal('modal-friend');
+}
+
+function openLogInteraction(fid){
+  document.getElementById('interact-friend-id').value=fid;
+  document.getElementById('interact-date').value=fmt(new Date());
+  document.getElementById('interact-type').value='text';
+  document.getElementById('interact-note').value='';
+  openModal('modal-interaction');
+}
+
+function saveInteraction(){
+  const fid=document.getElementById('interact-friend-id').value;
+  const f=state.friends.find(x=>x.id===fid);if(!f)return;
+  if(!f.interactions)f.interactions=[];
+  f.interactions.push({
+    date:document.getElementById('interact-date').value,
+    type:document.getElementById('interact-type').value,
+    note:document.getElementById('interact-note').value.trim()
+  });
+  save();renderFriends();closeModal('modal-interaction');
+}
+
+function showFriendMenu(e,fid){
+  e.stopPropagation();removeCtx();
+  const menu=document.createElement('div');menu.className='ctx-menu';
+  menu.innerHTML=`<button onclick="editFriend('${fid}')">Edit</button><button class="danger" onclick="deleteFriend('${fid}')">Delete</button>`;
+  document.body.appendChild(menu);
+  const r=e.target.getBoundingClientRect();
+  menu.style.top=r.bottom+4+'px';menu.style.right=(window.innerWidth-r.right)+'px';
+  setTimeout(()=>document.addEventListener('click',removeCtx,{once:true}),10);
+}
+
+function editFriend(fid){
+  removeCtx();
+  const f=state.friends.find(x=>x.id===fid);if(!f)return;
+  document.getElementById('friend-modal-title').textContent='Edit Friend';
+  document.getElementById('friend-name').value=f.name;
+  document.getElementById('friend-photo').value=f.photo||'';
+  document.getElementById('friend-met').value=f.met||'';
+  document.getElementById('friend-category').value=f.category;
+  document.getElementById('friend-freq').value=f.freq;
+  document.getElementById('friend-edit-id').value=fid;
+  openModal('modal-friend');
+}
+
+function deleteFriend(fid){
+  removeCtx();
+  if(!confirm('Delete this friend?'))return;
+  state.friends=state.friends.filter(x=>x.id!==fid);
+  save();renderFriends();
+}
+
+// ─── Modals ───
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id)})
+});
+
+// ─── Settings ───
+function openSettings(){openModal('modal-settings')}
+
+function exportData(){
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='pulse-backup-'+fmt(new Date())+'.json';a.click();
+}
+
+function importData(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(data.habits)state.habits=data.habits;
+      if(data.friends)state.friends=data.friends;
+      state.currentYear=data.currentYear||new Date().getFullYear();
+      save();location.reload();
+    }catch(err){alert('Invalid JSON file')}
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+// ─── Init ───
+load();
+renderHabits();
+renderFriends();
+</script>
+</body>
+</html>
