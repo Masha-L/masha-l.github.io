@@ -40,13 +40,13 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
   background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-top:1px solid var(--border);padding:6px 0 env(safe-area-inset-bottom,8px);z-index:100}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
-  padding:8px 4px;cursor:pointer;transition:all .2s;position:relative;
+  padding:8px 2px;cursor:pointer;transition:all .2s;position:relative;
   -webkit-tap-highlight-color:transparent}
 .tab svg{width:22px;height:22px;stroke:var(--text3);fill:none;stroke-width:1.8;transition:all .2s}
 .tab span{font-size:10px;font-weight:500;color:var(--text3);transition:all .2s}
 .tab.active svg{stroke:var(--accent)}
 .tab.active span{color:var(--accent)}
-.tab .badge{position:absolute;top:4px;right:calc(50% - 18px);min-width:16px;height:16px;
+.tab .badge{position:absolute;top:2px;right:calc(50% - 18px);min-width:16px;height:16px;
   border-radius:8px;background:var(--red);color:#fff;font-size:9px;font-weight:700;
   display:flex;align-items:center;justify-content:center;padding:0 4px;
   transform:scale(0);transition:transform .2s}
@@ -135,6 +135,121 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .summary-chip .chip-lbl{font-size:10px;color:var(--text2);margin-top:2px}
 .summary-chip.alert .chip-val{color:var(--red)}
 
+/* ── Mood/Energy ── */
+.mood-entry{margin-bottom:16px}
+.mood-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.mood-row .mood-label{font-size:13px;font-weight:500;min-width:60px;color:var(--text2)}
+.emoji-scale{display:flex;gap:6px}
+.emoji-btn{width:42px;height:42px;border-radius:50%;border:2px solid var(--border);
+  background:var(--surface);font-size:20px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.emoji-btn:hover{background:var(--surface2);transform:scale(1.1)}
+.emoji-btn.selected{border-color:var(--accent);background:rgba(167,139,250,0.15);transform:scale(1.15)}
+.emoji-btn.selected-energy{border-color:var(--accent2);background:rgba(45,212,191,0.15);transform:scale(1.15)}
+.mood-note-wrap{margin-top:10px}
+.mood-note-wrap input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;outline:none}
+.mood-note-wrap input:focus{border-color:var(--accent)}
+.mood-note-wrap .char-count{font-size:10px;color:var(--text3);text-align:right;margin-top:4px}
+.mood-saved{font-size:12px;color:var(--green);text-align:center;padding:6px 0;opacity:0;transition:opacity .3s}
+.mood-saved.show{opacity:1}
+
+.mood-chart-section{margin-bottom:16px}
+.mood-chart-section h3{font-size:14px;font-weight:600;margin-bottom:10px;color:var(--text2)}
+.mood-chart-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.mood-chart-wrap::-webkit-scrollbar{height:0}
+.mood-chart svg{display:block}
+
+.mood-weekly{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.week-bar{flex:1;min-width:60px;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:10px 8px;text-align:center}
+.week-bar .wb-label{font-size:10px;color:var(--text3);margin-bottom:6px}
+.week-bar .wb-bar{height:6px;border-radius:3px;margin-bottom:4px}
+.week-bar .wb-val{font-size:14px;font-weight:600}
+
+.mood-stats-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.mood-stat-card{flex:1;min-width:100px;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:12px;text-align:center}
+.mood-stat-card .ms-val{font-size:20px;font-weight:700}
+.mood-stat-card .ms-lbl{font-size:10px;color:var(--text2);margin-top:2px}
+
+.correlation-hint{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--text2);line-height:1.5}
+.correlation-hint strong{color:var(--accent)}
+
+/* ── Daily Wins ── */
+.wins-input-wrap{display:flex;gap:8px;margin-bottom:16px}
+.wins-input-wrap input{flex:1;padding:12px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);
+  background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none}
+.wins-input-wrap input:focus{border-color:var(--accent2)}
+.wins-input-wrap button{padding:12px 16px;border-radius:var(--radius-sm);border:none;
+  background:var(--accent2);color:#000;font-weight:600;font-size:14px;cursor:pointer;transition:all .2s}
+.wins-input-wrap button:hover{opacity:0.9}
+
+.wins-search{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface);color:var(--text);font-size:13px;font-family:inherit;outline:none;
+  margin-bottom:12px}
+.wins-search:focus{border-color:var(--accent2)}
+
+.wins-badge{display:inline-block;background:rgba(45,212,191,0.15);color:var(--accent2);
+  border:1px solid rgba(45,212,191,0.2);border-radius:20px;padding:4px 12px;
+  font-size:12px;font-weight:600;margin-bottom:16px}
+
+.wins-timeline{max-height:60vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.wins-timeline::-webkit-scrollbar{width:0}
+.win-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);position:relative}
+.win-item:last-child{border-bottom:none}
+.win-date{font-size:11px;color:var(--text3);min-width:70px;flex-shrink:0;padding-top:2px}
+.win-text{font-size:14px;color:var(--text);flex:1;line-height:1.4}
+.win-delete{position:absolute;right:0;top:12px;background:none;border:none;color:var(--text3);
+  cursor:pointer;font-size:14px;opacity:0;transition:opacity .2s;padding:2px 6px}
+.win-item:hover .win-delete{opacity:1}
+
+.wins-empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:14px;line-height:1.6}
+
+/* ── Self-Care ── */
+.care-score{text-align:center;margin-bottom:16px}
+.care-score .cs-val{font-size:36px;font-weight:700;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text}
+.care-score .cs-lbl{font-size:12px;color:var(--text2);margin-top:2px}
+
+.care-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:20px}
+.care-circle{width:72px;height:72px;border-radius:50%;border:3px solid var(--border);
+  background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .25s;-webkit-tap-highlight-color:transparent;gap:2px}
+.care-circle .care-icon{font-size:22px;transition:transform .2s}
+.care-circle .care-name{font-size:9px;color:var(--text3);font-weight:500;transition:color .2s}
+.care-circle:hover{background:var(--surface2);transform:scale(1.05)}
+.care-circle.done{border-color:var(--accent2);background:rgba(45,212,191,0.12)}
+.care-circle.done .care-icon{transform:scale(1.1)}
+.care-circle.done .care-name{color:var(--accent2)}
+
+.care-section-title{font-size:14px;font-weight:600;color:var(--text2);margin-bottom:10px;margin-top:8px}
+
+.care-weekly{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:16px}
+.care-weekly::-webkit-scrollbar{height:0}
+.care-weekly table{width:100%;border-collapse:separate;border-spacing:4px;min-width:320px}
+.care-weekly th{font-size:10px;color:var(--text3);font-weight:500;padding:4px}
+.care-weekly td{text-align:center;padding:4px}
+.care-weekly .cw-dot{width:18px;height:18px;border-radius:50%;display:inline-block;
+  border:1.5px solid var(--border);transition:all .2s}
+.care-weekly .cw-dot.filled{background:var(--accent2);border-color:var(--accent2)}
+.care-weekly .cw-label{font-size:11px;color:var(--text2);text-align:left;white-space:nowrap}
+.care-weekly .cw-today{box-shadow:0 0 0 2px rgba(167,139,250,0.4)}
+
+.care-monthly{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.care-pct-card{flex:1;min-width:90px;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:10px 8px;text-align:center}
+.care-pct-card .cp-icon{font-size:16px}
+.care-pct-card .cp-pct{font-size:18px;font-weight:700;color:var(--accent2)}
+.care-pct-card .cp-name{font-size:9px;color:var(--text3)}
+.care-pct-card .cp-streak{font-size:10px;color:var(--text2);margin-top:2px}
+
+.care-config-btn{display:block;margin:8px auto 0;background:none;border:1px solid var(--border);
+  color:var(--text3);padding:6px 14px;border-radius:8px;font-size:11px;cursor:pointer;transition:all .2s}
+.care-config-btn:hover{color:var(--text);background:var(--surface2)}
+
 /* ── Modals ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;
   display:none;align-items:flex-end;justify-content:center;padding:16px}
@@ -155,12 +270,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .btn-primary:hover{opacity:0.9}
 .btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border) !important}
 .btn-danger{background:rgba(248,113,113,0.15);color:var(--red);border:1px solid rgba(248,113,113,0.2) !important}
-
-/* ── Import/Export ── */
-.io-bar{display:flex;gap:8px;margin-bottom:16px;justify-content:flex-end}
-.io-bar button{padding:6px 12px;border-radius:8px;border:1px solid var(--border);
-  background:var(--surface);color:var(--text2);font-size:11px;cursor:pointer;transition:all .2s}
-.io-bar button:hover{color:var(--text);background:var(--surface2)}
 
 /* ── Sort Controls ── */
 .sort-bar{display:flex;gap:8px;margin-bottom:12px;align-items:center}
@@ -242,6 +351,68 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
         <div style="font-size:11px;color:var(--text3);margin-top:6px">Add friend</div>
       </div>
     </div>
+
+    <!-- Mood/Energy Page -->
+    <div class="page" id="page-mood">
+      <div class="card mood-entry">
+        <div style="font-size:14px;font-weight:600;margin-bottom:12px">How are you today?</div>
+        <div class="mood-row">
+          <div class="mood-label">Mood</div>
+          <div class="emoji-scale" id="mood-scale">
+            <div class="emoji-btn" data-val="1" onclick="selectMood(this)">😫</div>
+            <div class="emoji-btn" data-val="2" onclick="selectMood(this)">😕</div>
+            <div class="emoji-btn" data-val="3" onclick="selectMood(this)">😐</div>
+            <div class="emoji-btn" data-val="4" onclick="selectMood(this)">🙂</div>
+            <div class="emoji-btn" data-val="5" onclick="selectMood(this)">😊</div>
+          </div>
+        </div>
+        <div class="mood-row">
+          <div class="mood-label">Energy</div>
+          <div class="emoji-scale" id="energy-scale">
+            <div class="emoji-btn" data-val="1" onclick="selectEnergy(this)">😫</div>
+            <div class="emoji-btn" data-val="2" onclick="selectEnergy(this)">😕</div>
+            <div class="emoji-btn" data-val="3" onclick="selectEnergy(this)">😐</div>
+            <div class="emoji-btn" data-val="4" onclick="selectEnergy(this)">🙂</div>
+            <div class="emoji-btn" data-val="5" onclick="selectEnergy(this)">😊</div>
+          </div>
+        </div>
+        <div class="mood-note-wrap">
+          <input id="mood-note" placeholder="Quick note (optional)" maxlength="140" oninput="updateMoodCharCount()">
+          <div class="char-count" id="mood-char-count">0/140</div>
+        </div>
+        <div style="text-align:center;margin-top:10px">
+          <button class="btn-primary" style="padding:10px 32px;border-radius:10px;border:none;cursor:pointer" onclick="saveMoodEntry()">Save</button>
+        </div>
+        <div class="mood-saved" id="mood-saved">Saved!</div>
+      </div>
+      <div id="mood-stats"></div>
+      <div id="mood-chart-container"></div>
+      <div id="mood-weekly-container"></div>
+      <div id="mood-correlation"></div>
+    </div>
+
+    <!-- Daily Wins Page -->
+    <div class="page" id="page-wins">
+      <div class="wins-input-wrap">
+        <input id="win-input" placeholder="What went well today?" maxlength="200"
+          onkeydown="if(event.key==='Enter')addWin()">
+        <button onclick="addWin()">+</button>
+      </div>
+      <div id="wins-badge-container"></div>
+      <input class="wins-search" id="wins-search" placeholder="Search wins..." oninput="renderWins()">
+      <div id="wins-timeline" class="wins-timeline"></div>
+    </div>
+
+    <!-- Self-Care Page -->
+    <div class="page" id="page-care">
+      <div class="care-score" id="care-score"></div>
+      <div class="care-grid" id="care-grid"></div>
+      <div class="care-section-title">This Week</div>
+      <div class="care-weekly" id="care-weekly"></div>
+      <div class="care-section-title">This Month</div>
+      <div class="care-monthly" id="care-monthly"></div>
+      <button class="care-config-btn" onclick="openModal('modal-care-config')">Configure items</button>
+    </div>
   </div>
 
   <!-- Tab Bar -->
@@ -254,6 +425,19 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
       <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       <span>Friends</span>
       <div class="badge" id="friend-badge">0</div>
+    </div>
+    <div class="tab" onclick="switchTab('mood')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+      <span>Mood</span>
+    </div>
+    <div class="tab" onclick="switchTab('wins')">
+      <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span>Wins</span>
+      <div class="badge" id="wins-badge">0</div>
+    </div>
+    <div class="tab" onclick="switchTab('care')">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <span>Care</span>
     </div>
   </nav>
 </div>
@@ -332,6 +516,22 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
   </div>
 </div>
 
+<!-- Self-Care Config Modal -->
+<div class="modal-overlay" id="modal-care-config">
+  <div class="modal">
+    <h2>Configure Self-Care Items</h2>
+    <div id="care-config-list" style="margin-bottom:12px"></div>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <input id="care-new-name" placeholder="Item name" style="flex:1">
+      <input id="care-new-icon" placeholder="Emoji" style="width:60px;text-align:center">
+      <button class="btn-primary" style="flex:none;padding:10px 16px;border:none;cursor:pointer" onclick="addCareItem()">+</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('modal-care-config')">Done</button>
+    </div>
+  </div>
+</div>
+
 <!-- Settings/IO Modal -->
 <div class="modal-overlay" id="modal-settings">
   <div class="modal">
@@ -359,56 +559,51 @@ const COLORS = [
   {name:'Indigo',val:'#818cf8',bg:'rgba(129,140,248,'}
 ];
 
+const DEFAULT_CARE_ITEMS = [
+  {id:'water',name:'Water',icon:'💧'},
+  {id:'teeth',name:'Teeth',icon:'🪥'},
+  {id:'shower',name:'Shower',icon:'🚿'},
+  {id:'movement',name:'Movement',icon:'🏃'},
+  {id:'meds',name:'Meds',icon:'💊'}
+];
+
 let state = {
-  habits: [],      // {id,name,color,colorBg,days:{YYYY-MM-DD:true}}
-  friends: [],     // {id,name,photo,met,category,freq,interactions:[{date,type,note}]}
-  currentYear: new Date().getFullYear()
+  habits: [],
+  friends: [],
+  currentYear: new Date().getFullYear(),
+  mood: {},       // {YYYY-MM-DD: {mood:1-5, energy:1-5, note:''}}
+  wins: [],       // [{id, date:YYYY-MM-DD, text, ts}]
+  care: {         // {items:[{id,name,icon}], days:{YYYY-MM-DD:{itemId:true}}}
+    items: DEFAULT_CARE_ITEMS,
+    days: {}
+  }
 };
 
 function load(){
-  try{const s=localStorage.getItem('pulse_data');if(s)state={...state,...JSON.parse(s)}}catch(e){}
+  try{const s=localStorage.getItem('pulse_data');if(s){const d=JSON.parse(s);state={...state,...d};
+    if(!state.mood)state.mood={};
+    if(!state.wins)state.wins=[];
+    if(!state.care||!state.care.items)state.care={items:DEFAULT_CARE_ITEMS,days:state.care?.days||{}};
+  }}catch(e){}
   if(!state.currentYear)state.currentYear=new Date().getFullYear();
-  // Seed default habits on first load
-  if(state.habits.length===0){
-    state.habits=[
-      {id:uid(),name:'Water',color:'#2dd4bf',days:{}},
-      {id:uid(),name:'Teeth',color:'#a78bfa',days:{}},
-      {id:uid(),name:'Shower',color:'#60a5fa',days:{}},
-      {id:uid(),name:'Movement',color:'#34d399',days:{}},
-      {id:uid(),name:'Meds',color:'#fbbf24',days:{}},
-      {id:uid(),name:'Reading',color:'#f472b6',days:{}},
-      {id:uid(),name:'Crypto Study',color:'#fb923c',days:{}},
-      {id:uid(),name:'Sleep by 11pm',color:'#818cf8',days:{}}
-    ];
-    save();
-  }
-  // Seed default friends on first load
-  if(state.friends.length===0){
-    state.friends=[
-      {id:uid(),name:'Daniel',photo:'',met:'Best friend, former mentor',category:'close',freq:'weekly',interactions:[]},
-      {id:uid(),name:'Matt',photo:'',met:'Best friend',category:'close',freq:'weekly',interactions:[]},
-      {id:uid(),name:'E',photo:'',met:'Partner',category:'close',freq:'daily',interactions:[]},
-      {id:uid(),name:'Jack',photo:'',met:'College best friend, Boston',category:'close',freq:'biweekly',interactions:[]},
-      {id:uid(),name:'Galen',photo:'',met:'Friend/coworker',category:'friend',freq:'biweekly',interactions:[]},
-      {id:uid(),name:'Irinka',photo:'',met:'Childhood friend, PhD biophysics',category:'friend',freq:'monthly',interactions:[]},
-      {id:uid(),name:'Olivia',photo:'',met:'Friend (Poster House hangout)',category:'friend',freq:'monthly',interactions:[]},
-      {id:uid(),name:'Shaili',photo:'',met:'Fastrack to retirement group',category:'friend',freq:'monthly',interactions:[]}
-    ];
-    save();
-  }
 }
 function save(){localStorage.setItem('pulse_data',JSON.stringify(state))}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 
+const TABS = ['habits','friends','mood','wins','care'];
+
 // ─── Tab Navigation ───
 function switchTab(tab){
   document.querySelectorAll('.tab').forEach((t,i)=>{
-    t.classList.toggle('active',['habits','friends'][i]===tab);
+    t.classList.toggle('active',TABS[i]===tab);
   });
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+tab).classList.add('active');
   document.getElementById('content').scrollTop=0;
   if(tab==='friends')renderFriends();
+  if(tab==='mood')renderMood();
+  if(tab==='wins')renderWins();
+  if(tab==='care')renderCare();
 }
 
 // ─── Habits ───
@@ -448,49 +643,27 @@ function buildHeatmap(habit){
   const year=state.currentYear;
   const today=new Date();today.setHours(0,0,0,0);
   const todayStr=fmt(today);
-  // Find the first Monday on or before Jan 1
   const jan1=new Date(year,0,1);
-  const startDay=jan1.getDay();// 0=Sun
+  const startDay=jan1.getDay();
   const startOffset=(startDay===0)?-6:1-startDay;
   const gridStart=new Date(year,0,1+startOffset);
-  // End: last Sunday on or after Dec 31
   const dec31=new Date(year,11,31);
   const endDay=dec31.getDay();
   const endOffset=endDay===0?0:7-endDay;
   const gridEnd=new Date(year,11,31+endOffset);
 
-  // Month labels
-  let monthHtml='<div class="month-labels" style="display:flex;padding-left:22px">';
-  let prevMonth=-1;
   const weeks=[];
   let cur=new Date(gridStart);
   while(cur<=gridEnd){
     const week=[];
-    for(let d=0;d<7;d++){
-      week.push(new Date(cur));
-      cur.setDate(cur.getDate()+1);
-    }
+    for(let d=0;d<7;d++){week.push(new Date(cur));cur.setDate(cur.getDate()+1)}
     weeks.push(week);
   }
-  weeks.forEach(w=>{
-    const mon=w[0].getMonth();
-    if(mon!==prevMonth){
-      monthHtml+=`<div class="month-label" style="width:${15*1}px;min-width:15px">${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][mon]}</div>`;
-      prevMonth=mon;
-    } else {
-      monthHtml+=`<div style="width:15px;min-width:15px"></div>`;
-    }
-  });
-  monthHtml+='</div>';
 
-  // Day labels
   const dayNames=['M','T','W','T','F','S','S'];
-
-  // Grid
   let gridHtml='<div class="heatmap-container"><div class="day-labels">';
   dayNames.forEach(d=>{gridHtml+=`<div class="day-label">${d}</div>`});
   gridHtml+='</div><div><div class="heatmap-wrap"><div style="display:inline-block">';
-  // month labels row
   gridHtml+='<div style="display:flex;gap:2px;margin-bottom:3px">';
   let pm=-1;
   weeks.forEach(w=>{
@@ -520,7 +693,6 @@ function buildHeatmap(habit){
   });
   gridHtml+='</div></div></div></div></div>';
   wrap.innerHTML=gridHtml;
-  // Scroll to current week
   const hWrap=wrap.querySelector('.heatmap-wrap');
   if(hWrap&&year===new Date().getFullYear()){
     const weekIdx=Math.floor((today-gridStart)/(7*864e5));
@@ -537,7 +709,6 @@ function toggleDay(el){
   if(h.days[ds]){delete h.days[ds];el.style.background='rgba(255,255,255,0.08)'}
   else{h.days[ds]=true;el.style.background=h.color;el.style.transform='scale(1.4)';setTimeout(()=>el.style.transform='',200)}
   save();
-  // Update stats without full rerender
   const card=el.closest('.habit-card');
   if(card){
     const vals=card.querySelectorAll('.stat-val');
@@ -550,7 +721,6 @@ function toggleDay(el){
 function calcStreak(h){
   if(!h.days)return 0;
   let streak=0,d=new Date();d.setHours(0,0,0,0);
-  // Check today first, if not done check yesterday
   if(!h.days[fmt(d)]){d.setDate(d.getDate()-1)}
   while(h.days[fmt(d)]){streak++;d.setDate(d.getDate()-1)}
   return streak;
@@ -564,8 +734,7 @@ function calcLongest(h){
   for(let i=1;i<sorted.length;i++){
     const prev=new Date(sorted[i-1]+'T00:00:00');
     const now=new Date(sorted[i]+'T00:00:00');
-    const diff=(now-prev)/(864e5);
-    if(diff===1)cur++;else cur=1;
+    if((now-prev)/864e5===1)cur++;else cur=1;
     if(cur>max)max=cur;
   }
   return max;
@@ -584,7 +753,6 @@ function showTip(e,el){
 }
 function hideTip(){document.getElementById('tooltip').classList.remove('show')}
 
-// Habit CRUD
 function openAddHabit(){
   document.getElementById('habit-modal-title').textContent='New Habit';
   document.getElementById('habit-name').value='';
@@ -622,15 +790,12 @@ function saveHabit(){
 }
 
 function showHabitMenu(e,hid){
-  e.stopPropagation();
-  removeCtx();
-  const menu=document.createElement('div');
-  menu.className='ctx-menu';
+  e.stopPropagation();removeCtx();
+  const menu=document.createElement('div');menu.className='ctx-menu';
   menu.innerHTML=`<button onclick="editHabit('${hid}')">Edit</button><button class="danger" onclick="deleteHabit('${hid}')">Delete</button>`;
   document.body.appendChild(menu);
   const r=e.target.getBoundingClientRect();
-  menu.style.top=r.bottom+4+'px';
-  menu.style.right=(window.innerWidth-r.right)+'px';
+  menu.style.top=r.bottom+4+'px';menu.style.right=(window.innerWidth-r.right)+'px';
   setTimeout(()=>document.addEventListener('click',removeCtx,{once:true}),10);
 }
 function removeCtx(){document.querySelectorAll('.ctx-menu').forEach(m=>m.remove())}
@@ -672,13 +837,11 @@ function renderFriends(){
   const overdue=friends.filter(f=>f._status==='red').length;
   const contactedThisWeek=friends.filter(f=>f._daysSince<=7).length;
 
-  // Summary
   document.getElementById('friend-summary').innerHTML=`
     <div class="summary-chip ${overdue?'alert':''}"><div class="chip-val">${overdue}</div><div class="chip-lbl">Overdue</div></div>
     <div class="summary-chip"><div class="chip-val">${contactedThisWeek}</div><div class="chip-lbl">This week</div></div>
     <div class="summary-chip"><div class="chip-val">${friends.length}</div><div class="chip-lbl">Total</div></div>`;
 
-  // Badge
   const badge=document.getElementById('friend-badge');
   badge.textContent=overdue;
   badge.classList.toggle('show',overdue>0);
@@ -817,6 +980,387 @@ function deleteFriend(fid){
   save();renderFriends();
 }
 
+// ═══════════════════════════════════════════
+// ─── MOOD / ENERGY ───
+// ═══════════════════════════════════════════
+
+let _moodVal=0,_energyVal=0;
+
+function selectMood(el){
+  _moodVal=parseInt(el.dataset.val);
+  el.parentElement.querySelectorAll('.emoji-btn').forEach(b=>{
+    b.classList.remove('selected');
+  });
+  el.classList.add('selected');
+}
+
+function selectEnergy(el){
+  _energyVal=parseInt(el.dataset.val);
+  el.parentElement.querySelectorAll('.emoji-btn').forEach(b=>{
+    b.classList.remove('selected-energy');
+  });
+  el.classList.add('selected-energy');
+}
+
+function updateMoodCharCount(){
+  const v=document.getElementById('mood-note').value;
+  document.getElementById('mood-char-count').textContent=v.length+'/140';
+}
+
+function saveMoodEntry(){
+  if(!_moodVal||!_energyVal)return;
+  const today=fmt(new Date());
+  state.mood[today]={mood:_moodVal,energy:_energyVal,note:document.getElementById('mood-note').value.trim()};
+  save();
+  const el=document.getElementById('mood-saved');
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2000);
+  renderMood();
+}
+
+function renderMood(){
+  const today=fmt(new Date());
+  const entry=state.mood[today];
+
+  // Restore today's selection state
+  _moodVal=entry?entry.mood:0;
+  _energyVal=entry?entry.energy:0;
+  document.querySelectorAll('#mood-scale .emoji-btn').forEach(b=>{
+    b.classList.toggle('selected',entry&&parseInt(b.dataset.val)===entry.mood);
+  });
+  document.querySelectorAll('#energy-scale .emoji-btn').forEach(b=>{
+    b.classList.toggle('selected-energy',entry&&parseInt(b.dataset.val)===entry.energy);
+  });
+  if(entry&&entry.note){document.getElementById('mood-note').value=entry.note;updateMoodCharCount()}
+
+  // Get last 30 days of data
+  const days30=[];
+  for(let i=29;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const ds=fmt(d);
+    days30.push({date:ds,day:d,...(state.mood[ds]||{})});
+  }
+
+  // Stats
+  const filled=days30.filter(d=>d.mood);
+  const avgMood=filled.length?((filled.reduce((s,d)=>s+d.mood,0)/filled.length)).toFixed(1):'-';
+  const avgEnergy=filled.length?((filled.reduce((s,d)=>s+d.energy,0)/filled.length)).toFixed(1):'-';
+  const best=filled.reduce((b,d)=>(!b||d.mood+d.energy>b.mood+b.energy)?d:b,null);
+  const bestStr=best?new Date(best.date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}):'-';
+
+  document.getElementById('mood-stats').innerHTML=`
+    <div class="mood-stats-row">
+      <div class="mood-stat-card"><div class="ms-val" style="color:var(--accent)">${avgMood}</div><div class="ms-lbl">Avg Mood</div></div>
+      <div class="mood-stat-card"><div class="ms-val" style="color:var(--accent2)">${avgEnergy}</div><div class="ms-lbl">Avg Energy</div></div>
+      <div class="mood-stat-card"><div class="ms-val" style="color:var(--accent3)">${bestStr}</div><div class="ms-lbl">Best Day</div></div>
+    </div>`;
+
+  // 30-day trend SVG
+  const chartW=Math.max(400,days30.length*14);
+  const chartH=120;
+  const padT=15,padB=20,padL=10,padR=10;
+  const plotW=chartW-padL-padR;
+  const plotH=chartH-padT-padB;
+
+  let moodPath='',energyPath='',moodDots='',energyDots='';
+  let moodFirst=true,energyFirst=true;
+
+  days30.forEach((d,i)=>{
+    const x=padL+(i/(days30.length-1))*plotW;
+    if(d.mood){
+      const y=padT+plotH-(d.mood-1)/4*plotH;
+      moodPath+=(moodFirst?'M':'L')+x.toFixed(1)+','+y.toFixed(1)+' ';
+      moodDots+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#a78bfa" opacity="0.9"/>`;
+      moodFirst=false;
+    }
+    if(d.energy){
+      const y=padT+plotH-(d.energy-1)/4*plotH;
+      energyPath+=(energyFirst?'M':'L')+x.toFixed(1)+','+y.toFixed(1)+' ';
+      energyDots+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#2dd4bf" opacity="0.9"/>`;
+      energyFirst=false;
+    }
+  });
+
+  // Day labels at bottom (every 5 days)
+  let xLabels='';
+  days30.forEach((d,i)=>{
+    if(i%5===0||i===days30.length-1){
+      const x=padL+(i/(days30.length-1))*plotW;
+      const lbl=new Date(d.date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+      xLabels+=`<text x="${x.toFixed(1)}" y="${chartH-2}" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="9">${lbl}</text>`;
+    }
+  });
+
+  // Grid lines
+  let gridLines='';
+  for(let v=1;v<=5;v++){
+    const y=padT+plotH-(v-1)/4*plotH;
+    gridLines+=`<line x1="${padL}" y1="${y.toFixed(1)}" x2="${chartW-padR}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>`;
+  }
+
+  document.getElementById('mood-chart-container').innerHTML=filled.length?`
+    <div class="card mood-chart-section">
+      <h3>30-Day Trends</h3>
+      <div style="display:flex;gap:12px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#a78bfa;display:inline-block"></span><span style="font-size:11px;color:var(--text2)">Mood</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#2dd4bf;display:inline-block"></span><span style="font-size:11px;color:var(--text2)">Energy</span></div>
+      </div>
+      <div class="mood-chart-wrap">
+        <svg class="mood-chart" width="${chartW}" height="${chartH}" viewBox="0 0 ${chartW} ${chartH}">
+          ${gridLines}
+          <path d="${moodPath}" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+          <path d="${energyPath}" fill="none" stroke="#2dd4bf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+          ${moodDots}${energyDots}${xLabels}
+        </svg>
+      </div>
+    </div>`:'';
+
+  // Weekly averages (last 4 weeks)
+  const weeksData=[];
+  for(let w=3;w>=0;w--){
+    const weekDays=[];
+    for(let d=6;d>=0;d--){
+      const dt=new Date();dt.setDate(dt.getDate()-w*7-d);
+      const ds=fmt(dt);
+      if(state.mood[ds])weekDays.push(state.mood[ds]);
+    }
+    const wStart=new Date();wStart.setDate(wStart.getDate()-w*7-6);
+    const label=wStart.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const mAvg=weekDays.length?(weekDays.reduce((s,x)=>s+x.mood,0)/weekDays.length):0;
+    const eAvg=weekDays.length?(weekDays.reduce((s,x)=>s+x.energy,0)/weekDays.length):0;
+    weeksData.push({label,mAvg,eAvg,count:weekDays.length});
+  }
+
+  const hasWeekData=weeksData.some(w=>w.count>0);
+  document.getElementById('mood-weekly-container').innerHTML=hasWeekData?`
+    <div class="card">
+      <h3 style="font-size:14px;font-weight:600;color:var(--text2);margin-bottom:10px">Weekly Averages</h3>
+      <div class="mood-weekly">${weeksData.map(w=>`
+        <div class="week-bar">
+          <div class="wb-label">${w.label}</div>
+          <div class="wb-bar" style="background:linear-gradient(90deg,#a78bfa ${(w.mAvg/5*100).toFixed(0)}%,transparent ${(w.mAvg/5*100).toFixed(0)}%);opacity:${w.count?1:0.2}"></div>
+          <div class="wb-val" style="color:var(--accent)">${w.count?w.mAvg.toFixed(1):'-'}</div>
+          <div class="wb-bar" style="background:linear-gradient(90deg,#2dd4bf ${(w.eAvg/5*100).toFixed(0)}%,transparent ${(w.eAvg/5*100).toFixed(0)}%);opacity:${w.count?1:0.2};margin-top:4px"></div>
+          <div class="wb-val" style="color:var(--accent2)">${w.count?w.eAvg.toFixed(1):'-'}</div>
+        </div>`).join('')}
+      </div>
+    </div>`:'';
+
+  // Correlation hint
+  renderCorrelation();
+}
+
+function renderCorrelation(){
+  if(!state.habits.length||!Object.keys(state.mood).length){
+    document.getElementById('mood-correlation').innerHTML='';
+    return;
+  }
+  // On days with mood entries, compare mood on days where >=50% habits done vs not
+  const moodDates=Object.keys(state.mood);
+  let withHabits=[],withoutHabits=[];
+
+  moodDates.forEach(date=>{
+    const totalHabits=state.habits.length;
+    const doneCount=state.habits.filter(h=>h.days&&h.days[date]).length;
+    const pct=doneCount/totalHabits;
+    const m=state.mood[date].mood;
+    if(pct>=0.5)withHabits.push(m);
+    else withoutHabits.push(m);
+  });
+
+  if(withHabits.length>=2&&withoutHabits.length>=1){
+    const avgWith=(withHabits.reduce((s,v)=>s+v,0)/withHabits.length).toFixed(1);
+    const avgWithout=(withoutHabits.reduce((s,v)=>s+v,0)/withoutHabits.length).toFixed(1);
+    const diff=(avgWith-avgWithout).toFixed(1);
+    let hint='';
+    if(diff>0.3)hint=`On days you complete most habits, your mood averages <strong>${avgWith}</strong> vs <strong>${avgWithout}</strong> on lighter days. Habits seem to help!`;
+    else if(diff<-0.3)hint=`Interestingly, your mood averages <strong>${avgWith}</strong> on active habit days vs <strong>${avgWithout}</strong> on lighter days. Rest matters too.`;
+    else hint=`Your mood averages about the same whether habits are done or not (<strong>${avgWith}</strong> vs <strong>${avgWithout}</strong>). Consistency is its own reward.`;
+    document.getElementById('mood-correlation').innerHTML=`<div class="correlation-hint">${hint}</div>`;
+  } else {
+    document.getElementById('mood-correlation').innerHTML='';
+  }
+}
+
+// ═══════════════════════════════════════════
+// ─── DAILY WINS ───
+// ═══════════════════════════════════════════
+
+function addWin(){
+  const input=document.getElementById('win-input');
+  const text=input.value.trim();
+  if(!text)return;
+  state.wins.unshift({id:uid(),date:fmt(new Date()),text,ts:Date.now()});
+  save();
+  input.value='';
+  renderWins();
+}
+
+function deleteWin(id){
+  state.wins=state.wins.filter(w=>w.id!==id);
+  save();renderWins();
+}
+
+function renderWins(){
+  const search=(document.getElementById('wins-search').value||'').toLowerCase();
+  const today=fmt(new Date());
+  const now=new Date();
+  const monthName=now.toLocaleDateString('en-US',{month:'long'});
+  const monthPrefix=today.slice(0,7);
+  const monthCount=state.wins.filter(w=>w.date.startsWith(monthPrefix)).length;
+  const todayCount=state.wins.filter(w=>w.date===today).length;
+
+  // Badge
+  document.getElementById('wins-badge-container').innerHTML=monthCount?
+    `<div class="wins-badge">${monthCount} win${monthCount!==1?'s':''} in ${monthName}</div>`:'';
+
+  // Tab badge
+  const wb=document.getElementById('wins-badge');
+  wb.textContent=todayCount;
+  wb.classList.toggle('show',todayCount>0);
+
+  // Filter
+  let wins=state.wins;
+  if(search)wins=wins.filter(w=>w.text.toLowerCase().includes(search)||w.date.includes(search));
+
+  const timeline=document.getElementById('wins-timeline');
+  if(!wins.length){
+    timeline.innerHTML=`<div class="wins-empty">${state.wins.length?'No matches found.':'Nothing yet today. Even getting out of bed counts.'}</div>`;
+    return;
+  }
+
+  timeline.innerHTML=wins.map(w=>{
+    const d=new Date(w.date+'T00:00:00');
+    const dateStr=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    return `<div class="win-item">
+      <div class="win-date">${dateStr}</div>
+      <div class="win-text">${esc(w.text)}</div>
+      <button class="win-delete" onclick="deleteWin('${w.id}')" title="Delete">&times;</button>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+// ─── SELF-CARE ───
+// ═══════════════════════════════════════════
+
+function renderCare(){
+  const today=fmt(new Date());
+  const items=state.care.items;
+  const todayData=state.care.days[today]||{};
+  const doneCount=items.filter(it=>todayData[it.id]).length;
+
+  // Daily score
+  document.getElementById('care-score').innerHTML=`
+    <div class="cs-val">${doneCount}/${items.length}</div>
+    <div class="cs-lbl">today</div>`;
+
+  // Toggle grid
+  document.getElementById('care-grid').innerHTML=items.map(it=>`
+    <div class="care-circle ${todayData[it.id]?'done':''}" onclick="toggleCare('${it.id}')">
+      <div class="care-icon">${it.icon}</div>
+      <div class="care-name">${esc(it.name)}</div>
+    </div>`).join('');
+
+  // Weekly scorecard (Mon-Sun of current week)
+  const now=new Date();
+  const dayOfWeek=now.getDay();
+  const mondayOffset=dayOfWeek===0?-6:1-dayOfWeek;
+  const monday=new Date(now);monday.setDate(now.getDate()+mondayOffset);
+
+  const weekDays=[];
+  for(let i=0;i<7;i++){
+    const d=new Date(monday);d.setDate(monday.getDate()+i);
+    weekDays.push({date:fmt(d),day:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i],isToday:fmt(d)===today});
+  }
+
+  let tableHtml=`<table><thead><tr><th></th>${weekDays.map(d=>
+    `<th style="${d.isToday?'color:var(--accent)':''}">${d.day}</th>`).join('')}</tr></thead><tbody>`;
+  items.forEach(it=>{
+    tableHtml+=`<tr><td class="cw-label">${it.icon} ${esc(it.name)}</td>`;
+    weekDays.forEach(d=>{
+      const done=state.care.days[d.date]&&state.care.days[d.date][it.id];
+      tableHtml+=`<td><span class="cw-dot ${done?'filled':''} ${d.isToday?'cw-today':''}"></span></td>`;
+    });
+    tableHtml+='</tr>';
+  });
+  tableHtml+='</tbody></table>';
+  document.getElementById('care-weekly').innerHTML=tableHtml;
+
+  // Monthly consistency + streaks
+  const monthStart=today.slice(0,8)+'01';
+  const daysInMonth=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+  const dayOfMonth=now.getDate();
+
+  document.getElementById('care-monthly').innerHTML=items.map(it=>{
+    let doneDays=0;
+    for(let d=1;d<=dayOfMonth;d++){
+      const ds=today.slice(0,8)+String(d).padStart(2,'0');
+      if(state.care.days[ds]&&state.care.days[ds][it.id])doneDays++;
+    }
+    const pct=dayOfMonth?(doneDays/dayOfMonth*100).toFixed(0):0;
+    const streak=calcCareStreak(it.id);
+    return `<div class="care-pct-card">
+      <div class="cp-icon">${it.icon}</div>
+      <div class="cp-pct">${pct}%</div>
+      <div class="cp-name">${esc(it.name)}</div>
+      <div class="cp-streak">${streak?streak+'d streak':'no streak'}</div>
+    </div>`;
+  }).join('');
+
+  // Config modal
+  renderCareConfig();
+}
+
+function toggleCare(itemId){
+  const today=fmt(new Date());
+  if(!state.care.days[today])state.care.days[today]={};
+  if(state.care.days[today][itemId])delete state.care.days[today][itemId];
+  else state.care.days[today][itemId]=true;
+  save();renderCare();
+}
+
+function calcCareStreak(itemId){
+  let streak=0,d=new Date();d.setHours(0,0,0,0);
+  // Check today; if not done, check from yesterday
+  const todayDone=state.care.days[fmt(d)]&&state.care.days[fmt(d)][itemId];
+  if(!todayDone)d.setDate(d.getDate()-1);
+  while(true){
+    const ds=fmt(d);
+    if(state.care.days[ds]&&state.care.days[ds][itemId]){streak++;d.setDate(d.getDate()-1)}
+    else break;
+  }
+  return streak;
+}
+
+function renderCareConfig(){
+  const list=document.getElementById('care-config-list');
+  if(!list)return;
+  list.innerHTML=state.care.items.map(it=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:18px">${it.icon}</span>
+      <span style="flex:1;font-size:14px">${esc(it.name)}</span>
+      <button onclick="removeCareItem('${it.id}')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:16px;padding:4px 8px">&times;</button>
+    </div>`).join('');
+}
+
+function addCareItem(){
+  const name=document.getElementById('care-new-name').value.trim();
+  const icon=document.getElementById('care-new-icon').value.trim()||'✅';
+  if(!name)return;
+  state.care.items.push({id:uid(),name,icon});
+  save();
+  document.getElementById('care-new-name').value='';
+  document.getElementById('care-new-icon').value='';
+  renderCareConfig();renderCare();
+}
+
+function removeCareItem(id){
+  if(!confirm('Remove this item?'))return;
+  state.care.items=state.care.items.filter(it=>it.id!==id);
+  save();renderCareConfig();renderCare();
+}
+
 // ─── Modals ───
 function openModal(id){document.getElementById(id).classList.add('open')}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
@@ -841,6 +1385,9 @@ function importData(e){
       const data=JSON.parse(ev.target.result);
       if(data.habits)state.habits=data.habits;
       if(data.friends)state.friends=data.friends;
+      if(data.mood)state.mood=data.mood;
+      if(data.wins)state.wins=data.wins;
+      if(data.care)state.care=data.care;
       state.currentYear=data.currentYear||new Date().getFullYear();
       save();location.reload();
     }catch(err){alert('Invalid JSON file')}
