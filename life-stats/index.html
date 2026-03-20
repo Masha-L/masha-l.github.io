@@ -150,7 +150,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .heatmap-container{display:flex}
 .year-selector{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:16px}
 .year-selector button{background:var(--surface2);border:1px solid var(--border);color:var(--text);
-  border-radius:8px;padding:6px 14px;cursor:pointer;font-size:13px;font-weight:500;transition:all .2s}
+  border-radius:8px;padding:6px 14px;cursor:pointer;font-size:13px;font-weight:500;transition:all .2s;
+  min-height:44px;min-width:44px}
 .year-selector button:hover{background:rgba(255,255,255,0.1)}
 .year-selector .year-display{font-size:15px;font-weight:600;min-width:50px;text-align:center}
 
@@ -201,7 +202,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
   background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;outline:none;flex:1}
 .mood-date-picker input[type=date]:focus{border-color:var(--accent)}
 .mood-date-picker button{padding:8px 12px;border-radius:8px;border:1px solid var(--border);
-  background:var(--surface2);color:var(--text2);font-size:12px;cursor:pointer;transition:all .2s}
+  background:var(--surface2);color:var(--text2);font-size:12px;cursor:pointer;transition:all .2s;
+  min-height:44px;min-width:44px}
 .mood-date-picker button:hover{background:rgba(255,255,255,0.1);color:var(--text)}
 .mood-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .mood-row .mood-label{font-size:13px;font-weight:500;min-width:60px;color:var(--text2)}
@@ -256,7 +258,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .wins-date-row input[type=date]{padding:8px 12px;border-radius:8px;border:1px solid var(--border);
   background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;outline:none;flex:1}
 .wins-date-row button{padding:8px 12px;border-radius:8px;border:1px solid var(--border);
-  background:var(--surface2);color:var(--text2);font-size:12px;cursor:pointer;transition:all .2s}
+  background:var(--surface2);color:var(--text2);font-size:12px;cursor:pointer;transition:all .2s;
+  min-height:44px;min-width:44px}
 .wins-date-row button:hover{background:rgba(255,255,255,0.1);color:var(--text)}
 
 .wins-search{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);
@@ -274,8 +277,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .win-item:last-child{border-bottom:none}
 .win-date{font-size:11px;color:var(--text3);min-width:70px;flex-shrink:0;padding-top:2px}
 .win-text{font-size:14px;color:var(--text);flex:1;line-height:1.4}
-.win-delete{position:absolute;right:0;top:12px;background:none;border:none;color:var(--text3);
-  cursor:pointer;font-size:14px;opacity:0;transition:opacity .2s;padding:2px 6px}
+.win-delete{position:absolute;right:0;top:8px;background:none;border:none;color:var(--text3);
+  cursor:pointer;font-size:14px;opacity:0;transition:opacity .2s;padding:2px 6px;
+  min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
 .win-item:hover .win-delete{opacity:1}
 
 .wins-empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:14px;line-height:1.6}
@@ -286,7 +290,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
   background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;outline:none}
 .care-date-picker input[type=date]:focus{border-color:var(--accent)}
 .care-date-picker button{padding:8px 12px;border-radius:8px;border:1px solid var(--border);
-  background:var(--surface2);color:var(--text2);font-size:12px;cursor:pointer;transition:all .2s}
+  background:var(--surface2);color:var(--text2);font-size:12px;cursor:pointer;transition:all .2s;
+  min-height:44px;min-width:44px}
 .care-date-picker button:hover{background:rgba(255,255,255,0.1);color:var(--text)}
 .care-date-label{font-size:11px;color:var(--text3);text-align:center;margin-bottom:4px}
 
@@ -329,7 +334,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .care-pct-card .cp-streak{font-size:10px;color:var(--text2);margin-top:2px}
 
 .care-config-btn{display:block;margin:8px auto 0;background:none;border:1px solid var(--border);
-  color:var(--text3);padding:6px 14px;border-radius:8px;font-size:11px;cursor:pointer;transition:all .2s}
+  color:var(--text3);padding:6px 14px;border-radius:8px;font-size:11px;cursor:pointer;transition:all .2s;
+  min-height:44px}
 .care-config-btn:hover{color:var(--text);background:var(--surface2)}
 
 /* ── Modals ── */
