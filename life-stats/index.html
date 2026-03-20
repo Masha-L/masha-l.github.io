@@ -933,7 +933,7 @@ async function loadFromSupabase() {
     if (cdErr) throw cdErr;
 
     // Check if DB has data
-    const hasData = habits.length > 0 || friends.length > 0 || Object.keys(moods).length > 0 ||
+    const hasData = habits.length > 0 || friends.length > 0 || moods.length > 0 ||
                     wins.length > 0 || careItems.length > 0;
 
     if (!hasData) {
@@ -1363,9 +1363,13 @@ async function migrateLocalData() {
   }
 }
 
-function dismissMigration() {
+async function dismissMigration() {
   document.getElementById('migration-banner').classList.remove('show');
   localStorage.setItem('pulse_migration_dismissed', '1');
+  // Clear local-only state and seed defaults into Supabase
+  // so that data persists across sessions
+  await seedDefaults();
+  renderAll();
 }
 
 // ─── Init with user ───
@@ -1378,7 +1382,42 @@ async function initAppWithUser() {
   const hasCloudData = await loadFromSupabase();
 
   if (hasCloudData) {
-    // Cloud data loaded — re-render
+    // Cloud data loaded — seed defaults for any missing categories
+    if (state.habits.length === 0) {
+      // Habits missing from cloud — seed defaults
+      setSyncStatus('syncing');
+      try {
+        const habitInserts = DEFAULT_HABITS.map(h => ({
+          user_id: currentUser.id, name: h.name, color: h.color
+        }));
+        const { data: newHabits, error: hErr } = await sb.from('habits').insert(habitInserts).select();
+        if (!hErr && newHabits) {
+          state.habits = newHabits.map(h => {
+            const localId = uid();
+            sbIds.habits[localId] = h.id;
+            return { id: localId, name: h.name, color: h.color, days: {} };
+          });
+        }
+      } catch (e) { console.error('Seed habits error:', e); }
+    }
+    if (state.care.items.length === 0 || !sbIds.careItems || Object.keys(sbIds.careItems).length === 0) {
+      // Care items missing from cloud — seed defaults
+      try {
+        const careInserts = DEFAULT_CARE_ITEMS.map((ci, i) => ({
+          user_id: currentUser.id, name: ci.name, emoji: ci.icon, sort_order: i
+        }));
+        const { data: newCare, error: cErr } = await sb.from('selfcare_items').insert(careInserts).select();
+        if (!cErr && newCare) {
+          state.care.items = newCare.sort((a, b) => a.sort_order - b.sort_order).map(ci => {
+            const localId = ci.name.toLowerCase().replace(/\s+/g, '-') || uid();
+            sbIds.careItems[localId] = ci.id;
+            return { id: localId, name: ci.name, icon: ci.emoji };
+          });
+        }
+      } catch (e) { console.error('Seed care error:', e); }
+      setSyncStatus('ok');
+    }
+    saveLocal();
     renderAll();
   } else {
     // No cloud data
