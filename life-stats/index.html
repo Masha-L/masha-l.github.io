@@ -6,6 +6,7 @@
 <title>Pulse</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -18,13 +19,53 @@ html,body{height:100%;overflow:hidden}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);
   display:flex;flex-direction:column;-webkit-tap-highlight-color:transparent}
 
+/* ── Auth Screen ── */
+.auth-screen{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;
+  align-items:center;justify-content:center;padding:20px}
+.auth-screen.hidden{display:none}
+.auth-card{width:100%;max-width:380px;background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);border-radius:20px;padding:32px 28px;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.auth-card h1{font-size:28px;font-weight:700;text-align:center;margin-bottom:4px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text}
+.auth-card .auth-subtitle{text-align:center;color:var(--text3);font-size:13px;margin-bottom:28px}
+.auth-card label{display:block;font-size:12px;color:var(--text2);margin-bottom:4px;margin-top:14px}
+.auth-card input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;
+  transition:border-color .2s}
+.auth-card input:focus{border-color:var(--accent)}
+.auth-card .auth-btn{width:100%;padding:14px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;
+  font-size:15px;font-weight:600;cursor:pointer;margin-top:20px;transition:opacity .2s}
+.auth-card .auth-btn:hover{opacity:0.9}
+.auth-card .auth-btn:disabled{opacity:0.5;cursor:not-allowed}
+.auth-toggle{text-align:center;margin-top:16px;font-size:13px;color:var(--text2)}
+.auth-toggle a{color:var(--accent);cursor:pointer;text-decoration:none}
+.auth-toggle a:hover{text-decoration:underline}
+.auth-error{color:var(--red);font-size:12px;text-align:center;margin-top:10px;min-height:18px}
+.auth-info{color:var(--green);font-size:12px;text-align:center;margin-top:10px;min-height:18px}
+
+/* ── Migration Banner ── */
+.migration-banner{background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);
+  border-radius:12px;padding:14px 16px;margin-bottom:16px;display:none}
+.migration-banner.show{display:block}
+.migration-banner p{font-size:13px;color:var(--text);margin-bottom:10px;line-height:1.5}
+.migration-banner .migration-actions{display:flex;gap:8px}
+.migration-banner button{padding:8px 16px;border-radius:8px;border:none;font-size:12px;
+  font-weight:600;cursor:pointer;transition:all .2s}
+
 /* ── App Shell ── */
 .app{display:flex;flex-direction:column;height:100%;overflow:hidden}
+.app.hidden{display:none}
 .header{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;
   flex-shrink:0;background:var(--bg);z-index:10}
 .header h1{font-size:22px;font-weight:700;
   background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;
   -webkit-text-fill-color:transparent;background-clip:text}
+.header-right{display:flex;align-items:center;gap:8px}
+.header-email{font-size:10px;color:var(--text3);max-width:120px;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
 .header-actions{display:flex;gap:8px}
 .icon-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);
   background:var(--surface);color:var(--text2);display:flex;align-items:center;
@@ -34,6 +75,13 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .content{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 16px 100px;
   scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
 .content::-webkit-scrollbar{width:0}
+
+/* ── Sync indicator ── */
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;
+  transition:background .3s}
+.sync-dot.syncing{background:var(--accent3);animation:pulse 1s infinite}
+.sync-dot.error{background:var(--red)}
+.sync-dot.offline{background:var(--text3)}
 
 /* ── Tab Bar ── */
 .tab-bar{position:fixed;bottom:0;left:0;right:0;display:flex;
@@ -137,6 +185,13 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 
 /* ── Mood/Energy ── */
 .mood-entry{margin-bottom:16px}
+.mood-date-picker{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.mood-date-picker input[type=date]{padding:8px 12px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;outline:none;flex:1}
+.mood-date-picker input[type=date]:focus{border-color:var(--accent)}
+.mood-date-picker button{padding:8px 12px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--text2);font-size:12px;cursor:pointer;transition:all .2s}
+.mood-date-picker button:hover{background:rgba(255,255,255,0.1);color:var(--text)}
 .mood-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .mood-row .mood-label{font-size:13px;font-weight:500;min-width:60px;color:var(--text2)}
 .emoji-scale{display:flex;gap:6px}
@@ -178,13 +233,20 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .correlation-hint strong{color:var(--accent)}
 
 /* ── Daily Wins ── */
-.wins-input-wrap{display:flex;gap:8px;margin-bottom:16px}
-.wins-input-wrap input{flex:1;padding:12px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);
+.wins-input-wrap{display:flex;gap:8px;margin-bottom:8px}
+.wins-input-wrap input[type=text]{flex:1;padding:12px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);
   background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none}
-.wins-input-wrap input:focus{border-color:var(--accent2)}
+.wins-input-wrap input[type=text]:focus{border-color:var(--accent2)}
 .wins-input-wrap button{padding:12px 16px;border-radius:var(--radius-sm);border:none;
   background:var(--accent2);color:#000;font-weight:600;font-size:14px;cursor:pointer;transition:all .2s}
 .wins-input-wrap button:hover{opacity:0.9}
+
+.wins-date-row{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.wins-date-row input[type=date]{padding:8px 12px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;outline:none;flex:1}
+.wins-date-row button{padding:8px 12px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--text2);font-size:12px;cursor:pointer;transition:all .2s}
+.wins-date-row button:hover{background:rgba(255,255,255,0.1);color:var(--text)}
 
 .wins-search{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);
   background:var(--surface);color:var(--text);font-size:13px;font-family:inherit;outline:none;
@@ -208,6 +270,15 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .wins-empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:14px;line-height:1.6}
 
 /* ── Self-Care ── */
+.care-date-picker{display:flex;align-items:center;gap:8px;margin-bottom:16px;justify-content:center}
+.care-date-picker input[type=date]{padding:8px 12px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;outline:none}
+.care-date-picker input[type=date]:focus{border-color:var(--accent)}
+.care-date-picker button{padding:8px 12px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--text2);font-size:12px;cursor:pointer;transition:all .2s}
+.care-date-picker button:hover{background:rgba(255,255,255,0.1);color:var(--text)}
+.care-date-label{font-size:11px;color:var(--text3);text-align:center;margin-bottom:4px}
+
 .care-score{text-align:center;margin-bottom:16px}
 .care-score .cs-val{font-size:36px;font-weight:700;
   background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;
@@ -309,11 +380,48 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 </style>
 </head>
 <body>
-<div class="app">
+
+<!-- Auth Screen -->
+<div class="auth-screen" id="auth-screen">
+  <div class="auth-card">
+    <h1>Pulse</h1>
+    <div class="auth-subtitle">Track habits, mood, and self-care</div>
+    <div id="auth-form">
+      <label>Email</label>
+      <input type="email" id="auth-email" placeholder="you@example.com" autocomplete="email">
+      <label>Password</label>
+      <input type="password" id="auth-password" placeholder="Min 6 characters" autocomplete="current-password"
+        onkeydown="if(event.key==='Enter')handleAuth()">
+      <button class="auth-btn" id="auth-btn" onclick="handleAuth()">Log In</button>
+      <div class="auth-error" id="auth-error"></div>
+      <div class="auth-info" id="auth-info"></div>
+      <div class="auth-toggle" id="auth-toggle">
+        Don't have an account? <a onclick="toggleAuthMode()">Sign up</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main App -->
+<div class="app hidden" id="main-app">
   <div class="header">
     <h1>Pulse</h1>
-    <div class="header-actions">
-      <button class="icon-btn" onclick="openSettings()" title="Import/Export">&#8645;</button>
+    <div class="header-right">
+      <div class="sync-dot" id="sync-dot" title="Synced"></div>
+      <div class="header-email" id="header-email"></div>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="openSettings()" title="Import/Export">&#8645;</button>
+        <button class="icon-btn" onclick="handleLogout()" title="Log out" style="font-size:14px">&#x23FB;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Migration Banner -->
+  <div class="migration-banner" id="migration-banner">
+    <p>Found existing data on this device. Want to upload it to the cloud?</p>
+    <div class="migration-actions">
+      <button class="btn-primary" onclick="migrateLocalData()" style="border:none;cursor:pointer">Migrate to cloud</button>
+      <button class="btn-secondary" onclick="dismissMigration()" style="cursor:pointer">Skip</button>
     </div>
   </div>
 
@@ -355,7 +463,11 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
     <!-- Mood/Energy Page -->
     <div class="page" id="page-mood">
       <div class="card mood-entry">
-        <div style="font-size:14px;font-weight:600;margin-bottom:12px">How are you today?</div>
+        <div class="mood-date-picker">
+          <input type="date" id="mood-date" onchange="loadMoodForDate()">
+          <button onclick="setMoodDateToday()">Today</button>
+        </div>
+        <div id="mood-date-label" style="font-size:14px;font-weight:600;margin-bottom:12px;text-align:center"></div>
         <div class="mood-row">
           <div class="mood-label">Mood</div>
           <div class="emoji-scale" id="mood-scale">
@@ -394,9 +506,13 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
     <!-- Daily Wins Page -->
     <div class="page" id="page-wins">
       <div class="wins-input-wrap">
-        <input id="win-input" placeholder="What went well today?" maxlength="200"
+        <input type="text" id="win-input" placeholder="What went well?" maxlength="200"
           onkeydown="if(event.key==='Enter')addWin()">
         <button onclick="addWin()">+</button>
+      </div>
+      <div class="wins-date-row">
+        <input type="date" id="win-date">
+        <button onclick="document.getElementById('win-date').value=fmt(new Date())">Today</button>
       </div>
       <div id="wins-badge-container"></div>
       <input class="wins-search" id="wins-search" placeholder="Search wins..." oninput="renderWins()">
@@ -405,6 +521,13 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 
     <!-- Self-Care Page -->
     <div class="page" id="page-care">
+      <div class="care-date-picker">
+        <button onclick="changeCareDate(-1)">&larr;</button>
+        <input type="date" id="care-date" onchange="renderCare()">
+        <button onclick="changeCareDate(1)">&rarr;</button>
+        <button onclick="setCareDateToday()">Today</button>
+      </div>
+      <div class="care-date-label" id="care-date-label"></div>
       <div class="care-score" id="care-score"></div>
       <div class="care-grid" id="care-grid"></div>
       <div class="care-section-title">This Week</div>
@@ -540,14 +663,122 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
       <button class="btn-secondary" onclick="exportData()" style="flex:none;padding:14px">Export JSON</button>
       <button class="btn-secondary" onclick="document.getElementById('import-file').click()" style="flex:none;padding:14px">Import JSON</button>
       <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
-      <button class="btn-danger" onclick="if(confirm('Delete ALL data?')){localStorage.clear();location.reload()}" style="flex:none;padding:14px">Reset All Data</button>
+      <button class="btn-danger" onclick="if(confirm('Delete ALL local data? Cloud data stays.')){localStorage.clear();location.reload()}" style="flex:none;padding:14px">Reset Local Data</button>
       <button class="btn-secondary" onclick="closeModal('modal-settings')" style="flex:none;padding:14px">Close</button>
     </div>
   </div>
 </div>
 
 <script>
-// ─── State ───
+// ═══════════════════════════════════════════
+// ─── SUPABASE CLIENT ───
+// ═══════════════════════════════════════════
+const SUPABASE_URL = 'https://xfmcweloaladfnmfvkuk.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmbWN3ZWxvYWxhZGZubWZ2a3VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NzIwNDMsImV4cCI6MjA4OTU0ODA0M30.q2W-rI7wwdFMyYTiQEA301z69qiVi3OgZb8cYmGBU6I';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let currentUser = null;
+let _syncing = false;
+
+// ─── Sync indicator ───
+function setSyncStatus(status) {
+  const dot = document.getElementById('sync-dot');
+  if (!dot) return;
+  dot.className = 'sync-dot' + (status !== 'ok' ? ' ' + status : '');
+  dot.title = { ok: 'Synced', syncing: 'Syncing...', error: 'Sync error', offline: 'Offline' }[status] || '';
+}
+
+// ─── Auth ───
+let authMode = 'login'; // or 'signup'
+
+function toggleAuthMode() {
+  authMode = authMode === 'login' ? 'signup' : 'login';
+  document.getElementById('auth-btn').textContent = authMode === 'login' ? 'Log In' : 'Sign Up';
+  document.getElementById('auth-toggle').innerHTML = authMode === 'login'
+    ? 'Don\'t have an account? <a onclick="toggleAuthMode()">Sign up</a>'
+    : 'Already have an account? <a onclick="toggleAuthMode()">Log in</a>';
+  document.getElementById('auth-error').textContent = '';
+  document.getElementById('auth-info').textContent = '';
+}
+
+async function handleAuth() {
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const errEl = document.getElementById('auth-error');
+  const infoEl = document.getElementById('auth-info');
+  const btn = document.getElementById('auth-btn');
+  errEl.textContent = '';
+  infoEl.textContent = '';
+
+  if (!email || !password) { errEl.textContent = 'Email and password required'; return; }
+  if (password.length < 6) { errEl.textContent = 'Password must be at least 6 characters'; return; }
+
+  btn.disabled = true;
+  btn.textContent = authMode === 'login' ? 'Logging in...' : 'Signing up...';
+
+  try {
+    let result;
+    if (authMode === 'signup') {
+      result = await sb.auth.signUp({ email, password });
+      if (result.error) throw result.error;
+      // Check if email confirmation is required
+      if (result.data.user && !result.data.session) {
+        infoEl.textContent = 'Check your email to confirm your account, then log in.';
+        btn.disabled = false;
+        btn.textContent = 'Sign Up';
+        return;
+      }
+    } else {
+      result = await sb.auth.signInWithPassword({ email, password });
+      if (result.error) throw result.error;
+    }
+    // Session established — onAuthStateChange will handle the rest
+  } catch (e) {
+    errEl.textContent = e.message || 'Authentication failed';
+    btn.disabled = false;
+    btn.textContent = authMode === 'login' ? 'Log In' : 'Sign Up';
+  }
+}
+
+async function handleLogout() {
+  await sb.auth.signOut();
+  currentUser = null;
+  document.getElementById('main-app').classList.add('hidden');
+  document.getElementById('auth-screen').classList.remove('hidden');
+  document.getElementById('auth-error').textContent = '';
+  document.getElementById('auth-info').textContent = '';
+  document.getElementById('auth-password').value = '';
+}
+
+// ─── Auth State Listener ───
+sb.auth.onAuthStateChange(async (event, session) => {
+  if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
+    if (session && session.user) {
+      currentUser = session.user;
+      document.getElementById('header-email').textContent = currentUser.email;
+      document.getElementById('auth-screen').classList.add('hidden');
+      document.getElementById('main-app').classList.remove('hidden');
+
+      if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+        await initAppWithUser();
+      }
+    } else if (event === 'INITIAL_SESSION') {
+      // No session — show login
+      document.getElementById('auth-screen').classList.remove('hidden');
+      document.getElementById('main-app').classList.add('hidden');
+    }
+  }
+  if (event === 'SIGNED_OUT') {
+    currentUser = null;
+    document.getElementById('main-app').classList.add('hidden');
+    document.getElementById('auth-screen').classList.remove('hidden');
+  }
+});
+
+
+// ═══════════════════════════════════════════
+// ─── STATE ───
+// ═══════════════════════════════════════════
 const COLORS = [
   {name:'Green',val:'#34d399',bg:'rgba(52,211,153,'},
   {name:'Blue',val:'#60a5fa',bg:'rgba(96,165,250,'},
@@ -557,6 +788,17 @@ const COLORS = [
   {name:'Teal',val:'#2dd4bf',bg:'rgba(45,212,191,'},
   {name:'Red',val:'#f87171',bg:'rgba(248,113,113,'},
   {name:'Indigo',val:'#818cf8',bg:'rgba(129,140,248,'}
+];
+
+const DEFAULT_HABITS = [
+  {name:'Water',color:'#60a5fa'},
+  {name:'Teeth',color:'#34d399'},
+  {name:'Shower',color:'#2dd4bf'},
+  {name:'Movement',color:'#f472b6'},
+  {name:'Meds',color:'#fbbf24'},
+  {name:'Reading',color:'#a78bfa'},
+  {name:'Crypto Study',color:'#818cf8'},
+  {name:'Sleep by 11pm',color:'#f87171'}
 ];
 
 const DEFAULT_CARE_ITEMS = [
@@ -571,55 +813,585 @@ let state = {
   habits: [],
   friends: [],
   currentYear: new Date().getFullYear(),
-  mood: {},       // {YYYY-MM-DD: {mood:1-5, energy:1-5, note:''}}
-  wins: [],       // [{id, date:YYYY-MM-DD, text, ts}]
-  care: {         // {items:[{id,name,icon}], days:{YYYY-MM-DD:{itemId:true}}}
-    items: DEFAULT_CARE_ITEMS,
-    days: {}
-  }
+  mood: {},
+  wins: [],
+  care: { items: DEFAULT_CARE_ITEMS, days: {} }
 };
 
-function load(){
-  try{const s=localStorage.getItem('pulse_data');if(s){const d=JSON.parse(s);state={...state,...d};
-    if(!state.mood)state.mood={};
-    if(!state.wins)state.wins=[];
-    if(!state.care||!state.care.items)state.care={items:DEFAULT_CARE_ITEMS,days:state.care?.days||{}};
-  }}catch(e){}
-  if(!state.currentYear)state.currentYear=new Date().getFullYear();
+// Supabase ID maps (local id -> supabase uuid)
+let sbIds = { habits: {}, friends: {}, wins: {}, careItems: {} };
+
+function loadLocal() {
+  try {
+    const s = localStorage.getItem('pulse_data');
+    if (s) {
+      const d = JSON.parse(s);
+      state = { ...state, ...d };
+      if (!state.mood) state.mood = {};
+      if (!state.wins) state.wins = [];
+      if (!state.care || !state.care.items) state.care = { items: DEFAULT_CARE_ITEMS, days: state.care?.days || {} };
+    }
+  } catch (e) {}
+  if (!state.currentYear) state.currentYear = new Date().getFullYear();
 }
-function save(){localStorage.setItem('pulse_data',JSON.stringify(state))}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 
-const TABS = ['habits','friends','mood','wins','care'];
+function saveLocal() {
+  localStorage.setItem('pulse_data', JSON.stringify(state));
+}
 
-// ─── Tab Navigation ───
-function switchTab(tab){
-  document.querySelectorAll('.tab').forEach((t,i)=>{
-    t.classList.toggle('active',TABS[i]===tab);
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+const TABS = ['habits', 'friends', 'mood', 'wins', 'care'];
+
+// ═══════════════════════════════════════════
+// ─── SUPABASE DATA SYNC ───
+// ═══════════════════════════════════════════
+
+async function loadFromSupabase() {
+  if (!currentUser) return false;
+  setSyncStatus('syncing');
+  try {
+    // Load habits
+    const { data: habits, error: hErr } = await sb.from('habits').select('*').eq('user_id', currentUser.id);
+    if (hErr) throw hErr;
+
+    // Load habit_days
+    const { data: habitDays, error: hdErr } = await sb.from('habit_days').select('*').eq('user_id', currentUser.id);
+    if (hdErr) throw hdErr;
+
+    // Load friends
+    const { data: friends, error: fErr } = await sb.from('friends').select('*').eq('user_id', currentUser.id);
+    if (fErr) throw fErr;
+
+    // Load interactions
+    const { data: interactions, error: iErr } = await sb.from('interactions').select('*').eq('user_id', currentUser.id);
+    if (iErr) throw iErr;
+
+    // Load mood_entries
+    const { data: moods, error: mErr } = await sb.from('mood_entries').select('*').eq('user_id', currentUser.id);
+    if (mErr) throw mErr;
+
+    // Load wins
+    const { data: wins, error: wErr } = await sb.from('wins').select('*').eq('user_id', currentUser.id);
+    if (wErr) throw wErr;
+
+    // Load selfcare_items
+    const { data: careItems, error: ciErr } = await sb.from('selfcare_items').select('*').eq('user_id', currentUser.id);
+    if (ciErr) throw ciErr;
+
+    // Load selfcare_days
+    const { data: careDays, error: cdErr } = await sb.from('selfcare_days').select('*').eq('user_id', currentUser.id);
+    if (cdErr) throw cdErr;
+
+    // Check if DB has data
+    const hasData = habits.length > 0 || friends.length > 0 || Object.keys(moods).length > 0 ||
+                    wins.length > 0 || careItems.length > 0;
+
+    if (!hasData) {
+      setSyncStatus('ok');
+      return false; // No cloud data
+    }
+
+    // Transform habits
+    sbIds.habits = {};
+    state.habits = habits.map(h => {
+      const localId = uid();
+      sbIds.habits[localId] = h.id;
+      const days = {};
+      habitDays.filter(hd => hd.habit_id === h.id).forEach(hd => { days[hd.completed_date] = true; });
+      return { id: localId, name: h.name, color: h.color, days };
+    });
+
+    // Transform friends
+    sbIds.friends = {};
+    state.friends = friends.map(f => {
+      const localId = uid();
+      sbIds.friends[localId] = f.id;
+      const friendInteractions = interactions.filter(i => i.friend_id === f.id).map(i => ({
+        date: i.interaction_date, type: i.type, note: i.note || '', sbId: i.id
+      }));
+      return {
+        id: localId, name: f.name, photo: f.photo || '', met: f.met || '',
+        category: f.category, freq: f.frequency, interactions: friendInteractions
+      };
+    });
+
+    // Transform mood
+    state.mood = {};
+    moods.forEach(m => {
+      state.mood[m.entry_date] = { mood: m.mood, energy: m.energy, note: m.note || '', sbId: m.id };
+    });
+
+    // Transform wins
+    sbIds.wins = {};
+    state.wins = wins.map(w => {
+      const localId = uid();
+      sbIds.wins[localId] = w.id;
+      return { id: localId, date: w.created_at.slice(0, 10), text: w.text, ts: new Date(w.created_at).getTime() };
+    }).sort((a, b) => b.ts - a.ts);
+
+    // Transform care items
+    sbIds.careItems = {};
+    if (careItems.length > 0) {
+      state.care.items = careItems.sort((a, b) => a.sort_order - b.sort_order).map(ci => {
+        const localId = ci.name.toLowerCase().replace(/\s+/g, '-') || uid();
+        sbIds.careItems[localId] = ci.id;
+        return { id: localId, name: ci.name, icon: ci.emoji };
+      });
+    }
+
+    // Transform care days
+    state.care.days = {};
+    careDays.forEach(cd => {
+      const item = careItems.find(ci => ci.id === cd.item_id);
+      if (!item) return;
+      const localItemId = Object.keys(sbIds.careItems).find(k => sbIds.careItems[k] === cd.item_id);
+      if (!localItemId) return;
+      if (!state.care.days[cd.completed_date]) state.care.days[cd.completed_date] = {};
+      state.care.days[cd.completed_date][localItemId] = true;
+    });
+
+    saveLocal();
+    setSyncStatus('ok');
+    return true; // Has cloud data
+  } catch (e) {
+    console.error('Supabase load error:', e);
+    setSyncStatus('error');
+    return false;
+  }
+}
+
+async function seedDefaults() {
+  if (!currentUser) return;
+  setSyncStatus('syncing');
+  try {
+    // Ensure profile exists
+    await sb.from('profiles').upsert({ id: currentUser.id, email: currentUser.email }, { onConflict: 'id' });
+
+    // Seed habits
+    const habitInserts = DEFAULT_HABITS.map(h => ({
+      user_id: currentUser.id, name: h.name, color: h.color
+    }));
+    const { data: newHabits, error: hErr } = await sb.from('habits').insert(habitInserts).select();
+    if (hErr) throw hErr;
+
+    state.habits = newHabits.map(h => {
+      const localId = uid();
+      sbIds.habits[localId] = h.id;
+      return { id: localId, name: h.name, color: h.color, days: {} };
+    });
+
+    // Seed care items
+    const careInserts = DEFAULT_CARE_ITEMS.map((ci, i) => ({
+      user_id: currentUser.id, name: ci.name, emoji: ci.icon, sort_order: i
+    }));
+    const { data: newCare, error: cErr } = await sb.from('selfcare_items').insert(careInserts).select();
+    if (cErr) throw cErr;
+
+    state.care.items = newCare.sort((a, b) => a.sort_order - b.sort_order).map(ci => {
+      const localId = ci.name.toLowerCase().replace(/\s+/g, '-') || uid();
+      sbIds.careItems[localId] = ci.id;
+      return { id: localId, name: ci.name, icon: ci.emoji };
+    });
+    state.care.days = {};
+
+    state.friends = [];
+    state.mood = {};
+    state.wins = [];
+
+    saveLocal();
+    setSyncStatus('ok');
+  } catch (e) {
+    console.error('Seed error:', e);
+    setSyncStatus('error');
+  }
+}
+
+// ─── Granular sync helpers ───
+let _syncQueue = [];
+let _syncTimer = null;
+
+function queueSync(op) {
+  _syncQueue.push(op);
+  if (!_syncTimer) {
+    _syncTimer = setTimeout(flushSync, 300);
+  }
+}
+
+async function flushSync() {
+  _syncTimer = null;
+  if (!currentUser || !_syncQueue.length) return;
+  const ops = [..._syncQueue];
+  _syncQueue = [];
+  setSyncStatus('syncing');
+  try {
+    for (const op of ops) {
+      await op();
+    }
+    setSyncStatus('ok');
+  } catch (e) {
+    console.error('Sync error:', e);
+    setSyncStatus('error');
+  }
+}
+
+// ── Habit sync
+async function syncHabitToggle(habitLocalId, dateStr, done) {
+  if (!currentUser) return;
+  const sbHabitId = sbIds.habits[habitLocalId];
+  if (!sbHabitId) return;
+  queueSync(async () => {
+    if (done) {
+      await sb.from('habit_days').insert({
+        habit_id: sbHabitId, user_id: currentUser.id, completed_date: dateStr
+      });
+    } else {
+      await sb.from('habit_days').delete()
+        .eq('habit_id', sbHabitId).eq('user_id', currentUser.id).eq('completed_date', dateStr);
+    }
   });
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+tab).classList.add('active');
-  document.getElementById('content').scrollTop=0;
-  if(tab==='friends')renderFriends();
-  if(tab==='mood')renderMood();
-  if(tab==='wins')renderWins();
-  if(tab==='care')renderCare();
 }
 
-// ─── Habits ───
-function changeYear(d){state.currentYear+=d;document.getElementById('year-display').textContent=state.currentYear;renderHabits()}
+async function syncHabitCreate(localId, name, color) {
+  if (!currentUser) return;
+  queueSync(async () => {
+    const { data, error } = await sb.from('habits').insert({
+      user_id: currentUser.id, name, color
+    }).select().single();
+    if (!error && data) sbIds.habits[localId] = data.id;
+  });
+}
 
-function renderHabits(){
-  document.getElementById('year-display').textContent=state.currentYear;
-  const container=document.getElementById('habits-list');
-  container.innerHTML='';
-  state.habits.forEach(h=>{
-    const card=document.createElement('div');
-    card.className='card habit-card';
-    const streak=calcStreak(h);
-    const longest=calcLongest(h);
-    const total=Object.keys(h.days||{}).filter(d=>d.startsWith(state.currentYear+'')).length;
-    card.innerHTML=`
+async function syncHabitUpdate(localId, name, color) {
+  if (!currentUser) return;
+  const sbId = sbIds.habits[localId];
+  if (!sbId) return;
+  queueSync(async () => {
+    await sb.from('habits').update({ name, color }).eq('id', sbId);
+  });
+}
+
+async function syncHabitDelete(localId) {
+  if (!currentUser) return;
+  const sbId = sbIds.habits[localId];
+  if (!sbId) return;
+  queueSync(async () => {
+    await sb.from('habit_days').delete().eq('habit_id', sbId);
+    await sb.from('habits').delete().eq('id', sbId);
+  });
+  delete sbIds.habits[localId];
+}
+
+// ── Friend sync
+async function syncFriendCreate(localId, data) {
+  if (!currentUser) return;
+  queueSync(async () => {
+    const { data: row, error } = await sb.from('friends').insert({
+      user_id: currentUser.id, name: data.name, photo: data.photo || null,
+      met: data.met || null, category: data.category, frequency: data.freq
+    }).select().single();
+    if (!error && row) sbIds.friends[localId] = row.id;
+  });
+}
+
+async function syncFriendUpdate(localId, data) {
+  if (!currentUser) return;
+  const sbId = sbIds.friends[localId];
+  if (!sbId) return;
+  queueSync(async () => {
+    await sb.from('friends').update({
+      name: data.name, photo: data.photo || null, met: data.met || null,
+      category: data.category, frequency: data.freq
+    }).eq('id', sbId);
+  });
+}
+
+async function syncFriendDelete(localId) {
+  if (!currentUser) return;
+  const sbId = sbIds.friends[localId];
+  if (!sbId) return;
+  queueSync(async () => {
+    await sb.from('interactions').delete().eq('friend_id', sbId);
+    await sb.from('friends').delete().eq('id', sbId);
+  });
+  delete sbIds.friends[localId];
+}
+
+async function syncInteractionCreate(friendLocalId, interaction) {
+  if (!currentUser) return;
+  const sbFriendId = sbIds.friends[friendLocalId];
+  if (!sbFriendId) return;
+  queueSync(async () => {
+    await sb.from('interactions').insert({
+      friend_id: sbFriendId, user_id: currentUser.id,
+      interaction_date: interaction.date, type: interaction.type, note: interaction.note || null
+    });
+  });
+}
+
+// ── Mood sync
+async function syncMoodEntry(dateStr, entry) {
+  if (!currentUser) return;
+  queueSync(async () => {
+    const { data: existing } = await sb.from('mood_entries')
+      .select('id').eq('user_id', currentUser.id).eq('entry_date', dateStr).maybeSingle();
+    if (existing) {
+      await sb.from('mood_entries').update({
+        mood: entry.mood, energy: entry.energy, note: entry.note || null
+      }).eq('id', existing.id);
+    } else {
+      await sb.from('mood_entries').insert({
+        user_id: currentUser.id, entry_date: dateStr,
+        mood: entry.mood, energy: entry.energy, note: entry.note || null
+      });
+    }
+  });
+}
+
+// ── Win sync
+async function syncWinCreate(localId, text, dateStr) {
+  if (!currentUser) return;
+  queueSync(async () => {
+    const { data, error } = await sb.from('wins').insert({
+      user_id: currentUser.id, text,
+      created_at: dateStr + 'T' + new Date().toISOString().slice(11)
+    }).select().single();
+    if (!error && data) sbIds.wins[localId] = data.id;
+  });
+}
+
+async function syncWinDelete(localId) {
+  if (!currentUser) return;
+  const sbId = sbIds.wins[localId];
+  if (!sbId) return;
+  queueSync(async () => {
+    await sb.from('wins').delete().eq('id', sbId);
+  });
+  delete sbIds.wins[localId];
+}
+
+// ── Care sync
+async function syncCareToggle(itemLocalId, dateStr, done) {
+  if (!currentUser) return;
+  const sbItemId = sbIds.careItems[itemLocalId];
+  if (!sbItemId) return;
+  queueSync(async () => {
+    if (done) {
+      await sb.from('selfcare_days').insert({
+        item_id: sbItemId, user_id: currentUser.id, completed_date: dateStr
+      });
+    } else {
+      await sb.from('selfcare_days').delete()
+        .eq('item_id', sbItemId).eq('user_id', currentUser.id).eq('completed_date', dateStr);
+    }
+  });
+}
+
+async function syncCareItemCreate(localId, name, emoji, sortOrder) {
+  if (!currentUser) return;
+  queueSync(async () => {
+    const { data, error } = await sb.from('selfcare_items').insert({
+      user_id: currentUser.id, name, emoji, sort_order: sortOrder
+    }).select().single();
+    if (!error && data) sbIds.careItems[localId] = data.id;
+  });
+}
+
+async function syncCareItemDelete(localId) {
+  if (!currentUser) return;
+  const sbId = sbIds.careItems[localId];
+  if (!sbId) return;
+  queueSync(async () => {
+    await sb.from('selfcare_days').delete().eq('item_id', sbId);
+    await sb.from('selfcare_items').delete().eq('id', sbId);
+  });
+  delete sbIds.careItems[localId];
+}
+
+// ─── Migration: localStorage -> Supabase ───
+async function migrateLocalData() {
+  if (!currentUser) return;
+  setSyncStatus('syncing');
+  const banner = document.getElementById('migration-banner');
+
+  try {
+    // Ensure profile
+    await sb.from('profiles').upsert({ id: currentUser.id, email: currentUser.email }, { onConflict: 'id' });
+
+    // Migrate habits
+    for (const h of state.habits) {
+      const { data, error } = await sb.from('habits').insert({
+        user_id: currentUser.id, name: h.name, color: h.color
+      }).select().single();
+      if (!error && data) {
+        sbIds.habits[h.id] = data.id;
+        // Migrate habit days
+        const days = Object.keys(h.days || {});
+        if (days.length) {
+          const dayInserts = days.map(d => ({
+            habit_id: data.id, user_id: currentUser.id, completed_date: d
+          }));
+          // Insert in chunks of 100
+          for (let i = 0; i < dayInserts.length; i += 100) {
+            await sb.from('habit_days').insert(dayInserts.slice(i, i + 100));
+          }
+        }
+      }
+    }
+
+    // Migrate friends
+    for (const f of state.friends) {
+      const { data, error } = await sb.from('friends').insert({
+        user_id: currentUser.id, name: f.name, photo: f.photo || null,
+        met: f.met || null, category: f.category, frequency: f.freq
+      }).select().single();
+      if (!error && data) {
+        sbIds.friends[f.id] = data.id;
+        // Migrate interactions
+        if (f.interactions && f.interactions.length) {
+          const intInserts = f.interactions.map(int => ({
+            friend_id: data.id, user_id: currentUser.id,
+            interaction_date: int.date, type: int.type, note: int.note || null
+          }));
+          await sb.from('interactions').insert(intInserts);
+        }
+      }
+    }
+
+    // Migrate mood
+    const moodEntries = Object.entries(state.mood).map(([date, m]) => ({
+      user_id: currentUser.id, entry_date: date,
+      mood: m.mood, energy: m.energy, note: m.note || null
+    }));
+    if (moodEntries.length) {
+      for (let i = 0; i < moodEntries.length; i += 100) {
+        await sb.from('mood_entries').insert(moodEntries.slice(i, i + 100));
+      }
+    }
+
+    // Migrate wins
+    for (const w of state.wins) {
+      const { data, error } = await sb.from('wins').insert({
+        user_id: currentUser.id, text: w.text,
+        created_at: w.date + 'T12:00:00.000Z'
+      }).select().single();
+      if (!error && data) sbIds.wins[w.id] = data.id;
+    }
+
+    // Migrate care items
+    for (let i = 0; i < state.care.items.length; i++) {
+      const ci = state.care.items[i];
+      const { data, error } = await sb.from('selfcare_items').insert({
+        user_id: currentUser.id, name: ci.name, emoji: ci.icon, sort_order: i
+      }).select().single();
+      if (!error && data) sbIds.careItems[ci.id] = data.id;
+    }
+
+    // Migrate care days
+    const careDayInserts = [];
+    for (const [date, items] of Object.entries(state.care.days)) {
+      for (const [itemId, done] of Object.entries(items)) {
+        if (done && sbIds.careItems[itemId]) {
+          careDayInserts.push({
+            item_id: sbIds.careItems[itemId], user_id: currentUser.id, completed_date: date
+          });
+        }
+      }
+    }
+    if (careDayInserts.length) {
+      for (let i = 0; i < careDayInserts.length; i += 100) {
+        await sb.from('selfcare_days').insert(careDayInserts.slice(i, i + 100));
+      }
+    }
+
+    banner.classList.remove('show');
+    setSyncStatus('ok');
+    saveLocal();
+  } catch (e) {
+    console.error('Migration error:', e);
+    setSyncStatus('error');
+    alert('Migration failed: ' + (e.message || 'Unknown error'));
+  }
+}
+
+function dismissMigration() {
+  document.getElementById('migration-banner').classList.remove('show');
+  localStorage.setItem('pulse_migration_dismissed', '1');
+}
+
+// ─── Init with user ───
+async function initAppWithUser() {
+  // Load localStorage first for immediate rendering
+  loadLocal();
+  renderAll();
+
+  // Try loading from Supabase
+  const hasCloudData = await loadFromSupabase();
+
+  if (hasCloudData) {
+    // Cloud data loaded — re-render
+    renderAll();
+  } else {
+    // No cloud data
+    const hasLocalData = state.habits.length > 0 || state.friends.length > 0 ||
+                         Object.keys(state.mood).length > 0 || state.wins.length > 0;
+
+    if (hasLocalData && !localStorage.getItem('pulse_migration_dismissed')) {
+      // Offer migration
+      document.getElementById('migration-banner').classList.add('show');
+    } else {
+      // Seed defaults
+      await seedDefaults();
+      renderAll();
+    }
+  }
+}
+
+function renderAll() {
+  renderHabits();
+  renderFriends();
+  // Init date pickers
+  document.getElementById('mood-date').value = fmt(new Date());
+  document.getElementById('win-date').value = fmt(new Date());
+  document.getElementById('care-date').value = fmt(new Date());
+}
+
+// ═══════════════════════════════════════════
+// ─── TAB NAVIGATION ───
+// ═══════════════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', TABS[i] === tab);
+  });
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  document.getElementById('content').scrollTop = 0;
+  if (tab === 'friends') renderFriends();
+  if (tab === 'mood') renderMood();
+  if (tab === 'wins') renderWins();
+  if (tab === 'care') renderCare();
+}
+
+// ═══════════════════════════════════════════
+// ─── HABITS ───
+// ═══════════════════════════════════════════
+function changeYear(d) {
+  state.currentYear += d;
+  document.getElementById('year-display').textContent = state.currentYear;
+  renderHabits();
+}
+
+function renderHabits() {
+  document.getElementById('year-display').textContent = state.currentYear;
+  const container = document.getElementById('habits-list');
+  container.innerHTML = '';
+  state.habits.forEach(h => {
+    const card = document.createElement('div');
+    card.className = 'card habit-card';
+    const streak = calcStreak(h);
+    const longest = calcLongest(h);
+    const total = Object.keys(h.days || {}).filter(d => d.startsWith(state.currentYear + '')).length;
+    card.innerHTML = `
       <div class="habit-header">
         <div class="habit-name"><span class="habit-color" style="background:${h.color}"></span>${esc(h.name)}</div>
         <div style="display:flex;align-items:center;gap:12px">
@@ -637,241 +1409,255 @@ function renderHabits(){
   });
 }
 
-function buildHeatmap(habit){
-  const wrap=document.getElementById('heatmap-'+habit.id);
-  if(!wrap)return;
-  const year=state.currentYear;
-  const today=new Date();today.setHours(0,0,0,0);
-  const todayStr=fmt(today);
-  const jan1=new Date(year,0,1);
-  const startDay=jan1.getDay();
-  const startOffset=(startDay===0)?-6:1-startDay;
-  const gridStart=new Date(year,0,1+startOffset);
-  const dec31=new Date(year,11,31);
-  const endDay=dec31.getDay();
-  const endOffset=endDay===0?0:7-endDay;
-  const gridEnd=new Date(year,11,31+endOffset);
+function buildHeatmap(habit) {
+  const wrap = document.getElementById('heatmap-' + habit.id);
+  if (!wrap) return;
+  const year = state.currentYear;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const todayStr = fmt(today);
+  const jan1 = new Date(year, 0, 1);
+  const startDay = jan1.getDay();
+  const startOffset = (startDay === 0) ? -6 : 1 - startDay;
+  const gridStart = new Date(year, 0, 1 + startOffset);
+  const dec31 = new Date(year, 11, 31);
+  const endDay = dec31.getDay();
+  const endOffset = endDay === 0 ? 0 : 7 - endDay;
+  const gridEnd = new Date(year, 11, 31 + endOffset);
 
-  const weeks=[];
-  let cur=new Date(gridStart);
-  while(cur<=gridEnd){
-    const week=[];
-    for(let d=0;d<7;d++){week.push(new Date(cur));cur.setDate(cur.getDate()+1)}
+  const weeks = [];
+  let cur = new Date(gridStart);
+  while (cur <= gridEnd) {
+    const week = [];
+    for (let d = 0; d < 7; d++) { week.push(new Date(cur)); cur.setDate(cur.getDate() + 1); }
     weeks.push(week);
   }
 
-  const dayNames=['M','T','W','T','F','S','S'];
-  let gridHtml='<div class="heatmap-container"><div class="day-labels">';
-  dayNames.forEach(d=>{gridHtml+=`<div class="day-label">${d}</div>`});
-  gridHtml+='</div><div><div class="heatmap-wrap"><div style="display:inline-block">';
-  gridHtml+='<div style="display:flex;gap:2px;margin-bottom:3px">';
-  let pm=-1;
-  weeks.forEach(w=>{
-    const m=w[3]?w[3].getMonth():w[0].getMonth();
-    if(m!==pm){gridHtml+=`<div style="width:13px;font-size:9px;color:var(--text3);white-space:nowrap;overflow:visible">${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m]}</div>`;pm=m}
-    else gridHtml+=`<div style="width:13px"></div>`;
+  const dayNames = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+  let gridHtml = '<div class="heatmap-container"><div class="day-labels">';
+  dayNames.forEach(d => { gridHtml += `<div class="day-label">${d}</div>`; });
+  gridHtml += '</div><div><div class="heatmap-wrap"><div style="display:inline-block">';
+  gridHtml += '<div style="display:flex;gap:2px;margin-bottom:3px">';
+  let pm = -1;
+  weeks.forEach(w => {
+    const m = w[3] ? w[3].getMonth() : w[0].getMonth();
+    if (m !== pm) {
+      gridHtml += `<div style="width:13px;font-size:9px;color:var(--text3);white-space:nowrap;overflow:visible">${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][m]}</div>`;
+      pm = m;
+    } else gridHtml += `<div style="width:13px"></div>`;
   });
-  gridHtml+='</div>';
-  gridHtml+='<div class="heatmap" style="display:flex;gap:2px">';
-  weeks.forEach(w=>{
-    gridHtml+='<div class="heatmap-col">';
-    w.forEach(day=>{
-      const ds=fmt(day);
-      const done=habit.days&&habit.days[ds];
-      const isToday=ds===todayStr;
-      const isFuture=day>today;
-      const inYear=day.getFullYear()===year;
-      const opacity=done?0.9:0.08;
-      const bg=done?habit.color:'rgba(255,255,255,'+opacity+')';
-      const cls='heatmap-cell'+(isToday?' today':'')+(isFuture?' future':'')+(!inYear?' future':'');
-      gridHtml+=`<div class="${cls}" style="background:${bg}"
-        data-habit="${habit.id}" data-date="${ds}" data-day="${day.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}"
-        ${!isFuture&&inYear?'onclick="toggleDay(this)"':''}
+  gridHtml += '</div>';
+  gridHtml += '<div class="heatmap" style="display:flex;gap:2px">';
+  weeks.forEach(w => {
+    gridHtml += '<div class="heatmap-col">';
+    w.forEach(day => {
+      const ds = fmt(day);
+      const done = habit.days && habit.days[ds];
+      const isToday = ds === todayStr;
+      const isFuture = day > today;
+      const inYear = day.getFullYear() === year;
+      const opacity = done ? 0.9 : 0.08;
+      const bg = done ? habit.color : 'rgba(255,255,255,' + opacity + ')';
+      const cls = 'heatmap-cell' + (isToday ? ' today' : '') + (isFuture ? ' future' : '') + (!inYear ? ' future' : '');
+      gridHtml += `<div class="${cls}" style="background:${bg}"
+        data-habit="${habit.id}" data-date="${ds}" data-day="${day.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}"
+        ${!isFuture && inYear ? 'onclick="toggleDay(this)"' : ''}
         onmouseenter="showTip(event,this)" onmouseleave="hideTip()"></div>`;
     });
-    gridHtml+='</div>';
+    gridHtml += '</div>';
   });
-  gridHtml+='</div></div></div></div></div>';
-  wrap.innerHTML=gridHtml;
-  const hWrap=wrap.querySelector('.heatmap-wrap');
-  if(hWrap&&year===new Date().getFullYear()){
-    const weekIdx=Math.floor((today-gridStart)/(7*864e5));
-    const scrollTo=Math.max(0,weekIdx*15-hWrap.clientWidth/2);
-    requestAnimationFrame(()=>hWrap.scrollLeft=scrollTo);
+  gridHtml += '</div></div></div></div></div>';
+  wrap.innerHTML = gridHtml;
+  const hWrap = wrap.querySelector('.heatmap-wrap');
+  if (hWrap && year === new Date().getFullYear()) {
+    const weekIdx = Math.floor((today - gridStart) / (7 * 864e5));
+    const scrollTo = Math.max(0, weekIdx * 15 - hWrap.clientWidth / 2);
+    requestAnimationFrame(() => hWrap.scrollLeft = scrollTo);
   }
 }
 
-function toggleDay(el){
-  const hid=el.dataset.habit, ds=el.dataset.date;
-  const h=state.habits.find(x=>x.id===hid);
-  if(!h)return;
-  if(!h.days)h.days={};
-  if(h.days[ds]){delete h.days[ds];el.style.background='rgba(255,255,255,0.08)'}
-  else{h.days[ds]=true;el.style.background=h.color;el.style.transform='scale(1.4)';setTimeout(()=>el.style.transform='',200)}
-  save();
-  const card=el.closest('.habit-card');
-  if(card){
-    const vals=card.querySelectorAll('.stat-val');
-    vals[0].textContent=calcStreak(h);
-    vals[1].textContent=calcLongest(h);
-    vals[2].textContent=Object.keys(h.days).filter(d=>d.startsWith(state.currentYear+'')).length;
+function toggleDay(el) {
+  const hid = el.dataset.habit, ds = el.dataset.date;
+  const h = state.habits.find(x => x.id === hid);
+  if (!h) return;
+  if (!h.days) h.days = {};
+  let done;
+  if (h.days[ds]) { delete h.days[ds]; el.style.background = 'rgba(255,255,255,0.08)'; done = false; }
+  else { h.days[ds] = true; el.style.background = h.color; el.style.transform = 'scale(1.4)'; setTimeout(() => el.style.transform = '', 200); done = true; }
+  saveLocal();
+  syncHabitToggle(hid, ds, done);
+  const card = el.closest('.habit-card');
+  if (card) {
+    const vals = card.querySelectorAll('.stat-val');
+    vals[0].textContent = calcStreak(h);
+    vals[1].textContent = calcLongest(h);
+    vals[2].textContent = Object.keys(h.days).filter(d => d.startsWith(state.currentYear + '')).length;
   }
 }
 
-function calcStreak(h){
-  if(!h.days)return 0;
-  let streak=0,d=new Date();d.setHours(0,0,0,0);
-  if(!h.days[fmt(d)]){d.setDate(d.getDate()-1)}
-  while(h.days[fmt(d)]){streak++;d.setDate(d.getDate()-1)}
+function calcStreak(h) {
+  if (!h.days) return 0;
+  let streak = 0, d = new Date(); d.setHours(0, 0, 0, 0);
+  if (!h.days[fmt(d)]) { d.setDate(d.getDate() - 1); }
+  while (h.days[fmt(d)]) { streak++; d.setDate(d.getDate() - 1); }
   return streak;
 }
 
-function calcLongest(h){
-  if(!h.days)return 0;
-  const sorted=Object.keys(h.days).sort();
-  if(!sorted.length)return 0;
-  let max=1,cur=1;
-  for(let i=1;i<sorted.length;i++){
-    const prev=new Date(sorted[i-1]+'T00:00:00');
-    const now=new Date(sorted[i]+'T00:00:00');
-    if((now-prev)/864e5===1)cur++;else cur=1;
-    if(cur>max)max=cur;
+function calcLongest(h) {
+  if (!h.days) return 0;
+  const sorted = Object.keys(h.days).sort();
+  if (!sorted.length) return 0;
+  let max = 1, cur = 1;
+  for (let i = 1; i < sorted.length; i++) {
+    const prev = new Date(sorted[i - 1] + 'T00:00:00');
+    const now = new Date(sorted[i] + 'T00:00:00');
+    if ((now - prev) / 864e5 === 1) cur++; else cur = 1;
+    if (cur > max) max = cur;
   }
   return max;
 }
 
-function fmt(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function fmt(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
 
-function showTip(e,el){
-  const tip=document.getElementById('tooltip');
-  const h=state.habits.find(x=>x.id===el.dataset.habit);
-  const done=h&&h.days&&h.days[el.dataset.date];
-  tip.textContent=el.dataset.day+(done?' ✓':' ✗');
+function showTip(e, el) {
+  const tip = document.getElementById('tooltip');
+  const h = state.habits.find(x => x.id === el.dataset.habit);
+  const done = h && h.days && h.days[el.dataset.date];
+  tip.textContent = el.dataset.day + (done ? ' ✓' : ' ✗');
   tip.classList.add('show');
-  const r=el.getBoundingClientRect();
-  tip.style.left=r.left+'px';tip.style.top=(r.top-30)+'px';
+  const r = el.getBoundingClientRect();
+  tip.style.left = r.left + 'px'; tip.style.top = (r.top - 30) + 'px';
 }
-function hideTip(){document.getElementById('tooltip').classList.remove('show')}
+function hideTip() { document.getElementById('tooltip').classList.remove('show'); }
 
-function openAddHabit(){
-  document.getElementById('habit-modal-title').textContent='New Habit';
-  document.getElementById('habit-name').value='';
-  document.getElementById('habit-edit-id').value='';
+function openAddHabit() {
+  document.getElementById('habit-modal-title').textContent = 'New Habit';
+  document.getElementById('habit-name').value = '';
+  document.getElementById('habit-edit-id').value = '';
   buildColorPicker(COLORS[0].val);
   openModal('modal-habit');
 }
 
-function buildColorPicker(sel){
-  const p=document.getElementById('color-picker');
-  p.innerHTML='';
-  COLORS.forEach(c=>{
-    const d=document.createElement('div');
-    d.style.cssText=`width:28px;height:28px;border-radius:50%;background:${c.val};cursor:pointer;
-      border:2px solid ${c.val===sel?'#fff':'transparent'};transition:all .2s`;
-    d.onclick=()=>{document.getElementById('habit-color').value=c.val;
-      p.querySelectorAll('div').forEach(x=>x.style.borderColor='transparent');d.style.borderColor='#fff'};
+function buildColorPicker(sel) {
+  const p = document.getElementById('color-picker');
+  p.innerHTML = '';
+  COLORS.forEach(c => {
+    const d = document.createElement('div');
+    d.style.cssText = `width:28px;height:28px;border-radius:50%;background:${c.val};cursor:pointer;
+      border:2px solid ${c.val === sel ? '#fff' : 'transparent'};transition:all .2s`;
+    d.onclick = () => {
+      document.getElementById('habit-color').value = c.val;
+      p.querySelectorAll('div').forEach(x => x.style.borderColor = 'transparent');
+      d.style.borderColor = '#fff';
+    };
     p.appendChild(d);
   });
-  document.getElementById('habit-color').value=sel;
+  document.getElementById('habit-color').value = sel;
 }
 
-function saveHabit(){
-  const name=document.getElementById('habit-name').value.trim();
-  if(!name)return;
-  const color=document.getElementById('habit-color').value;
-  const editId=document.getElementById('habit-edit-id').value;
-  if(editId){
-    const h=state.habits.find(x=>x.id===editId);
-    if(h){h.name=name;h.color=color}
+function saveHabit() {
+  const name = document.getElementById('habit-name').value.trim();
+  if (!name) return;
+  const color = document.getElementById('habit-color').value;
+  const editId = document.getElementById('habit-edit-id').value;
+  if (editId) {
+    const h = state.habits.find(x => x.id === editId);
+    if (h) { h.name = name; h.color = color; }
+    syncHabitUpdate(editId, name, color);
   } else {
-    state.habits.push({id:uid(),name,color,days:{}});
+    const localId = uid();
+    state.habits.push({ id: localId, name, color, days: {} });
+    syncHabitCreate(localId, name, color);
   }
-  save();renderHabits();closeModal('modal-habit');
+  saveLocal(); renderHabits(); closeModal('modal-habit');
 }
 
-function showHabitMenu(e,hid){
-  e.stopPropagation();removeCtx();
-  const menu=document.createElement('div');menu.className='ctx-menu';
-  menu.innerHTML=`<button onclick="editHabit('${hid}')">Edit</button><button class="danger" onclick="deleteHabit('${hid}')">Delete</button>`;
+function showHabitMenu(e, hid) {
+  e.stopPropagation(); removeCtx();
+  const menu = document.createElement('div'); menu.className = 'ctx-menu';
+  menu.innerHTML = `<button onclick="editHabit('${hid}')">Edit</button><button class="danger" onclick="deleteHabit('${hid}')">Delete</button>`;
   document.body.appendChild(menu);
-  const r=e.target.getBoundingClientRect();
-  menu.style.top=r.bottom+4+'px';menu.style.right=(window.innerWidth-r.right)+'px';
-  setTimeout(()=>document.addEventListener('click',removeCtx,{once:true}),10);
+  const r = e.target.getBoundingClientRect();
+  menu.style.top = r.bottom + 4 + 'px'; menu.style.right = (window.innerWidth - r.right) + 'px';
+  setTimeout(() => document.addEventListener('click', removeCtx, { once: true }), 10);
 }
-function removeCtx(){document.querySelectorAll('.ctx-menu').forEach(m=>m.remove())}
+function removeCtx() { document.querySelectorAll('.ctx-menu').forEach(m => m.remove()); }
 
-function editHabit(hid){
+function editHabit(hid) {
   removeCtx();
-  const h=state.habits.find(x=>x.id===hid);if(!h)return;
-  document.getElementById('habit-modal-title').textContent='Edit Habit';
-  document.getElementById('habit-name').value=h.name;
-  document.getElementById('habit-edit-id').value=hid;
+  const h = state.habits.find(x => x.id === hid); if (!h) return;
+  document.getElementById('habit-modal-title').textContent = 'Edit Habit';
+  document.getElementById('habit-name').value = h.name;
+  document.getElementById('habit-edit-id').value = hid;
   buildColorPicker(h.color);
   openModal('modal-habit');
 }
-function deleteHabit(hid){
+
+function deleteHabit(hid) {
   removeCtx();
-  if(!confirm('Delete this habit and all its data?'))return;
-  state.habits=state.habits.filter(x=>x.id!==hid);
-  save();renderHabits();
+  if (!confirm('Delete this habit and all its data?')) return;
+  syncHabitDelete(hid);
+  state.habits = state.habits.filter(x => x.id !== hid);
+  saveLocal(); renderHabits();
 }
 
-// ─── Friends ───
-function renderFriends(){
-  const list=document.getElementById('friends-list');
-  const sort=document.getElementById('friend-sort').value;
-  let friends=[...state.friends];
-  const now=Date.now();
+// ═══════════════════════════════════════════
+// ─── FRIENDS ───
+// ═══════════════════════════════════════════
+function renderFriends() {
+  const list = document.getElementById('friends-list');
+  const sort = document.getElementById('friend-sort').value;
+  let friends = [...state.friends];
+  const now = Date.now();
 
-  friends.forEach(f=>{
-    f._lastContact=getLastContact(f);
-    f._daysSince=f._lastContact?Math.floor((now-new Date(f._lastContact).getTime())/864e5):999;
-    f._status=f._daysSince>(f.freq*1)?'red':f._daysSince>(f.freq*0.7)?'yellow':'green';
-    f._overdue=Math.max(0,f._daysSince-f.freq);
+  friends.forEach(f => {
+    f._lastContact = getLastContact(f);
+    f._daysSince = f._lastContact ? Math.floor((now - new Date(f._lastContact).getTime()) / 864e5) : 999;
+    f._status = f._daysSince > (f.freq * 1) ? 'red' : f._daysSince > (f.freq * 0.7) ? 'yellow' : 'green';
+    f._overdue = Math.max(0, f._daysSince - f.freq);
   });
 
-  if(sort==='overdue')friends.sort((a,b)=>b._overdue-a._overdue);
-  else if(sort==='recent')friends.sort((a,b)=>a._daysSince-b._daysSince);
-  else friends.sort((a,b)=>a.name.localeCompare(b.name));
+  if (sort === 'overdue') friends.sort((a, b) => b._overdue - a._overdue);
+  else if (sort === 'recent') friends.sort((a, b) => a._daysSince - b._daysSince);
+  else friends.sort((a, b) => a.name.localeCompare(b.name));
 
-  const overdue=friends.filter(f=>f._status==='red').length;
-  const contactedThisWeek=friends.filter(f=>f._daysSince<=7).length;
+  const overdue = friends.filter(f => f._status === 'red').length;
+  const contactedThisWeek = friends.filter(f => f._daysSince <= 7).length;
 
-  document.getElementById('friend-summary').innerHTML=`
-    <div class="summary-chip ${overdue?'alert':''}"><div class="chip-val">${overdue}</div><div class="chip-lbl">Overdue</div></div>
+  document.getElementById('friend-summary').innerHTML = `
+    <div class="summary-chip ${overdue ? 'alert' : ''}"><div class="chip-val">${overdue}</div><div class="chip-lbl">Overdue</div></div>
     <div class="summary-chip"><div class="chip-val">${contactedThisWeek}</div><div class="chip-lbl">This week</div></div>
     <div class="summary-chip"><div class="chip-val">${friends.length}</div><div class="chip-lbl">Total</div></div>`;
 
-  const badge=document.getElementById('friend-badge');
-  badge.textContent=overdue;
-  badge.classList.toggle('show',overdue>0);
+  const badge = document.getElementById('friend-badge');
+  badge.textContent = overdue;
+  badge.classList.toggle('show', overdue > 0);
 
-  list.innerHTML='';
-  friends.forEach(f=>{
-    const card=document.createElement('div');
-    card.className='card friend-card';
-    const initials=f.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    const avatar=f.photo?`<img src="${esc(f.photo)}" onerror="this.parentElement.innerHTML='${initials}'">`:`${initials}`;
-    const freqLabel={7:'Weekly',14:'Biweekly',30:'Monthly',90:'Quarterly'}[f.freq]||f.freq+'d';
-    const catLabel={close:'Close',friend:'Friend',acquaintance:'Acquaintance'}[f.category]||f.category;
-    const daysText=f._daysSince===999?'Never':f._daysSince;
-    const daysLabel=f._daysSince===999?'':'days ago';
+  list.innerHTML = '';
+  friends.forEach(f => {
+    const card = document.createElement('div');
+    card.className = 'card friend-card';
+    const initials = f.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    const avatar = f.photo ? `<img src="${esc(f.photo)}" onerror="this.parentElement.innerHTML='${initials}'">` : `${initials}`;
+    const freqLabel = { 7: 'Weekly', 14: 'Biweekly', 30: 'Monthly', 90: 'Quarterly' }[f.freq] || f.freq + 'd';
+    const catLabel = { close: 'Close', friend: 'Friend', acquaintance: 'Acquaintance' }[f.category] || f.category;
+    const daysText = f._daysSince === 999 ? 'Never' : f._daysSince;
+    const daysLabel = f._daysSince === 999 ? '' : 'days ago';
 
-    let historyHtml='';
-    const interactions=(f.interactions||[]).slice().sort((a,b)=>b.date.localeCompare(a.date));
-    interactions.slice(0,10).forEach(i=>{
-      const typeColors={text:'var(--accent)',call:'var(--accent2)',hangout:'var(--accent3)',meal:'var(--pink, #f472b6)'};
-      historyHtml+=`<div class="history-item"><span class="history-dot" style="background:${typeColors[i.type]||'var(--text3)'}"></span>
+    let historyHtml = '';
+    const interactions = (f.interactions || []).slice().sort((a, b) => b.date.localeCompare(a.date));
+    interactions.slice(0, 10).forEach(i => {
+      const typeColors = { text: 'var(--accent)', call: 'var(--accent2)', hangout: 'var(--accent3)', meal: 'var(--pink, #f472b6)' };
+      historyHtml += `<div class="history-item"><span class="history-dot" style="background:${typeColors[i.type] || 'var(--text3)'}"></span>
         <span class="history-date">${i.date}</span><span class="history-type">${i.type}</span>
-        <span class="history-note">${esc(i.note||'')}</span></div>`;
+        <span class="history-note">${esc(i.note || '')}</span></div>`;
     });
 
-    card.innerHTML=`
+    card.innerHTML = `
       <div class="friend-top">
         <div class="friend-avatar ${f._status}">${avatar}</div>
         <div class="friend-info">
           <div class="friend-name">${esc(f.name)}</div>
-          <div class="friend-meta">${catLabel} &middot; ${freqLabel}${f.met?' &middot; '+esc(f.met):''}</div>
+          <div class="friend-meta">${catLabel} &middot; ${freqLabel}${f.met ? ' &middot; ' + esc(f.met) : ''}</div>
         </div>
         <div class="friend-status ${f._status}">
           <div class="friend-days">${daysText}</div>
@@ -883,172 +1669,199 @@ function renderFriends(){
         <button onclick="toggleHistory(this)">History</button>
         <button onclick="showFriendMenu(event,'${f.id}')">&#8942;</button>
       </div>
-      <div class="friend-history">${historyHtml||'<div style="padding:8px 0;font-size:12px;color:var(--text3)">No interactions yet</div>'}</div>`;
+      <div class="friend-history">${historyHtml || '<div style="padding:8px 0;font-size:12px;color:var(--text3)">No interactions yet</div>'}</div>`;
     list.appendChild(card);
   });
 }
 
-function getLastContact(f){
-  if(!f.interactions||!f.interactions.length)return null;
-  return f.interactions.reduce((a,b)=>a.date>b.date?a:b).date;
+function getLastContact(f) {
+  if (!f.interactions || !f.interactions.length) return null;
+  return f.interactions.reduce((a, b) => a.date > b.date ? a : b).date;
 }
 
-function toggleHistory(btn){
-  const hist=btn.closest('.friend-card').querySelector('.friend-history');
+function toggleHistory(btn) {
+  const hist = btn.closest('.friend-card').querySelector('.friend-history');
   hist.classList.toggle('open');
-  btn.textContent=hist.classList.contains('open')?'Hide':'History';
+  btn.textContent = hist.classList.contains('open') ? 'Hide' : 'History';
 }
 
-function openAddFriend(){
-  document.getElementById('friend-modal-title').textContent='New Friend';
-  document.getElementById('friend-name').value='';
-  document.getElementById('friend-photo').value='';
-  document.getElementById('friend-met').value='';
-  document.getElementById('friend-category').value='close';
-  document.getElementById('friend-freq').value='14';
-  document.getElementById('friend-edit-id').value='';
+function openAddFriend() {
+  document.getElementById('friend-modal-title').textContent = 'New Friend';
+  document.getElementById('friend-name').value = '';
+  document.getElementById('friend-photo').value = '';
+  document.getElementById('friend-met').value = '';
+  document.getElementById('friend-category').value = 'close';
+  document.getElementById('friend-freq').value = '14';
+  document.getElementById('friend-edit-id').value = '';
   openModal('modal-friend');
 }
 
-function saveFriend(){
-  const name=document.getElementById('friend-name').value.trim();
-  if(!name)return;
-  const data={
+function saveFriend() {
+  const name = document.getElementById('friend-name').value.trim();
+  if (!name) return;
+  const data = {
     name,
-    photo:document.getElementById('friend-photo').value.trim(),
-    met:document.getElementById('friend-met').value.trim(),
-    category:document.getElementById('friend-category').value,
-    freq:parseInt(document.getElementById('friend-freq').value)
+    photo: document.getElementById('friend-photo').value.trim(),
+    met: document.getElementById('friend-met').value.trim(),
+    category: document.getElementById('friend-category').value,
+    freq: parseInt(document.getElementById('friend-freq').value)
   };
-  const editId=document.getElementById('friend-edit-id').value;
-  if(editId){
-    const f=state.friends.find(x=>x.id===editId);
-    if(f)Object.assign(f,data);
+  const editId = document.getElementById('friend-edit-id').value;
+  if (editId) {
+    const f = state.friends.find(x => x.id === editId);
+    if (f) Object.assign(f, data);
+    syncFriendUpdate(editId, data);
   } else {
-    state.friends.push({id:uid(),interactions:[],...data});
+    const localId = uid();
+    state.friends.push({ id: localId, interactions: [], ...data });
+    syncFriendCreate(localId, data);
   }
-  save();renderFriends();closeModal('modal-friend');
+  saveLocal(); renderFriends(); closeModal('modal-friend');
 }
 
-function openLogInteraction(fid){
-  document.getElementById('interact-friend-id').value=fid;
-  document.getElementById('interact-date').value=fmt(new Date());
-  document.getElementById('interact-type').value='text';
-  document.getElementById('interact-note').value='';
+function openLogInteraction(fid) {
+  document.getElementById('interact-friend-id').value = fid;
+  document.getElementById('interact-date').value = fmt(new Date());
+  document.getElementById('interact-type').value = 'text';
+  document.getElementById('interact-note').value = '';
   openModal('modal-interaction');
 }
 
-function saveInteraction(){
-  const fid=document.getElementById('interact-friend-id').value;
-  const f=state.friends.find(x=>x.id===fid);if(!f)return;
-  if(!f.interactions)f.interactions=[];
-  f.interactions.push({
-    date:document.getElementById('interact-date').value,
-    type:document.getElementById('interact-type').value,
-    note:document.getElementById('interact-note').value.trim()
-  });
-  save();renderFriends();closeModal('modal-interaction');
+function saveInteraction() {
+  const fid = document.getElementById('interact-friend-id').value;
+  const f = state.friends.find(x => x.id === fid); if (!f) return;
+  if (!f.interactions) f.interactions = [];
+  const interaction = {
+    date: document.getElementById('interact-date').value,
+    type: document.getElementById('interact-type').value,
+    note: document.getElementById('interact-note').value.trim()
+  };
+  f.interactions.push(interaction);
+  syncInteractionCreate(fid, interaction);
+  saveLocal(); renderFriends(); closeModal('modal-interaction');
 }
 
-function showFriendMenu(e,fid){
-  e.stopPropagation();removeCtx();
-  const menu=document.createElement('div');menu.className='ctx-menu';
-  menu.innerHTML=`<button onclick="editFriend('${fid}')">Edit</button><button class="danger" onclick="deleteFriend('${fid}')">Delete</button>`;
+function showFriendMenu(e, fid) {
+  e.stopPropagation(); removeCtx();
+  const menu = document.createElement('div'); menu.className = 'ctx-menu';
+  menu.innerHTML = `<button onclick="editFriend('${fid}')">Edit</button><button class="danger" onclick="deleteFriend('${fid}')">Delete</button>`;
   document.body.appendChild(menu);
-  const r=e.target.getBoundingClientRect();
-  menu.style.top=r.bottom+4+'px';menu.style.right=(window.innerWidth-r.right)+'px';
-  setTimeout(()=>document.addEventListener('click',removeCtx,{once:true}),10);
+  const r = e.target.getBoundingClientRect();
+  menu.style.top = r.bottom + 4 + 'px'; menu.style.right = (window.innerWidth - r.right) + 'px';
+  setTimeout(() => document.addEventListener('click', removeCtx, { once: true }), 10);
 }
 
-function editFriend(fid){
+function editFriend(fid) {
   removeCtx();
-  const f=state.friends.find(x=>x.id===fid);if(!f)return;
-  document.getElementById('friend-modal-title').textContent='Edit Friend';
-  document.getElementById('friend-name').value=f.name;
-  document.getElementById('friend-photo').value=f.photo||'';
-  document.getElementById('friend-met').value=f.met||'';
-  document.getElementById('friend-category').value=f.category;
-  document.getElementById('friend-freq').value=f.freq;
-  document.getElementById('friend-edit-id').value=fid;
+  const f = state.friends.find(x => x.id === fid); if (!f) return;
+  document.getElementById('friend-modal-title').textContent = 'Edit Friend';
+  document.getElementById('friend-name').value = f.name;
+  document.getElementById('friend-photo').value = f.photo || '';
+  document.getElementById('friend-met').value = f.met || '';
+  document.getElementById('friend-category').value = f.category;
+  document.getElementById('friend-freq').value = f.freq;
+  document.getElementById('friend-edit-id').value = fid;
   openModal('modal-friend');
 }
 
-function deleteFriend(fid){
+function deleteFriend(fid) {
   removeCtx();
-  if(!confirm('Delete this friend?'))return;
-  state.friends=state.friends.filter(x=>x.id!==fid);
-  save();renderFriends();
+  if (!confirm('Delete this friend?')) return;
+  syncFriendDelete(fid);
+  state.friends = state.friends.filter(x => x.id !== fid);
+  saveLocal(); renderFriends();
 }
 
 // ═══════════════════════════════════════════
 // ─── MOOD / ENERGY ───
 // ═══════════════════════════════════════════
 
-let _moodVal=0,_energyVal=0;
+let _moodVal = 0, _energyVal = 0;
 
-function selectMood(el){
-  _moodVal=parseInt(el.dataset.val);
-  el.parentElement.querySelectorAll('.emoji-btn').forEach(b=>{
-    b.classList.remove('selected');
+function getMoodDate() {
+  return document.getElementById('mood-date').value || fmt(new Date());
+}
+
+function setMoodDateToday() {
+  document.getElementById('mood-date').value = fmt(new Date());
+  loadMoodForDate();
+}
+
+function loadMoodForDate() {
+  const dateStr = getMoodDate();
+  const entry = state.mood[dateStr];
+  _moodVal = entry ? entry.mood : 0;
+  _energyVal = entry ? entry.energy : 0;
+
+  document.querySelectorAll('#mood-scale .emoji-btn').forEach(b => {
+    b.classList.toggle('selected', entry && parseInt(b.dataset.val) === entry.mood);
   });
+  document.querySelectorAll('#energy-scale .emoji-btn').forEach(b => {
+    b.classList.toggle('selected-energy', entry && parseInt(b.dataset.val) === entry.energy);
+  });
+  document.getElementById('mood-note').value = entry ? (entry.note || '') : '';
+  updateMoodCharCount();
+
+  const d = new Date(dateStr + 'T00:00:00');
+  const isToday = dateStr === fmt(new Date());
+  document.getElementById('mood-date-label').textContent = isToday ? 'How are you today?'
+    : d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+}
+
+function selectMood(el) {
+  _moodVal = parseInt(el.dataset.val);
+  el.parentElement.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
   el.classList.add('selected');
 }
 
-function selectEnergy(el){
-  _energyVal=parseInt(el.dataset.val);
-  el.parentElement.querySelectorAll('.emoji-btn').forEach(b=>{
-    b.classList.remove('selected-energy');
-  });
+function selectEnergy(el) {
+  _energyVal = parseInt(el.dataset.val);
+  el.parentElement.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected-energy'));
   el.classList.add('selected-energy');
 }
 
-function updateMoodCharCount(){
-  const v=document.getElementById('mood-note').value;
-  document.getElementById('mood-char-count').textContent=v.length+'/140';
+function updateMoodCharCount() {
+  const v = document.getElementById('mood-note').value;
+  document.getElementById('mood-char-count').textContent = v.length + '/140';
 }
 
-function saveMoodEntry(){
-  if(!_moodVal||!_energyVal)return;
-  const today=fmt(new Date());
-  state.mood[today]={mood:_moodVal,energy:_energyVal,note:document.getElementById('mood-note').value.trim()};
-  save();
-  const el=document.getElementById('mood-saved');
+function saveMoodEntry() {
+  if (!_moodVal || !_energyVal) return;
+  const dateStr = getMoodDate();
+  const entry = { mood: _moodVal, energy: _energyVal, note: document.getElementById('mood-note').value.trim() };
+  state.mood[dateStr] = entry;
+  saveLocal();
+  syncMoodEntry(dateStr, entry);
+  const el = document.getElementById('mood-saved');
   el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),2000);
-  renderMood();
+  setTimeout(() => el.classList.remove('show'), 2000);
+  renderMoodCharts();
 }
 
-function renderMood(){
-  const today=fmt(new Date());
-  const entry=state.mood[today];
+function renderMood() {
+  loadMoodForDate();
+  renderMoodCharts();
+}
 
-  // Restore today's selection state
-  _moodVal=entry?entry.mood:0;
-  _energyVal=entry?entry.energy:0;
-  document.querySelectorAll('#mood-scale .emoji-btn').forEach(b=>{
-    b.classList.toggle('selected',entry&&parseInt(b.dataset.val)===entry.mood);
-  });
-  document.querySelectorAll('#energy-scale .emoji-btn').forEach(b=>{
-    b.classList.toggle('selected-energy',entry&&parseInt(b.dataset.val)===entry.energy);
-  });
-  if(entry&&entry.note){document.getElementById('mood-note').value=entry.note;updateMoodCharCount()}
+function renderMoodCharts() {
+  const today = fmt(new Date());
 
   // Get last 30 days of data
-  const days30=[];
-  for(let i=29;i>=0;i--){
-    const d=new Date();d.setDate(d.getDate()-i);
-    const ds=fmt(d);
-    days30.push({date:ds,day:d,...(state.mood[ds]||{})});
+  const days30 = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const ds = fmt(d);
+    days30.push({ date: ds, day: d, ...(state.mood[ds] || {}) });
   }
 
   // Stats
-  const filled=days30.filter(d=>d.mood);
-  const avgMood=filled.length?((filled.reduce((s,d)=>s+d.mood,0)/filled.length)).toFixed(1):'-';
-  const avgEnergy=filled.length?((filled.reduce((s,d)=>s+d.energy,0)/filled.length)).toFixed(1):'-';
-  const best=filled.reduce((b,d)=>(!b||d.mood+d.energy>b.mood+b.energy)?d:b,null);
-  const bestStr=best?new Date(best.date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}):'-';
+  const filled = days30.filter(d => d.mood);
+  const avgMood = filled.length ? ((filled.reduce((s, d) => s + d.mood, 0) / filled.length)).toFixed(1) : '-';
+  const avgEnergy = filled.length ? ((filled.reduce((s, d) => s + d.energy, 0) / filled.length)).toFixed(1) : '-';
+  const best = filled.reduce((b, d) => (!b || d.mood + d.energy > b.mood + b.energy) ? d : b, null);
+  const bestStr = best ? new Date(best.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '-';
 
-  document.getElementById('mood-stats').innerHTML=`
+  document.getElementById('mood-stats').innerHTML = `
     <div class="mood-stats-row">
       <div class="mood-stat-card"><div class="ms-val" style="color:var(--accent)">${avgMood}</div><div class="ms-lbl">Avg Mood</div></div>
       <div class="mood-stat-card"><div class="ms-val" style="color:var(--accent2)">${avgEnergy}</div><div class="ms-lbl">Avg Energy</div></div>
@@ -1056,49 +1869,47 @@ function renderMood(){
     </div>`;
 
   // 30-day trend SVG
-  const chartW=Math.max(400,days30.length*14);
-  const chartH=120;
-  const padT=15,padB=20,padL=10,padR=10;
-  const plotW=chartW-padL-padR;
-  const plotH=chartH-padT-padB;
+  const chartW = Math.max(400, days30.length * 14);
+  const chartH = 120;
+  const padT = 15, padB = 20, padL = 10, padR = 10;
+  const plotW = chartW - padL - padR;
+  const plotH = chartH - padT - padB;
 
-  let moodPath='',energyPath='',moodDots='',energyDots='';
-  let moodFirst=true,energyFirst=true;
+  let moodPath = '', energyPath = '', moodDots = '', energyDots = '';
+  let moodFirst = true, energyFirst = true;
 
-  days30.forEach((d,i)=>{
-    const x=padL+(i/(days30.length-1))*plotW;
-    if(d.mood){
-      const y=padT+plotH-(d.mood-1)/4*plotH;
-      moodPath+=(moodFirst?'M':'L')+x.toFixed(1)+','+y.toFixed(1)+' ';
-      moodDots+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#a78bfa" opacity="0.9"/>`;
-      moodFirst=false;
+  days30.forEach((d, i) => {
+    const x = padL + (i / (days30.length - 1)) * plotW;
+    if (d.mood) {
+      const y = padT + plotH - (d.mood - 1) / 4 * plotH;
+      moodPath += (moodFirst ? 'M' : 'L') + x.toFixed(1) + ',' + y.toFixed(1) + ' ';
+      moodDots += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#a78bfa" opacity="0.9"/>`;
+      moodFirst = false;
     }
-    if(d.energy){
-      const y=padT+plotH-(d.energy-1)/4*plotH;
-      energyPath+=(energyFirst?'M':'L')+x.toFixed(1)+','+y.toFixed(1)+' ';
-      energyDots+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#2dd4bf" opacity="0.9"/>`;
-      energyFirst=false;
-    }
-  });
-
-  // Day labels at bottom (every 5 days)
-  let xLabels='';
-  days30.forEach((d,i)=>{
-    if(i%5===0||i===days30.length-1){
-      const x=padL+(i/(days30.length-1))*plotW;
-      const lbl=new Date(d.date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
-      xLabels+=`<text x="${x.toFixed(1)}" y="${chartH-2}" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="9">${lbl}</text>`;
+    if (d.energy) {
+      const y = padT + plotH - (d.energy - 1) / 4 * plotH;
+      energyPath += (energyFirst ? 'M' : 'L') + x.toFixed(1) + ',' + y.toFixed(1) + ' ';
+      energyDots += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#2dd4bf" opacity="0.9"/>`;
+      energyFirst = false;
     }
   });
 
-  // Grid lines
-  let gridLines='';
-  for(let v=1;v<=5;v++){
-    const y=padT+plotH-(v-1)/4*plotH;
-    gridLines+=`<line x1="${padL}" y1="${y.toFixed(1)}" x2="${chartW-padR}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>`;
+  let xLabels = '';
+  days30.forEach((d, i) => {
+    if (i % 5 === 0 || i === days30.length - 1) {
+      const x = padL + (i / (days30.length - 1)) * plotW;
+      const lbl = new Date(d.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      xLabels += `<text x="${x.toFixed(1)}" y="${chartH - 2}" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="9">${lbl}</text>`;
+    }
+  });
+
+  let gridLines = '';
+  for (let v = 1; v <= 5; v++) {
+    const y = padT + plotH - (v - 1) / 4 * plotH;
+    gridLines += `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${chartW - padR}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>`;
   }
 
-  document.getElementById('mood-chart-container').innerHTML=filled.length?`
+  document.getElementById('mood-chart-container').innerHTML = filled.length ? `
     <div class="card mood-chart-section">
       <h3>30-Day Trends</h3>
       <div style="display:flex;gap:12px;margin-bottom:8px">
@@ -1113,72 +1924,70 @@ function renderMood(){
           ${moodDots}${energyDots}${xLabels}
         </svg>
       </div>
-    </div>`:'';
+    </div>` : '';
 
-  // Weekly averages (last 4 weeks)
-  const weeksData=[];
-  for(let w=3;w>=0;w--){
-    const weekDays=[];
-    for(let d=6;d>=0;d--){
-      const dt=new Date();dt.setDate(dt.getDate()-w*7-d);
-      const ds=fmt(dt);
-      if(state.mood[ds])weekDays.push(state.mood[ds]);
+  // Weekly averages
+  const weeksData = [];
+  for (let w = 3; w >= 0; w--) {
+    const weekDays = [];
+    for (let d = 6; d >= 0; d--) {
+      const dt = new Date(); dt.setDate(dt.getDate() - w * 7 - d);
+      const ds = fmt(dt);
+      if (state.mood[ds]) weekDays.push(state.mood[ds]);
     }
-    const wStart=new Date();wStart.setDate(wStart.getDate()-w*7-6);
-    const label=wStart.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    const mAvg=weekDays.length?(weekDays.reduce((s,x)=>s+x.mood,0)/weekDays.length):0;
-    const eAvg=weekDays.length?(weekDays.reduce((s,x)=>s+x.energy,0)/weekDays.length):0;
-    weeksData.push({label,mAvg,eAvg,count:weekDays.length});
+    const wStart = new Date(); wStart.setDate(wStart.getDate() - w * 7 - 6);
+    const label = wStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const mAvg = weekDays.length ? (weekDays.reduce((s, x) => s + x.mood, 0) / weekDays.length) : 0;
+    const eAvg = weekDays.length ? (weekDays.reduce((s, x) => s + x.energy, 0) / weekDays.length) : 0;
+    weeksData.push({ label, mAvg, eAvg, count: weekDays.length });
   }
 
-  const hasWeekData=weeksData.some(w=>w.count>0);
-  document.getElementById('mood-weekly-container').innerHTML=hasWeekData?`
+  const hasWeekData = weeksData.some(w => w.count > 0);
+  document.getElementById('mood-weekly-container').innerHTML = hasWeekData ? `
     <div class="card">
       <h3 style="font-size:14px;font-weight:600;color:var(--text2);margin-bottom:10px">Weekly Averages</h3>
-      <div class="mood-weekly">${weeksData.map(w=>`
+      <div class="mood-weekly">${weeksData.map(w => `
         <div class="week-bar">
           <div class="wb-label">${w.label}</div>
-          <div class="wb-bar" style="background:linear-gradient(90deg,#a78bfa ${(w.mAvg/5*100).toFixed(0)}%,transparent ${(w.mAvg/5*100).toFixed(0)}%);opacity:${w.count?1:0.2}"></div>
-          <div class="wb-val" style="color:var(--accent)">${w.count?w.mAvg.toFixed(1):'-'}</div>
-          <div class="wb-bar" style="background:linear-gradient(90deg,#2dd4bf ${(w.eAvg/5*100).toFixed(0)}%,transparent ${(w.eAvg/5*100).toFixed(0)}%);opacity:${w.count?1:0.2};margin-top:4px"></div>
-          <div class="wb-val" style="color:var(--accent2)">${w.count?w.eAvg.toFixed(1):'-'}</div>
+          <div class="wb-bar" style="background:linear-gradient(90deg,#a78bfa ${(w.mAvg / 5 * 100).toFixed(0)}%,transparent ${(w.mAvg / 5 * 100).toFixed(0)}%);opacity:${w.count ? 1 : 0.2}"></div>
+          <div class="wb-val" style="color:var(--accent)">${w.count ? w.mAvg.toFixed(1) : '-'}</div>
+          <div class="wb-bar" style="background:linear-gradient(90deg,#2dd4bf ${(w.eAvg / 5 * 100).toFixed(0)}%,transparent ${(w.eAvg / 5 * 100).toFixed(0)}%);opacity:${w.count ? 1 : 0.2};margin-top:4px"></div>
+          <div class="wb-val" style="color:var(--accent2)">${w.count ? w.eAvg.toFixed(1) : '-'}</div>
         </div>`).join('')}
       </div>
-    </div>`:'';
+    </div>` : '';
 
-  // Correlation hint
   renderCorrelation();
 }
 
-function renderCorrelation(){
-  if(!state.habits.length||!Object.keys(state.mood).length){
-    document.getElementById('mood-correlation').innerHTML='';
+function renderCorrelation() {
+  if (!state.habits.length || !Object.keys(state.mood).length) {
+    document.getElementById('mood-correlation').innerHTML = '';
     return;
   }
-  // On days with mood entries, compare mood on days where >=50% habits done vs not
-  const moodDates=Object.keys(state.mood);
-  let withHabits=[],withoutHabits=[];
+  const moodDates = Object.keys(state.mood);
+  let withHabits = [], withoutHabits = [];
 
-  moodDates.forEach(date=>{
-    const totalHabits=state.habits.length;
-    const doneCount=state.habits.filter(h=>h.days&&h.days[date]).length;
-    const pct=doneCount/totalHabits;
-    const m=state.mood[date].mood;
-    if(pct>=0.5)withHabits.push(m);
+  moodDates.forEach(date => {
+    const totalHabits = state.habits.length;
+    const doneCount = state.habits.filter(h => h.days && h.days[date]).length;
+    const pct = doneCount / totalHabits;
+    const m = state.mood[date].mood;
+    if (pct >= 0.5) withHabits.push(m);
     else withoutHabits.push(m);
   });
 
-  if(withHabits.length>=2&&withoutHabits.length>=1){
-    const avgWith=(withHabits.reduce((s,v)=>s+v,0)/withHabits.length).toFixed(1);
-    const avgWithout=(withoutHabits.reduce((s,v)=>s+v,0)/withoutHabits.length).toFixed(1);
-    const diff=(avgWith-avgWithout).toFixed(1);
-    let hint='';
-    if(diff>0.3)hint=`On days you complete most habits, your mood averages <strong>${avgWith}</strong> vs <strong>${avgWithout}</strong> on lighter days. Habits seem to help!`;
-    else if(diff<-0.3)hint=`Interestingly, your mood averages <strong>${avgWith}</strong> on active habit days vs <strong>${avgWithout}</strong> on lighter days. Rest matters too.`;
-    else hint=`Your mood averages about the same whether habits are done or not (<strong>${avgWith}</strong> vs <strong>${avgWithout}</strong>). Consistency is its own reward.`;
-    document.getElementById('mood-correlation').innerHTML=`<div class="correlation-hint">${hint}</div>`;
+  if (withHabits.length >= 2 && withoutHabits.length >= 1) {
+    const avgWith = (withHabits.reduce((s, v) => s + v, 0) / withHabits.length).toFixed(1);
+    const avgWithout = (withoutHabits.reduce((s, v) => s + v, 0) / withoutHabits.length).toFixed(1);
+    const diff = (avgWith - avgWithout).toFixed(1);
+    let hint = '';
+    if (diff > 0.3) hint = `On days you complete most habits, your mood averages <strong>${avgWith}</strong> vs <strong>${avgWithout}</strong> on lighter days. Habits seem to help!`;
+    else if (diff < -0.3) hint = `Interestingly, your mood averages <strong>${avgWith}</strong> on active habit days vs <strong>${avgWithout}</strong> on lighter days. Rest matters too.`;
+    else hint = `Your mood averages about the same whether habits are done or not (<strong>${avgWith}</strong> vs <strong>${avgWithout}</strong>). Consistency is its own reward.`;
+    document.getElementById('mood-correlation').innerHTML = `<div class="correlation-hint">${hint}</div>`;
   } else {
-    document.getElementById('mood-correlation').innerHTML='';
+    document.getElementById('mood-correlation').innerHTML = '';
   }
 }
 
@@ -1186,52 +1995,57 @@ function renderCorrelation(){
 // ─── DAILY WINS ───
 // ═══════════════════════════════════════════
 
-function addWin(){
-  const input=document.getElementById('win-input');
-  const text=input.value.trim();
-  if(!text)return;
-  state.wins.unshift({id:uid(),date:fmt(new Date()),text,ts:Date.now()});
-  save();
-  input.value='';
+function getWinDate() {
+  return document.getElementById('win-date').value || fmt(new Date());
+}
+
+function addWin() {
+  const input = document.getElementById('win-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const dateStr = getWinDate();
+  const localId = uid();
+  state.wins.unshift({ id: localId, date: dateStr, text, ts: Date.now() });
+  saveLocal();
+  syncWinCreate(localId, text, dateStr);
+  input.value = '';
   renderWins();
 }
 
-function deleteWin(id){
-  state.wins=state.wins.filter(w=>w.id!==id);
-  save();renderWins();
+function deleteWin(id) {
+  syncWinDelete(id);
+  state.wins = state.wins.filter(w => w.id !== id);
+  saveLocal(); renderWins();
 }
 
-function renderWins(){
-  const search=(document.getElementById('wins-search').value||'').toLowerCase();
-  const today=fmt(new Date());
-  const now=new Date();
-  const monthName=now.toLocaleDateString('en-US',{month:'long'});
-  const monthPrefix=today.slice(0,7);
-  const monthCount=state.wins.filter(w=>w.date.startsWith(monthPrefix)).length;
-  const todayCount=state.wins.filter(w=>w.date===today).length;
+function renderWins() {
+  const search = (document.getElementById('wins-search').value || '').toLowerCase();
+  const today = fmt(new Date());
+  const now = new Date();
+  const monthName = now.toLocaleDateString('en-US', { month: 'long' });
+  const monthPrefix = today.slice(0, 7);
+  const monthCount = state.wins.filter(w => w.date.startsWith(monthPrefix)).length;
+  const todayCount = state.wins.filter(w => w.date === today).length;
 
-  // Badge
-  document.getElementById('wins-badge-container').innerHTML=monthCount?
-    `<div class="wins-badge">${monthCount} win${monthCount!==1?'s':''} in ${monthName}</div>`:'';
+  document.getElementById('wins-badge-container').innerHTML = monthCount ?
+    `<div class="wins-badge">${monthCount} win${monthCount !== 1 ? 's' : ''} in ${monthName}</div>` : '';
 
-  // Tab badge
-  const wb=document.getElementById('wins-badge');
-  wb.textContent=todayCount;
-  wb.classList.toggle('show',todayCount>0);
+  const wb = document.getElementById('wins-badge');
+  wb.textContent = todayCount;
+  wb.classList.toggle('show', todayCount > 0);
 
-  // Filter
-  let wins=state.wins;
-  if(search)wins=wins.filter(w=>w.text.toLowerCase().includes(search)||w.date.includes(search));
+  let wins = state.wins;
+  if (search) wins = wins.filter(w => w.text.toLowerCase().includes(search) || w.date.includes(search));
 
-  const timeline=document.getElementById('wins-timeline');
-  if(!wins.length){
-    timeline.innerHTML=`<div class="wins-empty">${state.wins.length?'No matches found.':'Nothing yet today. Even getting out of bed counts.'}</div>`;
+  const timeline = document.getElementById('wins-timeline');
+  if (!wins.length) {
+    timeline.innerHTML = `<div class="wins-empty">${state.wins.length ? 'No matches found.' : 'Nothing yet today. Even getting out of bed counts.'}</div>`;
     return;
   }
 
-  timeline.innerHTML=wins.map(w=>{
-    const d=new Date(w.date+'T00:00:00');
-    const dateStr=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  timeline.innerHTML = wins.map(w => {
+    const d = new Date(w.date + 'T00:00:00');
+    const dateStr = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
     return `<div class="win-item">
       <div class="win-date">${dateStr}</div>
       <div class="win-text">${esc(w.text)}</div>
@@ -1244,99 +2058,127 @@ function renderWins(){
 // ─── SELF-CARE ───
 // ═══════════════════════════════════════════
 
-function renderCare(){
-  const today=fmt(new Date());
-  const items=state.care.items;
-  const todayData=state.care.days[today]||{};
-  const doneCount=items.filter(it=>todayData[it.id]).length;
+function getCareDate() {
+  return document.getElementById('care-date').value || fmt(new Date());
+}
+
+function setCareDateToday() {
+  document.getElementById('care-date').value = fmt(new Date());
+  renderCare();
+}
+
+function changeCareDate(offset) {
+  const cur = new Date(getCareDate() + 'T00:00:00');
+  cur.setDate(cur.getDate() + offset);
+  document.getElementById('care-date').value = fmt(cur);
+  renderCare();
+}
+
+function renderCare() {
+  const selectedDate = getCareDate();
+  const today = fmt(new Date());
+  const isToday = selectedDate === today;
+  const items = state.care.items;
+  const dayData = state.care.days[selectedDate] || {};
+  const doneCount = items.filter(it => dayData[it.id]).length;
+
+  // Date label
+  const dateLabel = document.getElementById('care-date-label');
+  if (dateLabel) {
+    if (isToday) {
+      dateLabel.textContent = '';
+    } else {
+      const d = new Date(selectedDate + 'T00:00:00');
+      dateLabel.textContent = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    }
+  }
 
   // Daily score
-  document.getElementById('care-score').innerHTML=`
+  document.getElementById('care-score').innerHTML = `
     <div class="cs-val">${doneCount}/${items.length}</div>
-    <div class="cs-lbl">today</div>`;
+    <div class="cs-lbl">${isToday ? 'today' : selectedDate}</div>`;
 
   // Toggle grid
-  document.getElementById('care-grid').innerHTML=items.map(it=>`
-    <div class="care-circle ${todayData[it.id]?'done':''}" onclick="toggleCare('${it.id}')">
+  document.getElementById('care-grid').innerHTML = items.map(it => `
+    <div class="care-circle ${dayData[it.id] ? 'done' : ''}" onclick="toggleCare('${it.id}')">
       <div class="care-icon">${it.icon}</div>
       <div class="care-name">${esc(it.name)}</div>
     </div>`).join('');
 
-  // Weekly scorecard (Mon-Sun of current week)
-  const now=new Date();
-  const dayOfWeek=now.getDay();
-  const mondayOffset=dayOfWeek===0?-6:1-dayOfWeek;
-  const monday=new Date(now);monday.setDate(now.getDate()+mondayOffset);
+  // Weekly scorecard
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  const monday = new Date(now); monday.setDate(now.getDate() + mondayOffset);
 
-  const weekDays=[];
-  for(let i=0;i<7;i++){
-    const d=new Date(monday);d.setDate(monday.getDate()+i);
-    weekDays.push({date:fmt(d),day:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i],isToday:fmt(d)===today});
+  const weekDays = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday); d.setDate(monday.getDate() + i);
+    weekDays.push({ date: fmt(d), day: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i], isToday: fmt(d) === today });
   }
 
-  let tableHtml=`<table><thead><tr><th></th>${weekDays.map(d=>
-    `<th style="${d.isToday?'color:var(--accent)':''}">${d.day}</th>`).join('')}</tr></thead><tbody>`;
-  items.forEach(it=>{
-    tableHtml+=`<tr><td class="cw-label">${it.icon} ${esc(it.name)}</td>`;
-    weekDays.forEach(d=>{
-      const done=state.care.days[d.date]&&state.care.days[d.date][it.id];
-      tableHtml+=`<td><span class="cw-dot ${done?'filled':''} ${d.isToday?'cw-today':''}"></span></td>`;
+  let tableHtml = `<table><thead><tr><th></th>${weekDays.map(d =>
+    `<th style="${d.isToday ? 'color:var(--accent)' : ''}">${d.day}</th>`).join('')}</tr></thead><tbody>`;
+  items.forEach(it => {
+    tableHtml += `<tr><td class="cw-label">${it.icon} ${esc(it.name)}</td>`;
+    weekDays.forEach(d => {
+      const done = state.care.days[d.date] && state.care.days[d.date][it.id];
+      tableHtml += `<td><span class="cw-dot ${done ? 'filled' : ''} ${d.isToday ? 'cw-today' : ''}"></span></td>`;
     });
-    tableHtml+='</tr>';
+    tableHtml += '</tr>';
   });
-  tableHtml+='</tbody></table>';
-  document.getElementById('care-weekly').innerHTML=tableHtml;
+  tableHtml += '</tbody></table>';
+  document.getElementById('care-weekly').innerHTML = tableHtml;
 
   // Monthly consistency + streaks
-  const monthStart=today.slice(0,8)+'01';
-  const daysInMonth=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
-  const dayOfMonth=now.getDate();
+  const dayOfMonth = now.getDate();
 
-  document.getElementById('care-monthly').innerHTML=items.map(it=>{
-    let doneDays=0;
-    for(let d=1;d<=dayOfMonth;d++){
-      const ds=today.slice(0,8)+String(d).padStart(2,'0');
-      if(state.care.days[ds]&&state.care.days[ds][it.id])doneDays++;
+  document.getElementById('care-monthly').innerHTML = items.map(it => {
+    let doneDays = 0;
+    for (let d = 1; d <= dayOfMonth; d++) {
+      const ds = today.slice(0, 8) + String(d).padStart(2, '0');
+      if (state.care.days[ds] && state.care.days[ds][it.id]) doneDays++;
     }
-    const pct=dayOfMonth?(doneDays/dayOfMonth*100).toFixed(0):0;
-    const streak=calcCareStreak(it.id);
+    const pct = dayOfMonth ? (doneDays / dayOfMonth * 100).toFixed(0) : 0;
+    const streak = calcCareStreak(it.id);
     return `<div class="care-pct-card">
       <div class="cp-icon">${it.icon}</div>
       <div class="cp-pct">${pct}%</div>
       <div class="cp-name">${esc(it.name)}</div>
-      <div class="cp-streak">${streak?streak+'d streak':'no streak'}</div>
+      <div class="cp-streak">${streak ? streak + 'd streak' : 'no streak'}</div>
     </div>`;
   }).join('');
 
-  // Config modal
   renderCareConfig();
 }
 
-function toggleCare(itemId){
-  const today=fmt(new Date());
-  if(!state.care.days[today])state.care.days[today]={};
-  if(state.care.days[today][itemId])delete state.care.days[today][itemId];
-  else state.care.days[today][itemId]=true;
-  save();renderCare();
+function toggleCare(itemId) {
+  const dateStr = getCareDate();
+  if (!state.care.days[dateStr]) state.care.days[dateStr] = {};
+  const done = !state.care.days[dateStr][itemId];
+  if (done) state.care.days[dateStr][itemId] = true;
+  else delete state.care.days[dateStr][itemId];
+  saveLocal();
+  syncCareToggle(itemId, dateStr, done);
+  renderCare();
 }
 
-function calcCareStreak(itemId){
-  let streak=0,d=new Date();d.setHours(0,0,0,0);
-  // Check today; if not done, check from yesterday
-  const todayDone=state.care.days[fmt(d)]&&state.care.days[fmt(d)][itemId];
-  if(!todayDone)d.setDate(d.getDate()-1);
-  while(true){
-    const ds=fmt(d);
-    if(state.care.days[ds]&&state.care.days[ds][itemId]){streak++;d.setDate(d.getDate()-1)}
+function calcCareStreak(itemId) {
+  let streak = 0, d = new Date(); d.setHours(0, 0, 0, 0);
+  const todayDone = state.care.days[fmt(d)] && state.care.days[fmt(d)][itemId];
+  if (!todayDone) d.setDate(d.getDate() - 1);
+  while (true) {
+    const ds = fmt(d);
+    if (state.care.days[ds] && state.care.days[ds][itemId]) { streak++; d.setDate(d.getDate() - 1); }
     else break;
   }
   return streak;
 }
 
-function renderCareConfig(){
-  const list=document.getElementById('care-config-list');
-  if(!list)return;
-  list.innerHTML=state.care.items.map(it=>`
+function renderCareConfig() {
+  const list = document.getElementById('care-config-list');
+  if (!list) return;
+  list.innerHTML = state.care.items.map(it => `
     <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)">
       <span style="font-size:18px">${it.icon}</span>
       <span style="flex:1;font-size:14px">${esc(it.name)}</span>
@@ -1344,64 +2186,70 @@ function renderCareConfig(){
     </div>`).join('');
 }
 
-function addCareItem(){
-  const name=document.getElementById('care-new-name').value.trim();
-  const icon=document.getElementById('care-new-icon').value.trim()||'✅';
-  if(!name)return;
-  state.care.items.push({id:uid(),name,icon});
-  save();
-  document.getElementById('care-new-name').value='';
-  document.getElementById('care-new-icon').value='';
-  renderCareConfig();renderCare();
+function addCareItem() {
+  const name = document.getElementById('care-new-name').value.trim();
+  const icon = document.getElementById('care-new-icon').value.trim() || '✅';
+  if (!name) return;
+  const localId = uid();
+  state.care.items.push({ id: localId, name, icon });
+  saveLocal();
+  syncCareItemCreate(localId, name, icon, state.care.items.length - 1);
+  document.getElementById('care-new-name').value = '';
+  document.getElementById('care-new-icon').value = '';
+  renderCareConfig(); renderCare();
 }
 
-function removeCareItem(id){
-  if(!confirm('Remove this item?'))return;
-  state.care.items=state.care.items.filter(it=>it.id!==id);
-  save();renderCareConfig();renderCare();
+function removeCareItem(id) {
+  if (!confirm('Remove this item?')) return;
+  syncCareItemDelete(id);
+  state.care.items = state.care.items.filter(it => it.id !== id);
+  saveLocal(); renderCareConfig(); renderCare();
 }
 
 // ─── Modals ───
-function openModal(id){document.getElementById(id).classList.add('open')}
-function closeModal(id){document.getElementById(id).classList.remove('open')}
-document.querySelectorAll('.modal-overlay').forEach(m=>{
-  m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id)})
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) closeModal(m.id); });
 });
 
 // ─── Settings ───
-function openSettings(){openModal('modal-settings')}
+function openSettings() { openModal('modal-settings'); }
 
-function exportData(){
-  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download='pulse-backup-'+fmt(new Date())+'.json';a.click();
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'pulse-backup-' + fmt(new Date()) + '.json'; a.click();
 }
 
-function importData(e){
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    try{
-      const data=JSON.parse(ev.target.result);
-      if(data.habits)state.habits=data.habits;
-      if(data.friends)state.friends=data.friends;
-      if(data.mood)state.mood=data.mood;
-      if(data.wins)state.wins=data.wins;
-      if(data.care)state.care=data.care;
-      state.currentYear=data.currentYear||new Date().getFullYear();
-      save();location.reload();
-    }catch(err){alert('Invalid JSON file')}
+function importData(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (data.habits) state.habits = data.habits;
+      if (data.friends) state.friends = data.friends;
+      if (data.mood) state.mood = data.mood;
+      if (data.wins) state.wins = data.wins;
+      if (data.care) state.care = data.care;
+      state.currentYear = data.currentYear || new Date().getFullYear();
+      saveLocal(); location.reload();
+    } catch (err) { alert('Invalid JSON file'); }
   };
   reader.readAsText(file);
-  e.target.value='';
+  e.target.value = '';
 }
 
-function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// ─── Online/Offline handling ───
+window.addEventListener('online', () => { setSyncStatus('ok'); });
+window.addEventListener('offline', () => { setSyncStatus('offline'); });
 
 // ─── Init ───
-load();
-renderHabits();
-renderFriends();
+// Don't render yet — wait for auth state
+loadLocal();
 </script>
 </body>
 </html>
