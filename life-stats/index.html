@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Pulse</title>
+<title>Pulse - Life Dashboard</title>
+<meta name="description" content="Track habits, mood, self-care, friendships, and daily wins — all in one place.">
+<meta property="og:title" content="Pulse - Life Dashboard">
+<meta property="og:description" content="Track habits, mood, self-care, friendships, and daily wins — all in one place.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://masha-l.github.io/life-stats/">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 88C25 70 10 55 10 38c0-14 11-25 25-25 8 0 15 4 15 4s7-4 15-4c14 0 25 11 25 25 0 17-15 32-40 50z' fill='%23a78bfa'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -43,6 +50,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .auth-toggle{text-align:center;margin-top:16px;font-size:13px;color:var(--text2)}
 .auth-toggle a{color:var(--accent);cursor:pointer;text-decoration:none}
 .auth-toggle a:hover{text-decoration:underline}
+#auth-forgot{margin-top:8px;font-size:12px}
+#auth-forgot a{color:var(--text3)}
+#auth-forgot a:hover{color:var(--accent)}
 .auth-error{color:var(--red);font-size:12px;text-align:center;margin-top:10px;min-height:18px}
 .auth-info{color:var(--green);font-size:12px;text-align:center;margin-top:10px;min-height:18px}
 
@@ -67,7 +77,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .header-email{font-size:10px;color:var(--text3);max-width:120px;overflow:hidden;
   text-overflow:ellipsis;white-space:nowrap}
 .header-actions{display:flex;gap:8px}
-.icon-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);
+.icon-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);
   background:var(--surface);color:var(--text2);display:flex;align-items:center;
   justify-content:center;cursor:pointer;font-size:18px;transition:all .2s}
 .icon-btn:hover{background:var(--surface2);color:var(--text)}
@@ -88,8 +98,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
   background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-top:1px solid var(--border);padding:6px 0 env(safe-area-inset-bottom,8px);z-index:100}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
-  padding:8px 2px;cursor:pointer;transition:all .2s;position:relative;
-  -webkit-tap-highlight-color:transparent}
+  padding:10px 2px;cursor:pointer;transition:all .2s;position:relative;
+  min-height:48px;-webkit-tap-highlight-color:transparent}
 .tab svg{width:22px;height:22px;stroke:var(--text3);fill:none;stroke-width:1.8;transition:all .2s}
 .tab span{font-size:10px;font-weight:500;color:var(--text3);transition:all .2s}
 .tab.active svg{stroke:var(--accent)}
@@ -117,8 +127,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .habit-card .stat{text-align:center}
 .habit-card .stat-val{font-size:18px;font-weight:700}
 .habit-card .stat-lbl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
-.habit-card .habit-menu-btn{cursor:pointer;padding:4px 8px;color:var(--text3);font-size:18px;
-  border:none;background:none;transition:color .2s}
+.habit-card .habit-menu-btn{cursor:pointer;padding:8px 12px;color:var(--text3);font-size:18px;
+  border:none;background:none;transition:color .2s;min-width:44px;min-height:44px;
+  display:flex;align-items:center;justify-content:center}
 .habit-card .habit-menu-btn:hover{color:var(--text)}
 
 .heatmap-wrap{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
@@ -163,9 +174,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .friend-status.yellow .friend-days{color:var(--yellow)}
 .friend-status.red .friend-days{color:var(--red)}
 .friend-actions{display:flex;gap:8px;margin-top:8px}
-.friend-actions button{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);
+.friend-actions button{flex:1;padding:12px 8px;border-radius:8px;border:1px solid var(--border);
   background:var(--surface2);color:var(--text2);font-size:12px;font-weight:500;
-  cursor:pointer;transition:all .2s}
+  cursor:pointer;transition:all .2s;min-height:44px}
 .friend-actions button:hover{background:rgba(255,255,255,0.1);color:var(--text)}
 .friend-history{margin-top:10px;max-height:0;overflow:hidden;transition:max-height .3s}
 .friend-history.open{max-height:300px;overflow-y:auto}
@@ -195,7 +206,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .mood-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .mood-row .mood-label{font-size:13px;font-weight:500;min-width:60px;color:var(--text2)}
 .emoji-scale{display:flex;gap:6px}
-.emoji-btn{width:42px;height:42px;border-radius:50%;border:2px solid var(--border);
+.emoji-btn{width:44px;height:44px;border-radius:50%;border:2px solid var(--border);
   background:var(--surface);font-size:20px;display:flex;align-items:center;justify-content:center;
   cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
 .emoji-btn:hover{background:var(--surface2);transform:scale(1.1)}
@@ -373,8 +384,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 /* Context menu */
 .ctx-menu{position:fixed;background:#1e1e2e;border:1px solid var(--border);border-radius:10px;
   padding:4px;z-index:250;min-width:140px;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
-.ctx-menu button{display:block;width:100%;padding:8px 12px;border:none;background:none;
-  color:var(--text);font-size:13px;text-align:left;cursor:pointer;border-radius:6px;transition:all .15s}
+.ctx-menu button{display:block;width:100%;padding:12px 16px;border:none;background:none;
+  color:var(--text);font-size:14px;text-align:left;cursor:pointer;border-radius:6px;transition:all .15s;
+  min-height:44px}
 .ctx-menu button:hover{background:var(--surface2)}
 .ctx-menu button.danger{color:var(--red)}
 </style>
@@ -386,19 +398,21 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
   <div class="auth-card">
     <h1>Pulse</h1>
     <div class="auth-subtitle">Track habits, mood, and self-care</div>
-    <div id="auth-form">
+    <form id="auth-form" onsubmit="event.preventDefault();handleAuth()">
       <label>Email</label>
       <input type="email" id="auth-email" placeholder="you@example.com" autocomplete="email">
       <label>Password</label>
-      <input type="password" id="auth-password" placeholder="Min 6 characters" autocomplete="current-password"
-        onkeydown="if(event.key==='Enter')handleAuth()">
-      <button class="auth-btn" id="auth-btn" onclick="handleAuth()">Log In</button>
+      <input type="password" id="auth-password" placeholder="Min 6 characters" autocomplete="current-password">
+      <button type="submit" class="auth-btn" id="auth-btn">Log In</button>
       <div class="auth-error" id="auth-error"></div>
       <div class="auth-info" id="auth-info"></div>
       <div class="auth-toggle" id="auth-toggle">
         Don't have an account? <a onclick="toggleAuthMode()">Sign up</a>
       </div>
-    </div>
+      <div class="auth-toggle" id="auth-forgot">
+        <a onclick="handleForgotPassword()">Forgot password?</a>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -435,7 +449,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
       </div>
       <div id="habits-list"></div>
       <div style="text-align:center;padding:20px">
-        <button class="icon-btn" style="width:44px;height:44px;font-size:24px;margin:0 auto"
+        <button class="icon-btn" style="font-size:24px;margin:0 auto"
           onclick="openAddHabit()">+</button>
         <div style="font-size:11px;color:var(--text3);margin-top:6px">Add habit</div>
       </div>
@@ -454,7 +468,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
       </div>
       <div id="friends-list"></div>
       <div style="text-align:center;padding:20px">
-        <button class="icon-btn" style="width:44px;height:44px;font-size:24px;margin:0 auto"
+        <button class="icon-btn" style="font-size:24px;margin:0 auto"
           onclick="openAddFriend()">+</button>
         <div style="font-size:11px;color:var(--text3);margin-top:6px">Add friend</div>
       </div>
@@ -556,7 +570,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
     <div class="tab" onclick="switchTab('wins')">
       <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       <span>Wins</span>
-      <div class="badge" id="wins-badge">0</div>
+      <div class="badge" id="wins-badge"></div>
     </div>
     <div class="tab" onclick="switchTab('care')">
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -740,6 +754,24 @@ async function handleAuth() {
   }
 }
 
+async function handleForgotPassword() {
+  const email = document.getElementById('auth-email').value.trim();
+  const errEl = document.getElementById('auth-error');
+  const infoEl = document.getElementById('auth-info');
+  errEl.textContent = '';
+  infoEl.textContent = '';
+  if (!email) { errEl.textContent = 'Enter your email first'; return; }
+  try {
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + window.location.pathname
+    });
+    if (error) throw error;
+    infoEl.textContent = 'Password reset email sent! Check your inbox.';
+  } catch (e) {
+    errEl.textContent = e.message || 'Could not send reset email';
+  }
+}
+
 async function handleLogout() {
   await sb.auth.signOut();
   currentUser = null;
@@ -748,6 +780,7 @@ async function handleLogout() {
   document.getElementById('auth-error').textContent = '';
   document.getElementById('auth-info').textContent = '';
   document.getElementById('auth-password').value = '';
+  document.getElementById('auth-email').value = '';
   // Reset auth button state
   const btn = document.getElementById('auth-btn');
   btn.disabled = false;
