@@ -30,6 +30,12 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .auth-screen{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;
   align-items:center;justify-content:center;padding:20px}
 .auth-screen.hidden{display:none}
+.auth-screen.loading .auth-card{display:none}
+.auth-loading{display:none;text-align:center;color:var(--text2);font-size:14px}
+.auth-screen.loading .auth-loading{display:block}
+.auth-loading .loading-spinner{width:32px;height:32px;border:3px solid var(--border);
+  border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
 .auth-card{width:100%;max-width:380px;background:rgba(255,255,255,0.03);
   border:1px solid var(--border);border-radius:20px;padding:32px 28px;
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
@@ -400,7 +406,11 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 <body>
 
 <!-- Auth Screen -->
-<div class="auth-screen" id="auth-screen">
+<div class="auth-screen loading" id="auth-screen">
+  <div class="auth-loading">
+    <div class="loading-spinner"></div>
+    Loading...
+  </div>
   <div class="auth-card">
     <h1>Pulse</h1>
     <div class="auth-subtitle">Track habits, mood, and self-care</div>
@@ -413,10 +423,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
       <div class="auth-error" id="auth-error"></div>
       <div class="auth-info" id="auth-info"></div>
       <div class="auth-toggle" id="auth-toggle">
-        Don't have an account? <a onclick="toggleAuthMode()">Sign up</a>
+        Don't have an account? <a href="#" role="button" onclick="toggleAuthMode();return false" tabindex="0">Sign up</a>
       </div>
       <div class="auth-toggle" id="auth-forgot">
-        <a onclick="handleForgotPassword()">Forgot password?</a>
+        <a href="#" role="button" onclick="handleForgotPassword();return false" tabindex="0">Forgot password?</a>
       </div>
     </form>
   </div>
@@ -699,6 +709,24 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let currentUser = null;
 let _syncing = false;
+let _authResolved = false;
+
+// ─── Retry with exponential backoff ───
+async function withRetry(fn, maxRetries = 3) {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (e) {
+      const msg = (e.message || e.toString()).toLowerCase();
+      const isRetryable = e.status === 429 || msg.includes('lock') || msg.includes('rate') ||
+        msg.includes('another request stole') || msg.includes('network') || msg.includes('fetch');
+      if (!isRetryable || attempt === maxRetries) throw e;
+      const delay = Math.pow(2, attempt) * 1000; // 1s, 2s, 4s
+      console.warn(`Retry ${attempt + 1}/${maxRetries} after ${delay}ms:`, msg);
+      await new Promise(r => setTimeout(r, delay));
+    }
+  }
+}
 
 // ─── Sync indicator ───
 function setSyncStatus(status) {
@@ -715,8 +743,8 @@ function toggleAuthMode() {
   authMode = authMode === 'login' ? 'signup' : 'login';
   document.getElementById('auth-btn').textContent = authMode === 'login' ? 'Log In' : 'Sign Up';
   document.getElementById('auth-toggle').innerHTML = authMode === 'login'
-    ? 'Don\'t have an account? <a onclick="toggleAuthMode()">Sign up</a>'
-    : 'Already have an account? <a onclick="toggleAuthMode()">Log in</a>';
+    ? 'Don\'t have an account? <a href="#" role="button" onclick="toggleAuthMode();return false" tabindex="0">Sign up</a>'
+    : 'Already have an account? <a href="#" role="button" onclick="toggleAuthMode();return false" tabindex="0">Log in</a>';
   document.getElementById('auth-error').textContent = '';
   document.getElementById('auth-info').textContent = '';
 }
@@ -782,7 +810,9 @@ async function handleLogout() {
   await sb.auth.signOut();
   currentUser = null;
   document.getElementById('main-app').classList.add('hidden');
-  document.getElementById('auth-screen').classList.remove('hidden');
+  const authScreen = document.getElementById('auth-screen');
+  authScreen.classList.remove('loading');
+  authScreen.classList.remove('hidden');
   document.getElementById('auth-error').textContent = '';
   document.getElementById('auth-info').textContent = '';
   document.getElementById('auth-password').value = '';
@@ -796,6 +826,7 @@ async function handleLogout() {
 // ─── Auth State Listener ───
 sb.auth.onAuthStateChange(async (event, session) => {
   if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
+    _authResolved = true;
     if (session && session.user) {
       currentUser = session.user;
       document.getElementById('header-email').textContent = currentUser.email;
@@ -803,18 +834,30 @@ sb.auth.onAuthStateChange(async (event, session) => {
       document.getElementById('main-app').classList.remove('hidden');
 
       if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
-        await initAppWithUser();
+        // Sync mutex — prevent concurrent syncs from overlapping auth events
+        if (_syncing) { console.log('Sync already in progress, skipping'); return; }
+        _syncing = true;
+        try {
+          await initAppWithUser();
+        } finally {
+          _syncing = false;
+        }
       }
     } else if (event === 'INITIAL_SESSION') {
-      // No session — show login
-      document.getElementById('auth-screen').classList.remove('hidden');
+      // No session — show login form (remove loading state)
+      const authScreen = document.getElementById('auth-screen');
+      authScreen.classList.remove('loading');
+      authScreen.classList.remove('hidden');
       document.getElementById('main-app').classList.add('hidden');
     }
   }
   if (event === 'SIGNED_OUT') {
     currentUser = null;
+    _syncing = false;
     document.getElementById('main-app').classList.add('hidden');
-    document.getElementById('auth-screen').classList.remove('hidden');
+    const authScreen = document.getElementById('auth-screen');
+    authScreen.classList.remove('loading');
+    authScreen.classList.remove('hidden');
     // Reset auth button state on sign out
     const authBtn = document.getElementById('auth-btn');
     if (authBtn) {
@@ -900,37 +943,24 @@ async function loadFromSupabase() {
   if (!currentUser) return false;
   setSyncStatus('syncing');
   try {
-    // Load habits
-    const { data: habits, error: hErr } = await sb.from('habits').select('*').eq('user_id', currentUser.id);
-    if (hErr) throw hErr;
+    // Helper: fetch with retry
+    async function fetchTable(table) {
+      return withRetry(async () => {
+        const { data, error } = await sb.from(table).select('*').eq('user_id', currentUser.id);
+        if (error) throw error;
+        return data;
+      });
+    }
 
-    // Load habit_days
-    const { data: habitDays, error: hdErr } = await sb.from('habit_days').select('*').eq('user_id', currentUser.id);
-    if (hdErr) throw hdErr;
-
-    // Load friends
-    const { data: friends, error: fErr } = await sb.from('friends').select('*').eq('user_id', currentUser.id);
-    if (fErr) throw fErr;
-
-    // Load interactions
-    const { data: interactions, error: iErr } = await sb.from('interactions').select('*').eq('user_id', currentUser.id);
-    if (iErr) throw iErr;
-
-    // Load mood_entries
-    const { data: moods, error: mErr } = await sb.from('mood_entries').select('*').eq('user_id', currentUser.id);
-    if (mErr) throw mErr;
-
-    // Load wins
-    const { data: wins, error: wErr } = await sb.from('wins').select('*').eq('user_id', currentUser.id);
-    if (wErr) throw wErr;
-
-    // Load selfcare_items
-    const { data: careItems, error: ciErr } = await sb.from('selfcare_items').select('*').eq('user_id', currentUser.id);
-    if (ciErr) throw ciErr;
-
-    // Load selfcare_days
-    const { data: careDays, error: cdErr } = await sb.from('selfcare_days').select('*').eq('user_id', currentUser.id);
-    if (cdErr) throw cdErr;
+    // Load all tables with retry
+    const habits = await fetchTable('habits');
+    const habitDays = await fetchTable('habit_days');
+    const friends = await fetchTable('friends');
+    const interactions = await fetchTable('interactions');
+    const moods = await fetchTable('mood_entries');
+    const wins = await fetchTable('wins');
+    const careItems = await fetchTable('selfcare_items');
+    const careDays = await fetchTable('selfcare_days');
 
     // Check if DB has data
     const hasData = habits.length > 0 || friends.length > 0 || moods.length > 0 ||
@@ -1015,13 +1045,17 @@ async function seedDefaults() {
   setSyncStatus('syncing');
   try {
     // Ensure profile exists
-    await sb.from('profiles').upsert({ id: currentUser.id, email: currentUser.email }, { onConflict: 'id' });
+    await withRetry(() => sb.from('profiles').upsert({ id: currentUser.id, email: currentUser.email }, { onConflict: 'id' }));
 
     // Seed habits
     const habitInserts = DEFAULT_HABITS.map(h => ({
       user_id: currentUser.id, name: h.name, color: h.color
     }));
-    const { data: newHabits, error: hErr } = await sb.from('habits').insert(habitInserts).select();
+    const { data: newHabits, error: hErr } = await withRetry(async () => {
+      const res = await sb.from('habits').insert(habitInserts).select();
+      if (res.error) throw res.error;
+      return res;
+    });
     if (hErr) throw hErr;
 
     state.habits = newHabits.map(h => {
@@ -1034,7 +1068,11 @@ async function seedDefaults() {
     const careInserts = DEFAULT_CARE_ITEMS.map((ci, i) => ({
       user_id: currentUser.id, name: ci.name, emoji: ci.icon, sort_order: i
     }));
-    const { data: newCare, error: cErr } = await sb.from('selfcare_items').insert(careInserts).select();
+    const { data: newCare, error: cErr } = await withRetry(async () => {
+      const res = await sb.from('selfcare_items').insert(careInserts).select();
+      if (res.error) throw res.error;
+      return res;
+    });
     if (cErr) throw cErr;
 
     state.care.items = newCare.sort((a, b) => a.sort_order - b.sort_order).map(ci => {
@@ -1075,7 +1113,7 @@ async function flushSync() {
   setSyncStatus('syncing');
   try {
     for (const op of ops) {
-      await op();
+      await withRetry(op);
     }
     setSyncStatus('ok');
   } catch (e) {
@@ -1390,7 +1428,11 @@ async function initAppWithUser() {
         const habitInserts = DEFAULT_HABITS.map(h => ({
           user_id: currentUser.id, name: h.name, color: h.color
         }));
-        const { data: newHabits, error: hErr } = await sb.from('habits').insert(habitInserts).select();
+        const { data: newHabits, error: hErr } = await withRetry(async () => {
+          const res = await sb.from('habits').insert(habitInserts).select();
+          if (res.error) throw res.error;
+          return res;
+        });
         if (!hErr && newHabits) {
           state.habits = newHabits.map(h => {
             const localId = uid();
@@ -1406,7 +1448,11 @@ async function initAppWithUser() {
         const careInserts = DEFAULT_CARE_ITEMS.map((ci, i) => ({
           user_id: currentUser.id, name: ci.name, emoji: ci.icon, sort_order: i
         }));
-        const { data: newCare, error: cErr } = await sb.from('selfcare_items').insert(careInserts).select();
+        const { data: newCare, error: cErr } = await withRetry(async () => {
+          const res = await sb.from('selfcare_items').insert(careInserts).select();
+          if (res.error) throw res.error;
+          return res;
+        });
         if (!cErr && newCare) {
           state.care.items = newCare.sort((a, b) => a.sort_order - b.sort_order).map(ci => {
             const localId = ci.name.toLowerCase().replace(/\s+/g, '-') || uid();
