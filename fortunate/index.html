@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Fortunate Are You?</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-deep: #0a0a0f;
+  --bg-card: rgba(255,255,255,0.03);
+  --border-subtle: rgba(255,255,255,0.06);
+  --text-primary: #e8e6e3;
+  --text-secondary: rgba(255,255,255,0.5);
+  --text-muted: rgba(255,255,255,0.3);
+  --accent: #7c6ef0;
+  --accent-glow: rgba(124,110,240,0.15);
+  --yes-color: #6ee7b7;
+  --yes-glow: rgba(110,231,183,0.12);
+  --no-color: #f87171;
+  --no-glow: rgba(248,113,113,0.12);
+  --gradient-warm: linear-gradient(135deg, #7c6ef0 0%, #a78bfa 50%, #c4b5fd 100%);
+}
+
+html { font-size: 16px; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Ambient background */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    radial-gradient(ellipse at 20% 50%, rgba(124,110,240,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(167,139,250,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(110,231,183,0.03) 0%, transparent 50%);
+  animation: ambientDrift 20s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes ambientDrift {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-2%, 1%) scale(1.02); }
+}
+
+/* Container */
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 640px;
+  padding: 2rem 1.5rem;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Screens */
+.screen {
+  width: 100%;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.screen.active { display: flex; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-16px); }
+}
+
+.screen.exiting {
+  animation: fadeOut 0.35s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+/* ===== INTRO SCREEN ===== */
+.intro-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.6s 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.intro-title {
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.6s 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.intro-title em {
+  font-style: normal;
+  font-weight: 600;
+  background: var(--gradient-warm);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.intro-desc {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 460px;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: fadeUp 0.6s 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.intro-note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeUp 0.6s 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-start {
+  padding: 1rem 3rem;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 24px rgba(124,110,240,0.3);
+  opacity: 0;
+  animation: fadeUp 0.6s 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.btn-start:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(124,110,240,0.4);
+}
+
+.btn-start:active { transform: translateY(0); }
+
+/* ===== QUESTION SCREEN ===== */
+.top-bar {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.progress-track {
+  width: 100%;
+  height: 3px;
+  background: var(--border-subtle);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--gradient-warm);
+  border-radius: 2px;
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 0%;
+}
+
+.progress-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+/* Percentage display */
+.fortune-display {
+  margin-bottom: 3rem;
+}
+
+.fortune-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.fortune-number {
+  font-size: clamp(3rem, 10vw, 4.5rem);
+  font-weight: 800;
+  background: var(--gradient-warm);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  transition: opacity 0.3s;
+}
+
+.fortune-suffix {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* Question */
+.question-area {
+  margin-bottom: 3rem;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.question-text {
+  font-size: clamp(1.3rem, 4vw, 1.7rem);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  max-width: 500px;
+}
+
+.question-text.animating {
+  animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Stat reveal */
+.stat-reveal {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.stat-reveal.visible { display: flex; }
+
+.stat-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 420px;
+  font-weight: 400;
+}
+
+.stat-text strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Answer buttons */
+.answer-buttons {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  max-width: 360px;
+}
+
+.btn-answer {
+  flex: 1;
+  padding: 1.1rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.btn-answer:hover {
+  transform: translateY(-2px);
+}
+
+.btn-answer.btn-yes:hover {
+  background: var(--yes-glow);
+  border-color: rgba(110,231,183,0.25);
+  box-shadow: 0 4px 20px var(--yes-glow);
+  color: var(--yes-color);
+}
+
+.btn-answer.btn-no:hover {
+  background: var(--no-glow);
+  border-color: rgba(248,113,113,0.2);
+  box-shadow: 0 4px 20px var(--no-glow);
+  color: var(--no-color);
+}
+
+.btn-answer:active { transform: translateY(0); }
+
+.btn-answer:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ===== RESULTS SCREEN ===== */
+#results-screen {
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+.result-glow {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  margin-bottom: 1.5rem;
+  animation: pulseGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 40px rgba(124,110,240,0.05); }
+  100% { box-shadow: 0 0 60px rgba(124,110,240,0.1); }
+}
+
+.result-percent {
+  font-size: clamp(3.5rem, 12vw, 5rem);
+  font-weight: 800;
+  background: var(--gradient-warm);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.result-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.result-message {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 480px;
+  margin-bottom: 2rem;
+}
+
+.result-message em {
+  font-style: normal;
+  color: var(--text-primary);
+}
+
+/* Breakdown */
+.breakdown {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.breakdown-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.breakdown-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.breakdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.82rem;
+  text-align: left;
+  opacity: 0;
+  animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.breakdown-item .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.breakdown-item .dot.yes { background: var(--yes-color); }
+.breakdown-item .dot.no { background: var(--no-color); opacity: 0.5; }
+
+.breakdown-item .q-text {
+  flex: 1;
+  color: var(--text-secondary);
+}
+
+.breakdown-item .q-weight {
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.breakdown-item .q-weight.yes { color: var(--yes-color); }
+
+/* Sources */
+.sources {
+  width: 100%;
+  margin-bottom: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.sources-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.source-item {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+/* Share / Actions */
+.result-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.btn-share {
+  padding: 0.85rem 1.8rem;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(124,110,240,0.25);
+}
+
+.btn-share:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(124,110,240,0.35);
+}
+
+.btn-restart {
+  padding: 0.85rem 1.8rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.btn-restart:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,0.12);
+  color: var(--text-primary);
+}
+
+.copied-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(124,110,240,0.9);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+  backdrop-filter: blur(12px);
+}
+
+.copied-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Reflection quote */
+.reflection {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  max-width: 400px;
+  line-height: 1.6;
+  margin-top: 0.5rem;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .container { padding: 1.5rem 1.25rem; }
+  .answer-buttons { max-width: 300px; }
+  .btn-answer { padding: 1rem 1rem; }
+  .breakdown-item { padding: 0.55rem 0.7rem; font-size: 0.78rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- INTRO -->
+  <div class="screen active" id="intro-screen">
+    <div class="intro-label">A moment of reflection</div>
+    <h1 class="intro-title">How <em>Fortunate</em> Are You?</h1>
+    <p class="intro-desc">Fifteen simple questions. Each one a lens on something billions of people live without. This isn't about guilt — it's about perspective.</p>
+    <p class="intro-note">Based on data from UNESCO, WHO, World Bank, ITU & UNHCR</p>
+    <button class="btn btn-start" onclick="startQuiz()">Begin</button>
+  </div>
+
+  <!-- QUESTION -->
+  <div class="screen" id="question-screen">
+    <div class="top-bar">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">Question 1 of 15</div>
+    </div>
+
+    <div class="fortune-display">
+      <div class="fortune-label">More fortunate than</div>
+      <div class="fortune-number" id="fortune-number">0%</div>
+      <div class="fortune-suffix">of the world's population</div>
+    </div>
+
+    <div class="question-area">
+      <div class="question-text" id="question-text"></div>
+      <div class="stat-reveal" id="stat-reveal">
+        <p class="stat-text" id="stat-text"></p>
+      </div>
+    </div>
+
+    <div class="answer-buttons" id="answer-buttons">
+      <button class="btn btn-answer btn-yes" onclick="answer(true)">Yes</button>
+      <button class="btn btn-answer btn-no" onclick="answer(false)">No</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="screen" id="results-screen">
+    <div class="result-glow">
+      <div class="result-percent" id="result-percent">0%</div>
+      <div class="result-label">more fortunate</div>
+    </div>
+    <p class="result-message" id="result-message"></p>
+
+    <div class="breakdown">
+      <div class="breakdown-title">Your Answers</div>
+      <div class="breakdown-list" id="breakdown-list"></div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn btn-share" onclick="shareResult()">Copy Result</button>
+      <button class="btn btn-restart" onclick="restart()">Start Over</button>
+    </div>
+
+    <div class="sources">
+      <div class="sources-title">Sources &amp; Methodology</div>
+      <div id="sources-list"></div>
+    </div>
+
+    <p class="reflection">"To whom much is given, much will be required." — But first, simply notice what you've been given.</p>
+  </div>
+
+</div>
+
+<div class="copied-toast" id="copied-toast">Copied to clipboard</div>
+
+<script>
+const questions = [
+  {
+    text: "Can you read and write?",
+    weight: 14,
+    statYes: "Around <strong>770 million adults</strong> worldwide cannot read or write. You can — that alone sets you apart from 14% of humanity.",
+    statNo: "You share this reality with roughly <strong>770 million adults</strong> worldwide. Literacy remains out of reach for 14% of humanity.",
+    shortLabel: "Literacy",
+    source: "UNESCO Institute for Statistics, 2023"
+  },
+  {
+    text: "Do you have access to clean drinking water?",
+    weight: 45,
+    statYes: "Nearly <strong>half the world</strong> — about 3.6 billion people — lack access to safely managed drinking water.",
+    statNo: "You are among the <strong>3.6 billion people</strong> — nearly half the world — without safe drinking water access.",
+    shortLabel: "Clean water",
+    source: "WHO/UNICEF JMP & Science (2024)"
+  },
+  {
+    text: "Do you have access to the internet?",
+    weight: 37,
+    statYes: "Roughly <strong>2.6 billion people</strong> — a third of humanity — have never been online.",
+    statNo: "You are among the <strong>2.6 billion people</strong> who remain offline in an increasingly digital world.",
+    shortLabel: "Internet access",
+    source: "ITU, 2024"
+  },
+  {
+    text: "Did you attend secondary school?",
+    weight: 34,
+    statYes: "Only <strong>66%</strong> of the world's population completes secondary education. A third never get the chance.",
+    statNo: "You're among the <strong>one-third</strong> of people worldwide who didn't complete secondary school.",
+    shortLabel: "Secondary education",
+    source: "UNESCO Global Education Monitoring Report"
+  },
+  {
+    text: "Are your parents still alive?",
+    weight: 8,
+    statYes: "There are an estimated <strong>153 million orphans</strong> worldwide — children who've lost one or both parents.",
+    statNo: "You are among <strong>millions globally</strong> who have lost one or both parents. An estimated 153 million children are orphaned worldwide.",
+    shortLabel: "Parents alive",
+    source: "UNICEF, 2023"
+  },
+  {
+    text: "Are your parents still together?",
+    weight: 5,
+    statYes: "While divorce rates vary widely, in many developed nations <strong>40–50%</strong> of marriages end in divorce. Intact families are rarer than we assume.",
+    statNo: "Across the developed world, <strong>40–50%</strong> of marriages end in separation. Intact families are less common than we assume.",
+    shortLabel: "Parents together",
+    source: "OECD Family Database"
+  },
+  {
+    text: "Do you have a roof over your head?",
+    weight: 2,
+    statYes: "An estimated <strong>150 million people</strong> worldwide are homeless. Roughly 1.8 billion lack adequate housing.",
+    statNo: "You are among an estimated <strong>150 million people</strong> worldwide without a home. Another 1.8 billion live in inadequate housing.",
+    shortLabel: "Shelter",
+    source: "UN-Habitat, Institute of Global Homelessness"
+  },
+  {
+    text: "Did you eat today?",
+    weight: 9,
+    statYes: "Approximately <strong>735 million people</strong> face chronic hunger — they go to bed not knowing if they'll eat tomorrow.",
+    statNo: "You are among the <strong>735 million people</strong> worldwide who face chronic hunger and food insecurity.",
+    shortLabel: "Food security",
+    source: "FAO, State of Food Security and Nutrition, 2023"
+  },
+  {
+    text: "Do you have electricity in your home?",
+    weight: 8,
+    statYes: "Around <strong>675 million people</strong> still live without any access to electricity.",
+    statNo: "You are among the <strong>675 million people</strong> globally who lack access to electricity.",
+    shortLabel: "Electricity",
+    source: "World Bank, IEA, 2023"
+  },
+  {
+    text: "Do you have a bank account?",
+    weight: 17,
+    statYes: "About <strong>1.4 billion adults</strong> worldwide are unbanked — no safe place to save, send, or receive money.",
+    statNo: "You're among the <strong>1.4 billion adults</strong> worldwide with no access to formal financial services.",
+    shortLabel: "Banking access",
+    source: "World Bank Global Findex Database, 2021"
+  },
+  {
+    text: "Do you own a smartphone?",
+    weight: 42,
+    statYes: "Around <strong>3.4 billion people</strong> — over 40% of the world — don't own a smartphone.",
+    statNo: "You're among the <strong>3.4 billion people</strong> — over 40% of the world — without a smartphone.",
+    shortLabel: "Smartphone",
+    source: "GSMA, 2024"
+  },
+  {
+    text: "Have you ever traveled outside your country?",
+    weight: 88,
+    statYes: "Only about <strong>10–15%</strong> of the world's population holds a passport. International travel is a profound privilege.",
+    statNo: "You're with the vast majority — roughly <strong>85–90%</strong> of the world has never left their home country.",
+    shortLabel: "International travel",
+    source: "UNWTO, various national statistics"
+  },
+  {
+    text: "Do you have access to healthcare?",
+    weight: 56,
+    statYes: "An estimated <strong>4.5 billion people</strong> — more than half the world — lack access to essential health services.",
+    statNo: "You're among the <strong>4.5 billion people</strong> — over half of humanity — without access to essential health services.",
+    shortLabel: "Healthcare access",
+    source: "WHO & World Bank, UHC Global Monitoring Report"
+  },
+  {
+    text: "Did you grow up without experiencing war in your country?",
+    weight: 25,
+    statYes: "Over <strong>2 billion people</strong> currently live in conflict-affected areas. Peace during childhood is far from universal.",
+    statNo: "You are among the <strong>2+ billion people</strong> who have lived through conflict. Peace is not the default for much of the world.",
+    shortLabel: "Peace / no war",
+    source: "UNHCR, World Bank Fragility Reports"
+  },
+  {
+    text: "Do you have a college or university degree?",
+    weight: 93,
+    statYes: "Only about <strong>7%</strong> of the global population holds a university degree. You're in a small minority.",
+    statNo: "You're in good company — <strong>93%</strong> of the world doesn't hold a university degree either.",
+    shortLabel: "University degree",
+    source: "UNESCO, World Bank Education Statistics"
+  }
+];
+
+/* Weight normalization:
+   Each question's weight represents what percentile of the world lacks this.
+   We normalize so that answering YES to all 15 = ~96%, YES to none = ~4%.
+   The formula: base = 4%, each yes adds (weight / totalWeights) * 92% */
+
+const totalWeight = questions.reduce((s, q) => s + q.weight, 0);
+const BASE_PERCENT = 4;
+const MAX_GAIN = 92;
+
+let currentQuestion = 0;
+let answers = [];
+let currentPercent = BASE_PERCENT;
+let displayedPercent = BASE_PERCENT;
+let animFrame = null;
+
+function startQuiz() {
+  const intro = document.getElementById('intro-screen');
+  const qScreen = document.getElementById('question-screen');
+  
+  intro.classList.add('exiting');
+  setTimeout(() => {
+    intro.classList.remove('active', 'exiting');
+    qScreen.classList.add('active');
+    showQuestion();
+  }, 350);
+}
+
+function showQuestion() {
+  const q = questions[currentQuestion];
+  const textEl = document.getElementById('question-text');
+  const statEl = document.getElementById('stat-reveal');
+  const btns = document.getElementById('answer-buttons');
+  
+  statEl.classList.remove('visible');
+  btns.style.display = 'flex';
+  
+  textEl.textContent = q.text;
+  textEl.classList.remove('animating');
+  void textEl.offsetWidth;
+  textEl.classList.add('animating');
+  
+  document.getElementById('progress-fill').style.width = ((currentQuestion) / questions.length * 100) + '%';
+  document.getElementById('progress-label').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+  
+  enableButtons(true);
+}
+
+function answer(yes) {
+  enableButtons(false);
+  answers.push(yes);
+  
+  const q = questions[currentQuestion];
+  
+  if (yes) {
+    currentPercent += (q.weight / totalWeight) * MAX_GAIN;
+  }
+  
+  animatePercent(currentPercent);
+  
+  // Show stat
+  const textEl = document.getElementById('question-text');
+  const statEl = document.getElementById('stat-reveal');
+  const btns = document.getElementById('answer-buttons');
+  const statText = document.getElementById('stat-text');
+  
+  textEl.style.display = 'none';
+  btns.style.display = 'none';
+  statText.innerHTML = yes ? q.statYes : q.statNo;
+  statEl.classList.add('visible');
+  
+  document.getElementById('progress-fill').style.width = ((currentQuestion + 1) / questions.length * 100) + '%';
+  
+  setTimeout(() => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      statEl.classList.remove('visible');
+      textEl.style.display = '';
+      setTimeout(() => showQuestion(), 100);
+    } else {
+      showResults();
+    }
+  }, 2500);
+}
+
+function animatePercent(target) {
+  const start = displayedPercent;
+  const diff = target - start;
+  const duration = 800;
+  const startTime = performance.now();
+  
+  if (animFrame) cancelAnimationFrame(animFrame);
+  
+  function tick(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    
+    displayedPercent = start + diff * eased;
+    document.getElementById('fortune-number').textContent = Math.round(displayedPercent) + '%';
+    
+    if (progress < 1) {
+      animFrame = requestAnimationFrame(tick);
+    }
+  }
+  
+  animFrame = requestAnimationFrame(tick);
+}
+
+function enableButtons(enabled) {
+  document.querySelectorAll('.btn-answer').forEach(b => b.disabled = !enabled);
+}
+
+function showResults() {
+  const qScreen = document.getElementById('question-screen');
+  const rScreen = document.getElementById('results-screen');
+  
+  qScreen.classList.add('exiting');
+  setTimeout(() => {
+    qScreen.classList.remove('active', 'exiting');
+    rScreen.classList.add('active');
+    
+    const finalPercent = Math.round(currentPercent);
+    document.getElementById('result-percent').textContent = finalPercent + '%';
+    
+    // Message based on score
+    let message = '';
+    if (finalPercent >= 85) {
+      message = `You answered yes to most of these questions — placing you among the most fortunate people alive. <em>That's not a judgment. It's an invitation.</em> Most of what you have, billions never will. The question isn't whether you deserve it. It's what you do with the awareness.`;
+    } else if (finalPercent >= 60) {
+      message = `You have more than most — but you also know what it means to go without. <em>That duality is its own kind of wisdom.</em> You understand both sides of these questions in a way that statistics alone never capture.`;
+    } else if (finalPercent >= 35) {
+      message = `Your answers reflect a life shaped by real challenges — and real resilience. <em>Fortune isn't just about what you have. It's about what you've survived.</em> The fact that you're here, reflecting, says something no percentage can.`;
+    } else {
+      message = `These numbers don't define you — and neither does what you lack. <em>You are more than your circumstances.</em> The strength it takes to face these realities is itself a kind of fortune that no statistic can measure.`;
+    }
+    
+    document.getElementById('result-message').innerHTML = message;
+    
+    // Breakdown
+    const list = document.getElementById('breakdown-list');
+    list.innerHTML = '';
+    
+    // Sort by weight descending (biggest impact first)
+    const indexed = questions.map((q, i) => ({ ...q, index: i, answered: answers[i] }));
+    indexed.sort((a, b) => b.weight - a.weight);
+    
+    indexed.forEach((q, i) => {
+      const item = document.createElement('div');
+      item.className = 'breakdown-item';
+      item.style.animationDelay = (i * 0.05) + 's';
+      
+      const contribution = ((q.weight / totalWeight) * MAX_GAIN).toFixed(1);
+      
+      item.innerHTML = `
+        <span class="dot ${q.answered ? 'yes' : 'no'}"></span>
+        <span class="q-text">${q.shortLabel}</span>
+        <span class="q-weight ${q.answered ? 'yes' : ''}">${q.answered ? '+' + contribution + '%' : '—'}</span>
+      `;
+      list.appendChild(item);
+    });
+    
+    // Sources
+    const sourcesList = document.getElementById('sources-list');
+    sourcesList.innerHTML = '';
+    questions.forEach(q => {
+      const item = document.createElement('div');
+      item.className = 'source-item';
+      item.textContent = `${q.shortLabel}: ${q.source}`;
+      sourcesList.appendChild(item);
+    });
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+  }, 350);
+}
+
+function shareResult() {
+  const finalPercent = Math.round(currentPercent);
+  const yesCount = answers.filter(a => a).length;
+  
+  let text = `How Fortunate Are You?\n\n`;
+  text += `I'm more fortunate than ${finalPercent}% of the world's population.\n\n`;
+  text += `${yesCount} out of 15 basic life circumstances — things like clean water, literacy, shelter, healthcare — are part of my daily reality.\n\n`;
+  text += `This isn't about guilt. It's about perspective.\n\n`;
+  text += `Take the quiz → `;
+  
+  // Try to use current URL, fallback to generic
+  if (window.location.href && !window.location.href.startsWith('file:')) {
+    text += window.location.href;
+  } else {
+    text += '[link]';
+  }
+  
+  navigator.clipboard.writeText(text).then(() => {
+    const toast = document.getElementById('copied-toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const toast = document.getElementById('copied-toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  });
+}
+
+function restart() {
+  currentQuestion = 0;
+  answers = [];
+  currentPercent = BASE_PERCENT;
+  displayedPercent = BASE_PERCENT;
+  
+  const rScreen = document.getElementById('results-screen');
+  const intro = document.getElementById('intro-screen');
+  
+  rScreen.classList.add('exiting');
+  setTimeout(() => {
+    rScreen.classList.remove('active', 'exiting');
+    intro.classList.add('active');
+    document.getElementById('fortune-number').textContent = '0%';
+  }, 350);
+}
+</script>
+
+</body>
+</html>
