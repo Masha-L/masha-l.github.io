@@ -368,6 +368,34 @@ let state = {
 function load(){
   try{const s=localStorage.getItem('pulse_data');if(s)state={...state,...JSON.parse(s)}}catch(e){}
   if(!state.currentYear)state.currentYear=new Date().getFullYear();
+  // Seed default habits on first load
+  if(state.habits.length===0){
+    state.habits=[
+      {id:uid(),name:'Water',color:'#2dd4bf',days:{}},
+      {id:uid(),name:'Teeth',color:'#a78bfa',days:{}},
+      {id:uid(),name:'Shower',color:'#60a5fa',days:{}},
+      {id:uid(),name:'Movement',color:'#34d399',days:{}},
+      {id:uid(),name:'Meds',color:'#fbbf24',days:{}},
+      {id:uid(),name:'Reading',color:'#f472b6',days:{}},
+      {id:uid(),name:'Crypto Study',color:'#fb923c',days:{}},
+      {id:uid(),name:'Sleep by 11pm',color:'#818cf8',days:{}}
+    ];
+    save();
+  }
+  // Seed default friends on first load
+  if(state.friends.length===0){
+    state.friends=[
+      {id:uid(),name:'Daniel',photo:'',met:'Best friend, former mentor',category:'close',freq:'weekly',interactions:[]},
+      {id:uid(),name:'Matt',photo:'',met:'Best friend',category:'close',freq:'weekly',interactions:[]},
+      {id:uid(),name:'E',photo:'',met:'Partner',category:'close',freq:'daily',interactions:[]},
+      {id:uid(),name:'Jack',photo:'',met:'College best friend, Boston',category:'close',freq:'biweekly',interactions:[]},
+      {id:uid(),name:'Galen',photo:'',met:'Friend/coworker',category:'friend',freq:'biweekly',interactions:[]},
+      {id:uid(),name:'Irinka',photo:'',met:'Childhood friend, PhD biophysics',category:'friend',freq:'monthly',interactions:[]},
+      {id:uid(),name:'Olivia',photo:'',met:'Friend (Poster House hangout)',category:'friend',freq:'monthly',interactions:[]},
+      {id:uid(),name:'Shaili',photo:'',met:'Fastrack to retirement group',category:'friend',freq:'monthly',interactions:[]}
+    ];
+    save();
+  }
 }
 function save(){localStorage.setItem('pulse_data',JSON.stringify(state))}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
