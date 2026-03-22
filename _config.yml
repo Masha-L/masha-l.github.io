@@ -38,6 +38,15 @@ defaults:
     values:
       layout: "default"
 
+  - scope:
+      path: "macros"
+    values:
+      layout: null
+
+# Include static assets
+include:
+  - macros
+
 # Exclude
 exclude:
   - README.md
