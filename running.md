@@ -14,19 +14,31 @@ permalink: /running/
 <section class="section">
   <div class="section-container">
     <div class="section-header">
+      <p class="section-label">upcoming</p>
+      <h2 class="section-title">2026 Race calendar</h2>
+    </div>
+    <div class="card-grid stagger">
+      <div class="card">
+        <div class="card-icon">🏃</div>
+        <h3 class="card-title">Chicago Marathon</h3>
+        <p class="card-text">October 11, 2026. The flat and fast one. Training starts now.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🗽</div>
+        <h3 class="card-title">NYC Marathon</h3>
+        <p class="card-text">November 1, 2026. Coming back for round two, three weeks after Chicago. Because why not.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="section-container">
+    <div class="section-header">
       <p class="section-label">races</p>
       <h2 class="section-title">Race history</h2>
     </div>
     <div class="timeline stagger">
-      <div class="timeline-item current">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">2024</div>
-        <h3 class="timeline-title">NYC Marathon</h3>
-        <p class="timeline-subtitle">26.2 miles through all five boroughs</p>
-        <div class="timeline-content">
-          <p>The big one. Ran through Brooklyn, Queens, the Bronx, Manhattan, and finished in Central Park. Built a <a href="/projects/">tracker app</a> so friends could find me along the route.</p>
-        </div>
-      </div>
       <div class="timeline-item">
         <div class="timeline-dot"></div>
         <div class="timeline-date">2025</div>
@@ -36,11 +48,20 @@ permalink: /running/
           <p>Finished in 1:58:32. The NYC winter training was brutal, but crossing that finish line? Worth every frozen mile.</p>
         </div>
       </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2024</div>
+        <h3 class="timeline-title">NYC Marathon</h3>
+        <p class="timeline-subtitle">26.2 miles through all five boroughs</p>
+        <div class="timeline-content">
+          <p>The big one. Ran through Brooklyn, Queens, the Bronx, Manhattan, and finished in Central Park. Built a <a href="/projects/">tracker app</a> so friends could find me along the route.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="section section-alt">
+<section class="section">
   <div class="section-container">
     <div class="section-header">
       <p class="section-label">why I run</p>
@@ -79,7 +100,7 @@ permalink: /running/
   </div>
 </section>
 
-<section class="section">
+<section class="section section-alt">
   <div class="about-content">
     <div class="about-section">
       <h2>Favorite NYC routes</h2>

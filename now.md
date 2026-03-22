@@ -8,36 +8,35 @@ permalink: /now/
   <div class="about-content">
     <h1>Now</h1>
     <p class="lead">What I'm focused on right now. Updated monthly-ish.</p>
-    <p class="text-muted" style="font-size: 0.9rem;">Last updated: February 2026</p>
+    <p class="text-muted" style="font-size: 0.9rem;">Last updated: March 2026</p>
   </div>
 </section>
 
 <section class="section">
   <div class="about-content">
     <div class="about-section">
+      <h2>Working on</h2>
+      <p>Week one at <strong>Google DeepMind</strong>, building <strong>AI Studio</strong> — the developer experience for Gemini. Prompt playground, full-stack app creation, making frontier AI accessible to anyone who wants to build with it. Learning everything, meeting everyone, drinking from the firehose.</p>
+    </div>
+
+    <div class="about-section">
       <h2>Learning</h2>
       <p><strong>Applied Cryptography</strong> at NYU for my MS in Cybersecurity. The math is genuinely beautiful — there's something deeply satisfying about proofs that feel inevitable once you see them.</p>
     </div>
 
     <div class="about-section">
-      <h2>Working on</h2>
-      <p>Leading engineering for <strong>Spanner, Bigtable, and Firestore</strong> at Google Cloud. Current focus: making AI capabilities feel native to database workflows, not bolted on.</p>
-    </div>
-
-    <div class="about-section">
       <h2>Moving</h2>
-      <p>Training for my next race. Still exploring NYC on foot — it's the best way to actually see this city.</p>
+      <p>Training for the <strong>Chicago Marathon</strong> (October 11) and <strong>NYC Marathon</strong> (November 1). Two marathons in three weeks because apparently I don't believe in rest days. Still exploring NYC on foot — it's the best way to actually see this city.</p>
     </div>
 
     <div class="about-section">
       <h2>Building</h2>
-      <p><strong>Connection</strong> — a personal CRM for relationships. Because I kept forgetting to check in with people I actually care about, and that's embarrassing.</p>
+      <p><strong>Tend</strong> — a habit tracker meets friend CRM. Because I kept forgetting to check in with people I actually care about, and that's embarrassing.</p>
     </div>
 
     <div class="about-section">
       <h2>Reading</h2>
       <ul style="margin: 0; padding-left: 1.2rem;">
-        <li><strong>Database Internals</strong> by Alex Petrov — the distributed systems deep dive</li>
         <li><strong>Madly, Deeply</strong> — Alan Rickman's diaries (slowly, savoring)</li>
         <li>Too many half-finished sci-fi novels on my Kindle</li>
       </ul>

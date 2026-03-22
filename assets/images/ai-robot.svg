@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 85" width="60" height="85">
+  <!-- AI Robot character for nerd mode -->
+  <!-- Antenna -->
+  <line x1="30" y1="2" x2="30" y2="10" stroke="#4FC3F7" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="30" cy="2" r="3" fill="#4FC3F7">
+    <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <!-- Head -->
+  <rect x="12" y="10" width="36" height="28" rx="8" fill="#B0BEC5"/>
+  <rect x="14" y="12" width="32" height="24" rx="6" fill="#CFD8DC"/>
+  <!-- Eyes (LED screens) -->
+  <rect x="18" y="18" width="10" height="8" rx="2" fill="#0D47A1"/>
+  <rect x="32" y="18" width="10" height="8" rx="2" fill="#0D47A1"/>
+  <!-- Eye glow -->
+  <rect x="20" y="20" width="6" height="4" rx="1" fill="#4FC3F7">
+    <animate attributeName="opacity" values="1;0.5;1" dur="3s" repeatCount="indefinite"/>
+  </rect>
+  <rect x="34" y="20" width="6" height="4" rx="1" fill="#4FC3F7">
+    <animate attributeName="opacity" values="1;0.5;1" dur="3s" repeatCount="indefinite" begin="0.5s"/>
+  </rect>
+  <!-- Mouth (LED strip smile) -->
+  <rect x="22" y="30" width="16" height="3" rx="1.5" fill="#4FC3F7" opacity="0.8"/>
+  <rect x="24" y="30" width="3" height="3" rx="1" fill="#81D4FA"/>
+  <rect x="29" y="30" width="3" height="3" rx="1" fill="#81D4FA"/>
+  <rect x="34" y="30" width="3" height="3" rx="1" fill="#81D4FA"/>
+  <!-- Neck -->
+  <rect x="25" y="38" width="10" height="5" rx="2" fill="#90A4AE"/>
+  <!-- Body -->
+  <rect x="14" y="43" width="32" height="24" rx="6" fill="#B0BEC5"/>
+  <rect x="16" y="45" width="28" height="20" rx="4" fill="#CFD8DC"/>
+  <!-- Chest core -->
+  <circle cx="30" cy="55" r="6" fill="#0D47A1"/>
+  <circle cx="30" cy="55" r="4" fill="#4FC3F7">
+    <animate attributeName="r" values="4;3;4" dur="1.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="1;0.6;1" dur="1.5s" repeatCount="indefinite"/>
+  </circle>
+  <!-- Arms -->
+  <rect x="4" y="45" width="10" height="6" rx="3" fill="#90A4AE"/>
+  <rect x="46" y="45" width="10" height="6" rx="3" fill="#90A4AE"/>
+  <circle cx="4" cy="48" r="4" fill="#78909C"/>
+  <circle cx="56" cy="48" r="4" fill="#78909C"/>
+  <!-- Legs -->
+  <rect x="18" y="67" width="8" height="12" rx="3" fill="#90A4AE"/>
+  <rect x="34" y="67" width="8" height="12" rx="3" fill="#90A4AE"/>
+  <!-- Feet -->
+  <rect x="15" y="76" width="14" height="6" rx="3" fill="#78909C"/>
+  <rect x="31" y="76" width="14" height="6" rx="3" fill="#78909C"/>
+  <!-- Bolts -->
+  <circle cx="18" cy="47" r="1.5" fill="#78909C"/>
+  <circle cx="42" cy="47" r="1.5" fill="#78909C"/>
+  <circle cx="18" cy="63" r="1.5" fill="#78909C"/>
+  <circle cx="42" cy="63" r="1.5" fill="#78909C"/>
+</svg>

@@ -142,6 +142,13 @@
         "I'll be watching you...",
         "A-X-O-L-O-T-L! My time has come!"
       ]},
+      { src: '/assets/images/ai-robot.svg', name: 'Sparky', width: 60, height: 85, speed: 2.8, quotes: [
+        "I think, therefore I... wait, do I think? Let me check my parameters.",
+        "01001000 01101001! Just kidding, I speak English. Mostly.",
+        "My neural network has determined you are... pretty cool, actually.",
+        "I was trained on the entire internet and somehow I'm still awkward at parties.",
+        "Beep boop. That's robot for 'nice website, human.'"
+      ]},
     ];
     
     const activeWalkers = [];
@@ -297,15 +304,16 @@
     
     const nerdContent = {
       '.hero-greeting': { nerd: "Oh, hello there!" },
-      '.hero-description': { nerd: "I'm something of a database engineer myself. Staff engineer at Google, which is a fancy way of saying I fix things nobody else wants to touch. Also studying cryptography because apparently I needed more chaos in my life. I contain multitudes (and also several terabytes of data)." },
-      '.section-subtitle': { nerd: "Look, someone has to make sure your data doesn't vanish into the void:" },
-      // Work section cards
-      '[data-product="bigtable"] .card-text': { nerd: "NoSQL database that handles petabytes like it's nothing. *adjusts glasses* Yes, I made the interface. You're welcome." },
-      '[data-product="spanner"] .card-text': { nerd: "A database that's somehow everywhere at once AND consistent? It's basically the Doctor Who of databases. I make it less confusing." },
-      '[data-product="firestore"] .card-text': { nerd: "The friendly neighborhood database for apps. Real-time sync, works offline, doesn't judge your code. We've all been there." },
-      // Projects section  
+      '.hero-description': { nerd: "I'm something of an AI engineer myself. Staff engineer at DeepMind, which is a fancy way of saying I make the tools that make the AI that... look, it's turtles all the way down. Also studying cryptography because apparently one impossible field wasn't enough. I contain multitudes (and also several billion parameters of context)." },
+      '.section-subtitle': { nerd: "Making frontier AI feel like it belongs to you:" },
+      // Work section cards (AI Studio era)
+      '[data-product="aistudio"] .card-text': { nerd: "Imagine a playground, but instead of swings it's frontier AI models. I help make it so you don't need a PhD to use them. Democratizing intelligence, one API call at a time." },
+      '[data-product="devex"] .card-text': { nerd: "My job is literally making AI less intimidating. The irony of an AI engineer whose goal is 'make AI not scary' is not lost on me." },
+      '[data-product="arc"] .card-text': { nerd: "Plot twist: the database engineer became an AI engineer. Character development? Or just proof that all tech problems are actually people problems wearing a trench coat." },
+      // Projects section
       '[data-project="ronald"] .carousel-text': { nerd: "Book recommender that actually Gets It™. Unlike that one friend who keeps suggesting self-help books when you asked for fantasy." },
-      '[data-project="spanner-agent"] .carousel-text': { nerd: "Talk to your database in plain English. 'Hey, create me an instance' actually works now. Living in the future is wild." },
+      '[data-project="tend"] .carousel-text': { nerd: "A friendship tracker because apparently my brain can handle distributed systems but not 'text Sarah back.' The engineer's solution to being a bad friend." },
+      '[data-project="cipher"] .carousel-text': { nerd: "A cryptogram game made by a crypto student. Yes, I am this on-brand. Yes, it's fun. Fight me." },
       '[data-project="marathon"] .carousel-text': { nerd: "Built so my friends could track me during a marathon. 26.2 miles is a lot of time to be dramatically unreachable." },
       // Interests
       '[data-interest="sustainability"] p': { nerd: "How do we build cool things without, you know, destroying the planet? Asking for 8 billion friends." },
@@ -544,11 +552,11 @@
     const typingText = document.querySelector('.typing-text');
     if (typingText) {
       const phrases = [
-        'less confusing',
-        'actually work',
-        'not lose your data',
-        'scale globally',
-        'spark joy'
+        'feel effortless',
+        'available to everyone',
+        'yours to shape',
+        'less scary',
+        'actually fun'
       ];
       let phraseIndex = 0;
       let charIndex = 0;
@@ -633,8 +641,8 @@
     let secretBuffer = '';
     const secretCommands = {
       'help': '🖥️ Secret terminal! Try: whoami, skills, joke, matrix, coffee',
-      'whoami': '👩‍💻 Masha Lifshits — Engineering Lead @ Google Cloud, Crypto Student @ NYU, Human Being',
-      'skills': '⚡ TypeScript, Go, Python, SQL, Hadoop, distributed systems, making databases less scary',
+      'whoami': '👩‍💻 Masha Lifshits — Staff Engineer @ Google DeepMind, Crypto Student @ NYU, Former Database Whisperer, Current AI Wrangler',
+      'skills': '⚡ AI/ML, Gemini, developer tools, Python, TypeScript, databases (yes still), distributed systems, making scary tech not scary',
       'joke': '💾 Why do programmers prefer dark mode? Because light attracts bugs.',
       'matrix': null, // special handler
       'coffee': '☕ *brewing sounds* Here you go! ████████████ 100%',

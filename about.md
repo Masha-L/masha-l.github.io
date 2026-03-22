@@ -7,7 +7,7 @@ permalink: /about/
 <section class="about-intro">
   <div class="about-content">
     <h1>About me</h1>
-    <p class="lead">I'm Masha — an engineering leader, perpetual student, and someone who believes the best technology feels invisible.</p>
+    <p class="lead">I'm Masha — a staff engineer, perpetual student, and someone who believes the best technology feels invisible.</p>
   </div>
 </section>
 
@@ -18,7 +18,7 @@ permalink: /about/
         <div class="flip-card-front">
           <div class="card-icon">💼</div>
           <h3 class="card-title">By Day</h3>
-          <p class="card-text">Staff engineer at Google Cloud. I lead three teams building Spanner, Bigtable, and Firestore — the databases under the databases.</p>
+          <p class="card-text">Staff engineer at Google DeepMind. Building AI Studio — the place where developers meet Gemini. Previously: three database teams at Google Cloud.</p>
           <span class="flip-hint">hover to flip ↻</span>
         </div>
         <div class="flip-card-back">
@@ -39,7 +39,7 @@ permalink: /about/
       <p>In Russia, I started with <strong>literature and history</strong>. Then <strong>psychology and neuroscience</strong> — I spent years in <strong>Alzheimer's research labs</strong> during college because I wanted to be a neuroscientist.</p>
       <p>But I was coding on the side, building apps, falling in love with making things. Made it a <strong>double major</strong>. Ran the <strong>computer science society</strong>, organized <strong>hackathons</strong>, chaired <strong>ACM-W</strong>.</p>
       <p>First internship at <strong>ActionIQ</strong> turned into 3+ years of startup life — shipping fast, wearing many hats, handling trillions of rows of data.</p>
-      <p>Now at <strong>Google</strong>, leading teams building database systems. The research background, the humanities foundation, the neuroscience training — it all feeds into how I think about products and people.</p>
+      <p>At <strong>Google DeepMind</strong> now, building AI Studio — the developer experience for Gemini. Before this, four years leading database teams at <strong>Google Cloud</strong> (Spanner, Bigtable, Firestore). The path from neuroscience to databases to AI wasn't planned, but it makes a strange kind of sense: every step was about making complex systems legible to humans.</p>
     </div>
   </div>
 </section>
@@ -113,7 +113,7 @@ permalink: /about/
   <div class="about-content">
     <div class="about-section">
       <h2>Let's connect</h2>
-      <p>Want to talk engineering, security, grad school survival, or just commiserate about tech? I'm around.</p>
+      <p>Want to talk engineering, AI, security, grad school survival, or just commiserate about tech? I'm around.</p>
       <p>
         <a href="https://github.com/Masha-L" class="btn btn-secondary">GitHub</a>
         <a href="https://linkedin.com/in/masha-lifshits" class="btn btn-secondary">LinkedIn</a>

@@ -7,7 +7,7 @@ permalink: /projects/
 <section class="about-intro">
   <div class="about-content">
     <h1>Projects</h1>
-    <p class="lead">8 years of building things that solve real problems — from hackathon prototypes to cloud research.</p>
+    <p class="lead">8 years of building things that solve real problems — from hackathon prototypes to AI tools to games you can play right now.</p>
   </div>
 </section>
 
@@ -18,6 +18,21 @@ permalink: /projects/
       <h2>Featured</h2>
     </div>
     <div class="featured-grid stagger">
+      <div class="featured-card" id="tend">
+        <span class="badge badge-dev">In Development</span>
+        <h3>Tend</h3>
+        <p class="tech-stack">React · FastAPI · MySQL</p>
+        <p class="description">Habit tracker meets friend CRM. Track your routines, remember to check in on people you care about, see the patterns in how you spend your time. Because maintaining friendships shouldn't be left to chance.</p>
+      </div>
+      <div class="featured-card">
+        <span class="badge badge-shipped">Shipped</span>
+        <h3>Cipher</h3>
+        <p class="tech-stack">JavaScript · Cryptography</p>
+        <p class="description">Cryptogram puzzle game. Decode encrypted quotes one letter at a time. The cryptography student's idea of a good time.</p>
+        <div class="card-links">
+          <a href="https://masha-l.github.io/cipher/" class="link-external link-blog">Play Cipher →</a>
+        </div>
+      </div>
       <div class="featured-card">
         <span class="badge badge-shipped">Shipped</span>
         <h3>R.O.N.A.L.D.</h3>
@@ -27,18 +42,6 @@ permalink: /projects/
           <a href="https://github.com/Masha-L/R.O.N.A.L.D." class="link-external link-github">GitHub</a>
         </div>
       </div>
-      <div class="featured-card">
-        <span class="badge badge-dev">In Development</span>
-        <h3>Connection</h3>
-        <p class="tech-stack">FastAPI · React · MySQL · JWT</p>
-        <p class="description">Personal CRM for relationships. Track friends, interactions, meetings, and get reminders to stay connected. Because maintaining friendships shouldn't be left to chance.</p>
-      </div>
-      <div class="featured-card">
-        <span class="badge badge-google">At Google</span>
-        <h3>Spanner Agent</h3>
-        <p class="tech-stack">Python · Gemini LLM · Cloud Spanner</p>
-        <p class="description">Conversational AI agent for database administration. Create instances, propose schemas, generate sample data — all through natural language.</p>
-      </div>
     </div>
   </div>
 </section>
@@ -46,10 +49,56 @@ permalink: /projects/
 <section class="section section-alt">
   <div class="section-container">
     <div class="category-header">
+      <span class="category-icon">🎮</span>
+      <h2>Play now</h2>
+    </div>
+    <div class="featured-grid stagger">
+      <div class="featured-card">
+        <span class="badge badge-shipped">Live</span>
+        <h3>Focus Flow</h3>
+        <p class="tech-stack">JavaScript · Web Audio API</p>
+        <p class="description">Minimalist focus timer with ambient sounds. Pomodoro meets lo-fi beats. For when you need to get in the zone.</p>
+        <div class="card-links">
+          <a href="https://masha-l.github.io/focus-flow/" class="link-external link-blog">Try Focus Flow →</a>
+        </div>
+      </div>
+      <div class="featured-card">
+        <span class="badge badge-shipped">Live</span>
+        <h3>Fortunate</h3>
+        <p class="tech-stack">JavaScript</p>
+        <p class="description">A fun personality quiz — discover your fortune with a whimsical twist. Because sometimes you need a little magic in your day.</p>
+        <div class="card-links">
+          <a href="https://masha-l.github.io/fortunate/" class="link-external link-blog">Try Fortunate →</a>
+        </div>
+      </div>
+      <div class="featured-card">
+        <span class="badge badge-shipped">Live</span>
+        <h3>Cipher</h3>
+        <p class="tech-stack">JavaScript · Cryptography</p>
+        <p class="description">Decode encrypted quotes one letter at a time. How fast can you crack the cipher?</p>
+        <div class="card-links">
+          <a href="https://masha-l.github.io/cipher/" class="link-external link-blog">Play Cipher →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-container">
+    <div class="category-header">
       <span class="category-icon">☁️</span>
       <h2>Cloud & research</h2>
     </div>
     <div class="team-grid stagger">
+      <div class="team-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+          <h3 style="margin: 0;">Spanner Agent</h3>
+          <span class="badge badge-google">At Google</span>
+        </div>
+        <p class="team-type">Python · Gemini LLM · Cloud Spanner</p>
+        <p>Conversational AI agent for database administration. Create instances, propose schemas, generate sample data — all through natural language. Built during my Cloud era.</p>
+      </div>
       <div class="team-card">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
           <h3 style="margin: 0;">Hybrid Autoscaler Research</h3>
@@ -89,7 +138,7 @@ permalink: /projects/
   </div>
 </section>
 
-<section class="section">
+<section class="section section-alt">
   <div class="section-container">
     <div class="category-header">
       <span class="category-icon">👥</span>
@@ -126,7 +175,7 @@ permalink: /projects/
   </div>
 </section>
 
-<section class="section section-alt">
+<section class="section">
   <div class="section-container">
     <div class="category-header">
       <span class="category-icon">🧪</span>
@@ -162,7 +211,7 @@ permalink: /projects/
   </div>
 </section>
 
-<section class="section">
+<section class="section section-alt">
   <div class="section-container">
     <div class="category-header">
       <span class="category-icon">💚</span>
@@ -189,11 +238,11 @@ permalink: /projects/
       </div>
       <div class="team-card">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-          <h3 style="margin: 0;">Resume Tailor</h3>
-          <span class="badge badge-dev">In Development</span>
+          <h3 style="margin: 0;">Jobbyx</h3>
+          <span class="badge badge-shipped">Shipped</span>
         </div>
-        <p class="team-type">Next.js · React · Firebase</p>
-        <p>Tool to customize resumes for specific job descriptions. In development — because job hunting is hard enough.</p>
+        <p class="team-type">Next.js · React · AI</p>
+        <p>AI-powered resume tailoring tool. Customize your resume for specific job descriptions.</p>
       </div>
     </div>
   </div>

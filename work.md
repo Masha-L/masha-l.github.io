@@ -7,15 +7,97 @@ permalink: /work/
 <section class="about-intro">
   <div class="about-content">
     <h1>Work</h1>
-    <p class="lead">I lead database teams at Google Cloud. Three products, thousands of developers depending on our APIs, petabytes of everyone's data.</p>
+    <p class="lead">I build developer tools for frontier AI at Google DeepMind. Previously: three database teams at Google Cloud. The thread: making powerful technology feel like it belongs to you.</p>
   </div>
 </section>
 
 <section class="section">
   <div class="section-container">
     <div class="section-header">
-      <p class="section-label">google cloud</p>
-      <h2 class="section-title">The products</h2>
+      <p class="section-label">google deepmind</p>
+      <h2 class="section-title">Current work</h2>
+    </div>
+    <div class="featured-grid stagger">
+      <div class="featured-card">
+        <span class="badge badge-google">🧪 AI Studio</span>
+        <h3>AI Studio — Staff Engineer</h3>
+        <p class="tech-stack">Python · TypeScript · Gemini · Full Stack</p>
+        <p class="description">The developer experience for Gemini. AI Studio is where anyone — developers, creators, curious humans — goes to prototype, build, and ship with Google's frontier AI models. Prompt playground, full-stack app creation with the Antigravity agent, multimodal experiments, code export. Making frontier AI feel approachable, not intimidating.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="section-container">
+    <div class="section-header">
+      <p class="section-label">philosophy</p>
+      <h2 class="section-title">How I build</h2>
+    </div>
+    <div class="interests-grid stagger">
+      <div class="interest-card">
+        <span class="interest-icon">💻</span>
+        <div class="interest-content">
+          <h3>Stay in the Code</h3>
+          <p>Still writing code. Still reviewing PRs. The best product thinking happens when you're close to the material.</p>
+        </div>
+      </div>
+      <div class="interest-card">
+        <span class="interest-icon">🧠</span>
+        <div class="interest-content">
+          <h3>Neuroscience Trained</h3>
+          <p>A psych/neuro background changes how you think about developer experience. Cognitive load matters. Intuition matters. The brain is the first user.</p>
+        </div>
+      </div>
+      <div class="interest-card">
+        <span class="interest-icon">🎯</span>
+        <div class="interest-content">
+          <h3>Products > Features</h3>
+          <p>Does this actually make someone's life better?</p>
+        </div>
+      </div>
+      <div class="interest-card">
+        <span class="interest-icon">🔗</span>
+        <div class="interest-content">
+          <h3>Bridge Builder</h3>
+          <p>Databases, AI, research — the best solutions come from connecting disciplines, not isolating them.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-container">
+    <div class="section-header">
+      <p class="section-label">philosophy</p>
+      <h2 class="section-title">How I lead</h2>
+    </div>
+    <div class="interests-grid stagger">
+      <div class="interest-card">
+        <span class="interest-icon">🌱</span>
+        <div class="interest-content">
+          <h3>Grow People</h3>
+          <p>My favorite part: when someone I mentored outgrows the role I hired them for.</p>
+        </div>
+      </div>
+      <div class="interest-card">
+        <span class="interest-icon">✂️</span>
+        <div class="interest-content">
+          <h3>Kill Bad Process</h3>
+          <p>Process should enable. When it doesn't, cut it.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="section-container">
+    <div class="section-header">
+      <p class="section-label">previously</p>
+      <h2 class="section-title">Google Cloud (2021–2026)</h2>
+      <p class="section-subtitle">Led engineering for three flagship database products</p>
     </div>
     <div class="card-grid stagger">
       <div class="card">
@@ -37,11 +119,12 @@ permalink: /work/
   </div>
 </section>
 
-<section class="section section-alt">
+<section class="section">
   <div class="section-container">
     <div class="section-header">
       <p class="section-label">impact</p>
       <h2 class="section-title">By the numbers</h2>
+      <p class="section-subtitle">From the Google Cloud era</p>
     </div>
     <div class="metrics-grid stagger">
       <div class="metric-card">
@@ -64,11 +147,11 @@ permalink: /work/
   </div>
 </section>
 
-<section class="section">
+<section class="section section-alt">
   <div class="section-container">
     <div class="section-header">
       <p class="section-label">highlights</p>
-      <h2 class="section-title">Recent wins</h2>
+      <h2 class="section-title">Key wins</h2>
     </div>
     <div class="featured-grid stagger">
       <div class="featured-card">
@@ -106,7 +189,7 @@ permalink: /work/
   </div>
 </section>
 
-<section class="section section-alt">
+<section class="section">
   <div class="section-container">
     <div class="section-header">
       <p class="section-label">writing</p>
@@ -149,45 +232,6 @@ permalink: /work/
   </div>
 </section>
 
-<section class="section">
-  <div class="section-container">
-    <div class="section-header">
-      <p class="section-label">philosophy</p>
-      <h2 class="section-title">How I lead</h2>
-    </div>
-    <div class="interests-grid stagger">
-      <div class="interest-card">
-        <span class="interest-icon">💻</span>
-        <div class="interest-content">
-          <h3>Stay Technical</h3>
-          <p>Still write code. Still review PRs. Leaders who leave the craft lose something.</p>
-        </div>
-      </div>
-      <div class="interest-card">
-        <span class="interest-icon">🌱</span>
-        <div class="interest-content">
-          <h3>Grow People</h3>
-          <p>My favorite part: when someone I mentored outgrows the role I hired them for.</p>
-        </div>
-      </div>
-      <div class="interest-card">
-        <span class="interest-icon">🎯</span>
-        <div class="interest-content">
-          <h3>Products > Features</h3>
-          <p>Does this actually make someone's life better?</p>
-        </div>
-      </div>
-      <div class="interest-card">
-        <span class="interest-icon">✂️</span>
-        <div class="interest-content">
-          <h3>Kill Bad Process</h3>
-          <p>Process should enable. When it doesn't, cut it.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section class="section section-alt">
   <div class="section-container">
     <div class="section-header">
@@ -197,11 +241,20 @@ permalink: /work/
     <div class="timeline stagger">
       <div class="timeline-item current">
         <div class="timeline-dot"></div>
-        <div class="timeline-date">Nov 2021 – Present</div>
-        <h3 class="timeline-title">google cloud</h3>
-        <p class="timeline-subtitle">Tech Lead Manager → Engineering Lead</p>
+        <div class="timeline-date">Mar 2026 – Present</div>
+        <h3 class="timeline-title">google deepmind</h3>
+        <p class="timeline-subtitle">Staff Software Engineer</p>
         <div class="timeline-content">
-          <p>Three teams, three flagship databases, thousands of developers relying on what we ship. Currently figuring out how to make AI feel native to database workflows — not like we duct-taped a chatbot to the side.</p>
+          <p>Building AI Studio — Google's developer playground for Gemini. The place where prompts become products. Transferred from Cloud because the most interesting developer experience problem in the world right now is: how do you make frontier AI feel like a natural tool?</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Nov 2021 – Mar 2026</div>
+        <h3 class="timeline-title">google cloud</h3>
+        <p class="timeline-subtitle">Tech Lead Manager → Staff Engineer</p>
+        <div class="timeline-content">
+          <p>Three teams, three flagship databases (Spanner, Bigtable, Firestore). Led AI integration into database workflows. Shipped graph visualization, NL2SQL, product-led growth redesign.</p>
         </div>
       </div>
       <div class="timeline-item">
@@ -234,6 +287,16 @@ permalink: /work/
     </div>
     <div class="card-grid stagger">
       <div class="card">
+        <div class="card-icon">🤖</div>
+        <h3 class="card-title">AI & ML</h3>
+        <p class="card-text">Gemini · AI Studio · LLM Integration · RAG · NL2SQL · Prompt Engineering · Multimodal AI · Eval Sets · Developer Tools for AI · LlamaIndex · TF-IDF</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🛠️</div>
+        <h3 class="card-title">Full Stack</h3>
+        <p class="card-text">React · Next.js · Angular · Flask · FastAPI · Pydantic · REST · gRPC · SOAP · Microservices · System Design</p>
+      </div>
+      <div class="card">
         <div class="card-icon">💻</div>
         <h3 class="card-title">Languages</h3>
         <p class="card-text">Python · TypeScript · JavaScript · Kotlin · Java · Scala · SQL · C</p>
@@ -244,24 +307,14 @@ permalink: /work/
         <p class="card-text">GCP · AWS · Hadoop · Terraform · Cloud Run · Gateway API · Load Balancing · Firebase · Spanner · Bigtable · BigQuery · Postgres</p>
       </div>
       <div class="card">
-        <div class="card-icon">🤖</div>
-        <h3 class="card-title">AI & ML</h3>
-        <p class="card-text">LLM Integration · RAG · LlamaIndex · NL2SQL · Eval Sets · CNNs · LSTMs · Gemini · TF-IDF · Information Retrieval</p>
-      </div>
-      <div class="card">
         <div class="card-icon">📊</div>
         <h3 class="card-title">Data & Search</h3>
         <p class="card-text">Spark · Finagle · Vector Search · Elasticsearch · Data Pipelines · SQL · BigQuery</p>
       </div>
       <div class="card">
-        <div class="card-icon">🛠️</div>
-        <h3 class="card-title">Full Stack</h3>
-        <p class="card-text">React · Next.js · Angular · Flask · FastAPI · Pydantic · REST · gRPC · SOAP · Microservices · System Design</p>
-      </div>
-      <div class="card">
         <div class="card-icon">👥</div>
-        <h3 class="card-title">Leadership</h3>
-        <p class="card-text">Building teams that trust each other. Mentoring. Hiring. Writing PRDs people actually read. Running on-call programs that don't burn people out.</p>
+        <h3 class="card-title">Developer Experience</h3>
+        <p class="card-text">Building tools developers love. Vibe coding. Mentoring. Hiring. Writing PRDs people actually read. Making complex systems feel simple.</p>
       </div>
     </div>
   </div>
