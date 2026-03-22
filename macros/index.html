@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Macros</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- HOME -->
+    <section id="page-home" class="page active">
+      <header class="date-header">
+        <button class="date-nav" id="prev-day">&larr;</button>
+        <div class="date-center">
+          <h1 id="date-display"></h1>
+          <span class="mode-badge" id="mode-badge">Recomp</span>
+        </div>
+        <button class="date-nav" id="next-day">&rarr;</button>
+      </header>
+
+      <div class="gauges-section">
+        <div class="calorie-gauge-wrap">
+          <canvas id="calorie-gauge" width="260" height="150"></canvas>
+          <div class="calorie-label">
+            <span id="cal-current">0</span>
+            <span class="cal-unit">kcal</span>
+            <span id="cal-target" class="cal-target-text"></span>
+          </div>
+        </div>
+        <div class="macro-gauges">
+          <div class="mini-gauge" data-macro="protein">
+            <canvas width="100" height="65"></canvas>
+            <div class="mini-label"><span class="mini-val">0</span><span class="mini-name">Protein</span></div>
+          </div>
+          <div class="mini-gauge" data-macro="carbs">
+            <canvas width="100" height="65"></canvas>
+            <div class="mini-label"><span class="mini-val">0</span><span class="mini-name">Carbs</span></div>
+          </div>
+          <div class="mini-gauge" data-macro="fat">
+            <canvas width="100" height="65"></canvas>
+            <div class="mini-label"><span class="mini-val">0</span><span class="mini-name">Fat</span></div>
+          </div>
+          <div class="mini-gauge" data-macro="fiber">
+            <canvas width="100" height="65"></canvas>
+            <div class="mini-label"><span class="mini-val">0</span><span class="mini-name">Fiber</span></div>
+          </div>
+        </div>
+        <div class="sodium-bar-wrap">
+          <div class="sodium-bar-label">
+            <span>Sodium</span>
+            <span id="sodium-val">0 / 2000mg</span>
+          </div>
+          <div class="sodium-bar"><div class="sodium-fill" id="sodium-fill"></div></div>
+          <div class="sodium-warning hidden" id="sodium-warning">&#9888; Sodium limit exceeded</div>
+        </div>
+        <div class="water-tracker">
+          <span class="water-label">Water</span>
+          <div class="water-cups" id="water-cups"></div>
+          <span class="water-count" id="water-count">0 / 8</span>
+        </div>
+      </div>
+
+      <div class="meals-section" id="meals-section"></div>
+      <footer class="app-footer">Powered by Ada and Masha</footer>
+    </section>
+
+    <!-- STATS -->
+    <section id="page-stats" class="page">
+      <header class="page-header"><h1>Stats</h1></header>
+      <div class="stats-toggle">
+        <button class="stats-btn active" data-period="week">Weekly</button>
+        <button class="stats-btn" data-period="month">Monthly</button>
+      </div>
+      <div id="stats-content"></div>
+      <footer class="app-footer">Powered by Ada and Masha</footer>
+    </section>
+
+    <!-- LIBRARY -->
+    <section id="page-library" class="page">
+      <header class="page-header"><h1>Library</h1></header>
+      <div class="library-search-wrap">
+        <input type="text" id="library-search" placeholder="Search foods..." autocomplete="off">
+      </div>
+      <div class="library-filters" id="library-cat-filters"></div>
+      <div class="library-filters" id="library-tag-filters"></div>
+      <div class="library-list" id="library-list"></div>
+      <button class="fab" id="add-custom-btn" title="Add custom food">+</button>
+      <footer class="app-footer">Powered by Ada and Masha</footer>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="page-settings" class="page">
+      <header class="page-header"><h1>Settings</h1></header>
+      <div class="settings-content" id="settings-content"></div>
+      <footer class="app-footer">Powered by Ada and Masha</footer>
+    </section>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-page="home">
+      <svg viewBox="0 0 24 24" width="24" height="24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-btn" data-page="stats">
+      <svg viewBox="0 0 24 24" width="24" height="24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
+      <span>Stats</span>
+    </button>
+    <button class="nav-btn" data-page="library">
+      <svg viewBox="0 0 24 24" width="24" height="24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+      <span>Library</span>
+    </button>
+    <button class="nav-btn" data-page="settings">
+      <svg viewBox="0 0 24 24" width="24" height="24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 00-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1115.6 12 3.6 3.6 0 0112 15.6z"/></svg>
+      <span>Settings</span>
+    </button>
+  </nav>
+
+  <!-- Add Food Modal -->
+  <div class="modal-overlay hidden" id="add-food-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-meal-title">Add Food</h2>
+        <button class="modal-close" id="modal-close">&times;</button>
+      </div>
+      <div class="modal-tabs">
+        <button class="modal-tab active" data-tab="library">Library</button>
+        <button class="modal-tab" data-tab="search">USDA Search</button>
+        <button class="modal-tab" data-tab="quick">Quick Add</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-tab-content active" id="tab-library">
+          <input type="text" id="modal-lib-search" placeholder="Search library..." autocomplete="off">
+          <div class="modal-food-list" id="modal-lib-list"></div>
+        </div>
+        <div class="modal-tab-content" id="tab-search">
+          <div class="usda-search-wrap">
+            <input type="text" id="usda-search-input" placeholder="Search USDA database..." autocomplete="off">
+            <button id="usda-search-btn">Search</button>
+          </div>
+          <div class="modal-food-list" id="usda-results"></div>
+        </div>
+        <div class="modal-tab-content" id="tab-quick">
+          <div class="quick-add-form">
+            <input type="text" id="qa-name" placeholder="Food name" autocomplete="off">
+            <div class="qa-row">
+              <div class="qa-field"><label>Cal</label><input type="number" id="qa-cal" min="0"></div>
+              <div class="qa-field"><label>Protein</label><input type="number" id="qa-protein" min="0" step="0.1"></div>
+              <div class="qa-field"><label>Carbs</label><input type="number" id="qa-carbs" min="0" step="0.1"></div>
+            </div>
+            <div class="qa-row">
+              <div class="qa-field"><label>Fat</label><input type="number" id="qa-fat" min="0" step="0.1"></div>
+              <div class="qa-field"><label>Fiber</label><input type="number" id="qa-fiber" min="0" step="0.1"></div>
+              <div class="qa-field"><label>Sodium (mg)</label><input type="number" id="qa-sodium" min="0"></div>
+            </div>
+            <button class="btn-primary" id="qa-add">Add to Meal</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Library Item Modal -->
+  <div class="modal-overlay hidden" id="edit-food-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Edit Food</h2>
+        <button class="modal-close" id="edit-modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="quick-add-form">
+          <input type="text" id="ef-name" placeholder="Food name" autocomplete="off">
+          <div class="qa-row">
+            <div class="qa-field"><label>Cal</label><input type="number" id="ef-cal" min="0"></div>
+            <div class="qa-field"><label>Protein</label><input type="number" id="ef-protein" min="0" step="0.1"></div>
+            <div class="qa-field"><label>Carbs</label><input type="number" id="ef-carbs" min="0" step="0.1"></div>
+          </div>
+          <div class="qa-row">
+            <div class="qa-field"><label>Fat</label><input type="number" id="ef-fat" min="0" step="0.1"></div>
+            <div class="qa-field"><label>Fiber</label><input type="number" id="ef-fiber" min="0" step="0.1"></div>
+            <div class="qa-field"><label>Sodium (mg)</label><input type="number" id="ef-sodium" min="0"></div>
+          </div>
+          <div class="qa-row">
+            <div class="qa-field full">
+              <label>Category</label>
+              <select id="ef-category">
+                <option value="breakfast">Breakfast</option>
+                <option value="coffee">Coffee</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+                <option value="snack">Snack</option>
+                <option value="ingredient">Ingredient</option>
+              </select>
+            </div>
+          </div>
+          <div class="qa-row">
+            <div class="qa-field full">
+              <label>Tags</label>
+              <div class="tag-checkboxes" id="ef-tags"></div>
+            </div>
+          </div>
+          <div class="edit-actions">
+            <button class="btn-danger" id="ef-delete">Delete</button>
+            <button class="btn-primary" id="ef-save">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Serving Size Modal -->
+  <div class="modal-overlay hidden" id="serving-modal">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2 id="serving-food-name">Adjust Serving</h2>
+        <button class="modal-close" id="serving-modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="serving-adjust">
+          <label>Servings</label>
+          <div class="serving-controls">
+            <button class="serving-btn" id="serving-minus">&minus;</button>
+            <input type="number" id="serving-amount" value="1" min="0.25" step="0.25">
+            <button class="serving-btn" id="serving-plus">+</button>
+          </div>
+          <div class="serving-preview" id="serving-preview"></div>
+          <button class="btn-primary" id="serving-confirm">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
