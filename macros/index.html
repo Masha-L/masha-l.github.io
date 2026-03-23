@@ -120,6 +120,28 @@
         </p>
       </div>
 
+      <!-- Weight Tracker -->
+      <div class="weight-card" id="weight-card">
+        <div class="weight-header">
+          <div class="weight-header-left">
+            <span class="weight-title">Weight</span>
+            <span class="weight-current" id="weight-current">— lbs</span>
+          </div>
+          <button class="weight-btn" id="weigh-in-btn">Weigh In</button>
+        </div>
+        <div class="weight-progress-wrap">
+          <div class="weight-progress-labels">
+            <span>148</span>
+            <span id="weight-goal-label">130 lbs</span>
+          </div>
+          <div class="weight-progress-bg">
+            <div class="weight-progress-fill" id="weight-progress-bar"></div>
+            <div class="weight-progress-marker" id="weight-progress-marker"></div>
+          </div>
+          <div class="weight-progress-stats" id="weight-progress-stats"></div>
+        </div>
+      </div>
+
       <!-- Water Tracker -->
       <div class="water-card">
         <div class="water-header">
@@ -367,6 +389,39 @@
           <input type="email" id="forgot-email" placeholder="Your email" required>
           <button type="submit" class="btn-primary">Send Reset Link</button>
           <p id="forgot-msg" class="success-text"></p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEIGH-IN MODAL -->
+  <div class="modal-overlay" id="weighin-modal">
+    <div class="modal modal-small">
+      <div class="modal-header">
+        <h2>Weigh In</h2>
+        <button class="modal-close" id="weighin-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="weighin-form" class="quick-form">
+          <div class="form-field">
+            <label>Date</label>
+            <input type="date" id="wi-date" required>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Weight (lbs)</label>
+              <input type="number" id="wi-lbs" step="0.1" min="50" max="500" required>
+            </div>
+            <div class="form-field">
+              <label>Weight (kg)</label>
+              <input type="number" id="wi-kg" step="0.1" min="20" max="230" readonly>
+            </div>
+          </div>
+          <div class="form-field">
+            <label>Note (optional)</label>
+            <input type="text" id="wi-note" placeholder="e.g., post-run, morning weigh-in">
+          </div>
+          <button type="submit" class="btn-primary">Save</button>
         </form>
       </div>
     </div>

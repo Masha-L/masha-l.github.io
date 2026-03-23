@@ -397,6 +397,7 @@ let dayLog = [];     // macro_log rows for currentDate
 let waterCups = 0;
 let servingFood = null;
 let servingCount = 1;
+let weightEntries = [];
 
 // ── Helpers ──
 function todayStr() {
@@ -737,6 +738,9 @@ function renderHome() {
   badge.className = 'mode-badge';
   
   const totals = computeTotals();
+
+  // Update weight card
+  renderWeightCard();
 
   // Over range check
   if (totals.cal > getTargets().cal[1]) badge.classList.add('over');
@@ -1540,6 +1544,10 @@ async function renderStats() {
       </div>
     </div>
   `;
+
+  // Render weight stats section
+  await loadWeightEntries();
+  renderWeightStats(content);
 }
 
 let statsPeriod = 'week';
@@ -1964,6 +1972,277 @@ function debounce(fn, ms) {
 }
 
 // ══════════════════════════════════
+// WEIGHT TRACKING
+// ══════════════════════════════════
+const WEIGHT_START = 148;
+const WEIGHT_GOAL = 130;
+
+async function loadWeightEntries() {
+  if (!currentUser) return;
+  const { data } = await sb.from('macro_weight')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .order('date', { ascending: true });
+  weightEntries = data || [];
+}
+
+async function saveWeightEntry(date, lbs, note) {
+  if (!currentUser) return;
+  const { error } = await sb.from('macro_weight').upsert({
+    user_id: currentUser.id,
+    date: date,
+    weight_lbs: lbs,
+    note: note || null,
+  }, { onConflict: 'user_id,date' });
+  if (error) { toast('Error saving weight'); console.error(error); return false; }
+  await loadWeightEntries();
+  return true;
+}
+
+async function deleteWeightEntry(id) {
+  await sb.from('macro_weight').delete().eq('id', id);
+  await loadWeightEntries();
+}
+
+function renderWeightCard() {
+  const latest = weightEntries.length > 0 ? weightEntries[weightEntries.length - 1] : null;
+  const currentWeight = latest ? parseFloat(latest.weight_lbs) : null;
+
+  const currentEl = document.getElementById('weight-current');
+  const bar = document.getElementById('weight-progress-bar');
+  const marker = document.getElementById('weight-progress-marker');
+  const statsEl = document.getElementById('weight-progress-stats');
+
+  if (currentWeight === null) {
+    currentEl.textContent = '— lbs';
+    bar.style.width = '0%';
+    marker.style.display = 'none';
+    statsEl.innerHTML = '<span>No weigh-ins yet</span>';
+    return;
+  }
+
+  currentEl.textContent = `${r1(currentWeight)} lbs`;
+
+  // Progress: 148 → 130 = 18 lbs total range
+  const totalRange = WEIGHT_START - WEIGHT_GOAL;
+  const lost = Math.max(0, WEIGHT_START - currentWeight);
+  const remaining = Math.max(0, currentWeight - WEIGHT_GOAL);
+  const pct = Math.min(100, Math.max(0, (lost / totalRange) * 100));
+
+  bar.style.width = pct + '%';
+  marker.style.display = 'block';
+  marker.style.left = pct + '%';
+
+  statsEl.innerHTML = `
+    <span class="lost">${r1(lost)} lbs lost</span>
+    <span class="remaining">${r1(remaining)} lbs to go</span>
+  `;
+}
+
+// Weigh-in modal
+const weighinModal = document.getElementById('weighin-modal');
+document.getElementById('weigh-in-btn').addEventListener('click', () => {
+  weighinModal.classList.add('active');
+  document.getElementById('wi-date').value = todayStr();
+  document.getElementById('wi-lbs').value = '';
+  document.getElementById('wi-kg').value = '';
+  document.getElementById('wi-note').value = '';
+  // Pre-fill with latest weight
+  if (weightEntries.length > 0) {
+    const last = parseFloat(weightEntries[weightEntries.length - 1].weight_lbs);
+    document.getElementById('wi-lbs').value = r1(last);
+    document.getElementById('wi-kg').value = r1(last * 0.453592);
+  }
+});
+document.getElementById('weighin-close').addEventListener('click', () => weighinModal.classList.remove('active'));
+weighinModal.addEventListener('click', (e) => { if (e.target === weighinModal) weighinModal.classList.remove('active'); });
+
+// Lbs → kg auto-convert
+document.getElementById('wi-lbs').addEventListener('input', () => {
+  const v = parseFloat(document.getElementById('wi-lbs').value);
+  if (!isNaN(v)) document.getElementById('wi-kg').value = r1(v * 0.453592);
+  else document.getElementById('wi-kg').value = '';
+});
+
+document.getElementById('weighin-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const date = document.getElementById('wi-date').value;
+  const lbs = parseFloat(document.getElementById('wi-lbs').value);
+  const note = document.getElementById('wi-note').value.trim();
+  if (!date || isNaN(lbs)) return;
+  const ok = await saveWeightEntry(date, lbs, note);
+  if (ok) {
+    weighinModal.classList.remove('active');
+    renderWeightCard();
+    toast('Weight logged!');
+  }
+});
+
+// Weight Stats for Stats page
+function renderWeightStats(container) {
+  if (weightEntries.length === 0) {
+    container.innerHTML += `
+      <div class="stat-card weight-stats-section">
+        <h3>Weight</h3>
+        <div class="meal-empty">No weigh-ins yet. Use the Weigh In button on the home page.</div>
+      </div>`;
+    return;
+  }
+
+  const entries = weightEntries;
+  const latest = parseFloat(entries[entries.length - 1].weight_lbs);
+  const first = parseFloat(entries[0].weight_lbs);
+  const totalLost = r1(WEIGHT_START - latest);
+  const remaining = r1(Math.max(0, latest - WEIGHT_GOAL));
+
+  // Weekly averages
+  const weekMap = {};
+  entries.forEach(e => {
+    const d = new Date(e.date + 'T00:00:00');
+    const weekStart = new Date(d);
+    weekStart.setDate(d.getDate() - d.getDay());
+    const key = `${weekStart.getFullYear()}-${String(weekStart.getMonth()+1).padStart(2,'0')}-${String(weekStart.getDate()).padStart(2,'0')}`;
+    if (!weekMap[key]) weekMap[key] = [];
+    weekMap[key].push(parseFloat(e.weight_lbs));
+  });
+  const weeklyAvgs = Object.entries(weekMap).sort((a,b) => a[0].localeCompare(b[0])).map(([week, vals]) => ({
+    week,
+    avg: r1(vals.reduce((s,v) => s+v, 0) / vals.length)
+  }));
+
+  // Avg loss per week
+  let avgLossPerWeek = 0;
+  if (entries.length >= 2) {
+    const firstDate = new Date(entries[0].date + 'T00:00:00');
+    const lastDate = new Date(entries[entries.length - 1].date + 'T00:00:00');
+    const weeks = Math.max(1, (lastDate - firstDate) / (7 * 24 * 60 * 60 * 1000));
+    avgLossPerWeek = r1((first - latest) / weeks);
+  }
+
+  // Projected goal date
+  let projectedDate = 'N/A';
+  if (avgLossPerWeek > 0 && remaining > 0) {
+    const weeksLeft = remaining / avgLossPerWeek;
+    const goalDate = new Date();
+    goalDate.setDate(goalDate.getDate() + Math.round(weeksLeft * 7));
+    projectedDate = goalDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  // SVG Chart
+  const chartW = 320, chartH = 180, padL = 40, padR = 10, padT = 20, padB = 30;
+  const plotW = chartW - padL - padR;
+  const plotH = chartH - padT - padB;
+
+  // Use all entries for chart
+  const chartEntries = entries.map(e => ({ date: e.date, w: parseFloat(e.weight_lbs) }));
+  const minW = Math.min(WEIGHT_GOAL - 2, ...chartEntries.map(e => e.w));
+  const maxW = Math.max(WEIGHT_START + 2, ...chartEntries.map(e => e.w));
+  const wRange = maxW - minW;
+
+  const toY = (w) => padT + plotH - ((w - minW) / wRange * plotH);
+  const toX = (i) => padL + (i / Math.max(1, chartEntries.length - 1)) * plotW;
+
+  // Build polyline points
+  const points = chartEntries.map((e, i) => `${r1(toX(i))},${r1(toY(e.w))}`).join(' ');
+
+  // Date labels (show first, middle, last)
+  const dateLabels = [];
+  if (chartEntries.length >= 1) {
+    const fmtD = (d) => { const dt = new Date(d + 'T00:00:00'); return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); };
+    dateLabels.push({ x: toX(0), label: fmtD(chartEntries[0].date) });
+    if (chartEntries.length > 2) {
+      const mid = Math.floor(chartEntries.length / 2);
+      dateLabels.push({ x: toX(mid), label: fmtD(chartEntries[mid].date) });
+    }
+    if (chartEntries.length > 1) {
+      dateLabels.push({ x: toX(chartEntries.length - 1), label: fmtD(chartEntries[chartEntries.length - 1].date) });
+    }
+  }
+
+  // Y-axis labels
+  const ySteps = 5;
+  const yLabels = [];
+  for (let i = 0; i <= ySteps; i++) {
+    const w = minW + (wRange * i / ySteps);
+    yLabels.push({ y: toY(w), label: Math.round(w) });
+  }
+
+  const goalY = r1(toY(WEIGHT_GOAL));
+  const startY = r1(toY(WEIGHT_START));
+
+  const chartSvg = `
+    <svg viewBox="0 0 ${chartW} ${chartH}" xmlns="http://www.w3.org/2000/svg">
+      <!-- Grid lines -->
+      ${yLabels.map(l => `<line x1="${padL}" y1="${r1(l.y)}" x2="${chartW - padR}" y2="${r1(l.y)}" stroke="#1f1f1f" stroke-width="0.5"/>`).join('')}
+      <!-- Y-axis labels -->
+      ${yLabels.map(l => `<text x="${padL - 5}" y="${r1(l.y + 3)}" fill="#666" font-size="8" text-anchor="end">${l.label}</text>`).join('')}
+      <!-- Date labels -->
+      ${dateLabels.map(l => `<text x="${r1(l.x)}" y="${chartH - 5}" fill="#666" font-size="7" text-anchor="middle">${l.label}</text>`).join('')}
+      <!-- Start line -->
+      <line x1="${padL}" y1="${startY}" x2="${chartW - padR}" y2="${startY}" stroke="#555" stroke-width="0.5" stroke-dasharray="4 3"/>
+      <text x="${chartW - padR + 2}" y="${r1(parseFloat(startY) + 3)}" fill="#555" font-size="7" text-anchor="start">148</text>
+      <!-- Goal line -->
+      <line x1="${padL}" y1="${goalY}" x2="${chartW - padR}" y2="${goalY}" stroke="#10b981" stroke-width="1" stroke-dasharray="6 3"/>
+      <text x="${chartW - padR + 2}" y="${r1(parseFloat(goalY) + 3)}" fill="#10b981" font-size="7" text-anchor="start">Goal</text>
+      <!-- Weight line -->
+      <polyline points="${points}" fill="none" stroke="#e5e5e5" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <!-- Data points -->
+      ${chartEntries.map((e, i) => `<circle cx="${r1(toX(i))}" cy="${r1(toY(e.w))}" r="2.5" fill="#e5e5e5" stroke="#0d0d0d" stroke-width="1"/>`).join('')}
+    </svg>
+  `;
+
+  // Recent entries list (last 10)
+  const recent = [...entries].reverse().slice(0, 10);
+  const entriesHtml = recent.map(e => `
+    <div class="weight-entry-row">
+      <span class="weight-entry-date">${new Date(e.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+      <span class="weight-entry-value">${r1(parseFloat(e.weight_lbs))} lbs</span>
+      ${e.note ? `<span class="weight-entry-note">${e.note}</span>` : '<span></span>'}
+      <button class="weight-entry-delete" data-weight-id="${e.id}">&times;</button>
+    </div>
+  `).join('');
+
+  container.innerHTML += `
+    <div class="weight-stats-section">
+      <h3>Weight Progress</h3>
+      <div class="weight-chart-wrap">${chartSvg}</div>
+      <div class="weight-summary-grid">
+        <div class="weight-summary-item green">
+          <span class="weight-summary-value">${totalLost} lbs</span>
+          <span class="weight-summary-label">Total Lost</span>
+        </div>
+        <div class="weight-summary-item yellow">
+          <span class="weight-summary-value">${remaining} lbs</span>
+          <span class="weight-summary-label">Remaining</span>
+        </div>
+        <div class="weight-summary-item blue">
+          <span class="weight-summary-value">${avgLossPerWeek > 0 ? avgLossPerWeek : '—'} lbs</span>
+          <span class="weight-summary-label">Avg / Week</span>
+        </div>
+        <div class="weight-summary-item">
+          <span class="weight-summary-value">${projectedDate}</span>
+          <span class="weight-summary-label">Projected Goal</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <h3>Recent Weigh-ins</h3>
+        <div class="weight-entries-list">${entriesHtml || '<div class="meal-empty">No entries</div>'}</div>
+      </div>
+    </div>
+  `;
+
+  // Delete handlers
+  container.querySelectorAll('.weight-entry-delete').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('Delete this weigh-in?')) return;
+      await deleteWeightEntry(btn.dataset.weightId);
+      renderWeightCard();
+      renderStats();
+    });
+  });
+}
+
+// ══════════════════════════════════
 // NAV
 // ══════════════════════════════════
 document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -2041,7 +2320,9 @@ async function showApp(user) {
 
   await loadDayLog(currentDate);
   await loadWater(currentDate);
+  await loadWeightEntries();
   renderHome();
+  renderWeightCard();
 }
 
 // Auth state listener
