@@ -132,6 +132,125 @@ const REFERENCE_FOODS = [
   {name:'Avocado',calories:218,protein:2.7,carbs:12,fat:20,fiber:9,sodium:10,category:'ingredient',tags:[],serving_label:'1 whole'},
 ];
 
+// ── Restaurant Database ──
+const RESTAURANT_DB = {
+  'Chipotle': [
+    {name:'Chicken Bowl (no rice)',calories:400,protein:46,carbs:16,fat:17,sodium:1310,tags:['high-protein']},
+    {name:'Chicken Bowl',calories:665,protein:50,carbs:72,fat:18,sodium:1480,tags:['high-protein']},
+    {name:'Steak Bowl',calories:685,protein:46,carbs:72,fat:20,sodium:1400,tags:['high-protein']},
+    {name:'Barbacoa Bowl',calories:640,protein:44,carbs:72,fat:18,sodium:1580,tags:[]},
+    {name:'Sofritas Bowl',calories:575,protein:22,carbs:78,fat:20,sodium:1370,tags:['vegan']},
+    {name:'Chicken Burrito',calories:1025,protein:56,carbs:108,fat:37,sodium:2090,tags:[]},
+    {name:'Steak Burrito',calories:1045,protein:52,carbs:108,fat:39,sodium:2010,tags:[]},
+    {name:'Chicken Salad (no dressing)',calories:490,protein:48,carbs:24,fat:22,sodium:1350,tags:['high-protein','low-carb']},
+    {name:'Steak Salad (no dressing)',calories:510,protein:44,carbs:24,fat:24,sodium:1270,tags:['low-carb']},
+    {name:'Side of Guacamole',calories:230,protein:3,carbs:12,fat:20,sodium:375,tags:[]},
+    {name:'Chips',calories:540,protein:7,carbs:68,fat:26,sodium:320,tags:[]},
+    {name:'Chips & Guac',calories:770,protein:10,carbs:80,fat:46,sodium:695,tags:[]},
+  ],
+  'Sweetgreen': [
+    {name:'Harvest Bowl',calories:575,protein:27,carbs:52,fat:30,sodium:680,tags:[]},
+    {name:'Hot Honey Chicken',calories:515,protein:38,carbs:42,fat:22,sodium:790,tags:['high-protein']},
+    {name:'Crispy Rice Bowl',calories:580,protein:30,carbs:62,fat:24,sodium:920,tags:[]},
+    {name:'Buffalo Chicken Bowl',calories:490,protein:40,carbs:28,fat:24,sodium:1150,tags:['high-protein']},
+    {name:'Garden Cobb',calories:490,protein:33,carbs:18,fat:33,sodium:810,tags:['low-carb']},
+    {name:'Guacamole Greens',calories:450,protein:12,carbs:38,fat:30,sodium:520,tags:['vegan']},
+    {name:'Shroomami',calories:410,protein:14,carbs:56,fat:16,sodium:740,tags:['vegan']},
+    {name:'Super Green Goddess',calories:420,protein:28,carbs:32,fat:22,sodium:760,tags:[]},
+    {name:'Chicken + Avocado Plate',calories:550,protein:42,carbs:24,fat:34,sodium:680,tags:['high-protein','low-carb']},
+  ],
+  'Shake Shack': [
+    {name:'ShackBurger (single)',calories:530,protein:28,carbs:27,fat:34,sodium:1280,tags:[]},
+    {name:'ShackBurger (double)',calories:770,protein:48,carbs:27,fat:50,sodium:1800,tags:['high-protein']},
+    {name:'Chick\'n Shack',calories:580,protein:30,carbs:50,fat:28,sodium:1290,tags:[]},
+    {name:'Grilled Chicken Sandwich',calories:390,protein:38,carbs:28,fat:14,sodium:980,tags:['high-protein']},
+    {name:'Shack Stack',calories:810,protein:32,carbs:44,fat:52,sodium:1650,tags:[]},
+    {name:'Crinkle Cut Fries (regular)',calories:420,protein:5,carbs:56,fat:19,sodium:580,tags:[]},
+    {name:'Cheese Fries',calories:570,protein:12,carbs:57,fat:33,sodium:1050,tags:[]},
+    {name:'Vanilla Shake',calories:610,protein:12,carbs:83,fat:26,sodium:300,tags:[]},
+    {name:'Chocolate Shake',calories:640,protein:13,carbs:89,fat:28,sodium:450,tags:[]},
+    {name:'Chicken Bites (6pc)',calories:290,protein:20,carbs:16,fat:16,sodium:890,tags:[]},
+  ],
+  'Starbucks': [
+    {name:'Caffè Latte (Grande, 2%)',calories:190,protein:13,carbs:19,fat:7,sodium:170,tags:[]},
+    {name:'Cappuccino (Grande, 2%)',calories:140,protein:10,carbs:14,fat:5,sodium:120,tags:[]},
+    {name:'Cold Brew (Grande)',calories:5,protein:0,carbs:0,fat:0,sodium:15,tags:['low-cal']},
+    {name:'Iced Matcha Latte (Grande, 2%)',calories:240,protein:12,carbs:34,fat:7,sodium:170,tags:[]},
+    {name:'Protein Box — Eggs & Cheese',calories:470,protein:26,carbs:42,fat:22,sodium:900,tags:['high-protein']},
+    {name:'Protein Box — Chicken & Hummus',calories:300,protein:20,carbs:26,fat:12,sodium:680,tags:['high-protein']},
+    {name:'Egg Bites — Bacon & Gruyère (2pc)',calories:310,protein:19,carbs:9,fat:22,sodium:590,tags:['high-protein','low-carb']},
+    {name:'Egg Bites — Egg White & Red Pepper (2pc)',calories:170,protein:13,carbs:11,fat:8,sodium:490,tags:['high-protein','low-cal']},
+    {name:'Turkey Bacon, Cheddar & Egg White',calories:230,protein:18,carbs:28,fat:5,sodium:690,tags:['high-protein']},
+    {name:'Spinach, Feta & Egg White Wrap',calories:290,protein:20,carbs:34,fat:8,sodium:840,tags:[]},
+    {name:'Impossible Breakfast Sandwich',calories:420,protein:22,carbs:34,fat:22,sodium:780,tags:[]},
+    {name:'Oat Milk Shaken Espresso (Grande)',calories:140,protein:2,carbs:24,fat:4,sodium:130,tags:[]},
+  ],
+  'Subway': [
+    {name:'6" Turkey Breast',calories:260,protein:18,carbs:40,fat:3.5,sodium:760,tags:[]},
+    {name:'6" Oven Roasted Chicken',calories:270,protein:19,carbs:40,fat:4.5,sodium:640,tags:[]},
+    {name:'6" Rotisserie Chicken',calories:300,protein:23,carbs:40,fat:6,sodium:790,tags:['high-protein']},
+    {name:'6" Steak & Cheese',calories:360,protein:26,carbs:41,fat:10,sodium:860,tags:['high-protein']},
+    {name:'6" Veggie Delite',calories:200,protein:8,carbs:39,fat:2,sodium:280,tags:['vegan','low-cal']},
+    {name:'6" Tuna',calories:370,protein:20,carbs:39,fat:15,sodium:550,tags:[]},
+    {name:'6" Italian B.M.T.',calories:370,protein:17,carbs:41,fat:15,sodium:1180,tags:[]},
+    {name:'Protein Bowl — Chicken',calories:210,protein:20,carbs:16,fat:8,sodium:590,tags:['high-protein','low-carb']},
+    {name:'Protein Bowl — Steak',calories:250,protein:22,carbs:16,fat:10,sodium:700,tags:['high-protein','low-carb']},
+    {name:'Chopped Salad — Turkey',calories:130,protein:15,carbs:12,fat:3,sodium:580,tags:['low-cal']},
+  ],
+  'Cava': [
+    {name:'Grilled Chicken Bowl',calories:530,protein:40,carbs:42,fat:22,sodium:890,tags:['high-protein']},
+    {name:'Braised Lamb Bowl',calories:620,protein:36,carbs:48,fat:30,sodium:1020,tags:[]},
+    {name:'Grilled Meatball Bowl',calories:580,protein:30,carbs:50,fat:28,sodium:1180,tags:[]},
+    {name:'Falafel Bowl',calories:560,protein:18,carbs:62,fat:26,sodium:920,tags:['vegan']},
+    {name:'Harissa Chicken Greens + Grains',calories:490,protein:38,carbs:36,fat:20,sodium:780,tags:['high-protein']},
+    {name:'RightRice Bowl w/ Chicken',calories:470,protein:42,carbs:38,fat:16,sodium:820,tags:['high-protein']},
+    {name:'Mini Pita w/ Chicken',calories:350,protein:25,carbs:38,fat:10,sodium:680,tags:[]},
+    {name:'Crazy Feta Dip + Pita Chips',calories:420,protein:10,carbs:48,fat:22,sodium:780,tags:[]},
+  ],
+  'Just Salad': [
+    {name:'Thai Chicken Crunch',calories:480,protein:36,carbs:32,fat:24,sodium:860,tags:['high-protein']},
+    {name:'Chicken Caesar',calories:410,protein:38,carbs:12,fat:24,sodium:790,tags:['high-protein','low-carb']},
+    {name:'Harvest Bowl',calories:520,protein:22,carbs:58,fat:24,sodium:640,tags:[]},
+    {name:'Tokyo Supergreen',calories:390,protein:18,carbs:42,fat:18,sodium:720,tags:[]},
+    {name:'Grilled Chicken + Hummus',calories:440,protein:40,carbs:24,fat:22,sodium:680,tags:['high-protein']},
+    {name:'Crispy Chicken Ranch',calories:580,protein:34,carbs:38,fat:32,sodium:1080,tags:[]},
+    {name:'Warm Grains + Salmon',calories:510,protein:32,carbs:44,fat:22,sodium:760,tags:['high-protein']},
+  ],
+  'Dig': [
+    {name:'Charred Chicken Plate',calories:490,protein:44,carbs:28,fat:22,sodium:780,tags:['high-protein']},
+    {name:'Roasted Salmon Plate',calories:520,protein:38,carbs:32,fat:26,sodium:720,tags:['high-protein']},
+    {name:'Braised Beef Plate',calories:580,protein:40,carbs:36,fat:28,sodium:960,tags:['high-protein']},
+    {name:'Grilled Chicken + Broccoli',calories:420,protein:46,carbs:16,fat:20,sodium:640,tags:['high-protein','low-carb']},
+    {name:'Market Plate (veggie)',calories:380,protein:14,carbs:48,fat:16,sodium:580,tags:['vegan']},
+    {name:'Chicken + Sweet Potato Mash',calories:510,protein:42,carbs:42,fat:16,sodium:720,tags:['high-protein']},
+    {name:'Salmon + Charred Broccoli',calories:450,protein:36,carbs:18,fat:28,sodium:620,tags:['high-protein','low-carb']},
+  ],
+  'Panera': [
+    {name:'Fuji Apple Chicken Salad (half)',calories:280,protein:14,carbs:28,fat:14,sodium:430,tags:[]},
+    {name:'Green Goddess Cobb w/ Chicken (full)',calories:530,protein:38,carbs:26,fat:32,sodium:1080,tags:['high-protein']},
+    {name:'Caesar Salad w/ Chicken (full)',calories:470,protein:34,carbs:18,fat:30,sodium:980,tags:['high-protein']},
+    {name:'Broccoli Cheddar Soup (bowl)',calories:360,protein:14,carbs:30,fat:21,sodium:1190,tags:[]},
+    {name:'Turkey Sandwich (whole)',calories:520,protein:32,carbs:52,fat:20,sodium:1380,tags:[]},
+    {name:'Mediterranean Veggie Sandwich',calories:440,protein:16,carbs:58,fat:16,sodium:1090,tags:[]},
+    {name:'Chipotle Chicken Avocado Melt',calories:710,protein:42,carbs:56,fat:34,sodium:1560,tags:[]},
+    {name:'Chicken & Wild Rice Soup (bowl)',calories:260,protein:16,carbs:24,fat:10,sodium:1040,tags:[]},
+    {name:'Ten Veg Soup (bowl)',calories:140,protein:5,carbs:24,fat:3,sodium:920,tags:['low-cal','vegan']},
+    {name:'Greek Salad (full)',calories:400,protein:8,carbs:16,fat:34,sodium:780,tags:['low-carb']},
+  ],
+};
+
+// Food restriction flags (Masha's)
+const FOOD_RESTRICTIONS = ['pasta','kale','cumin','alcohol'];
+const SODIUM_WARNING_THRESHOLD = 1000;
+
+// ── Saved restaurants (localStorage) ──
+function getSavedRestaurants() {
+  try { return JSON.parse(localStorage.getItem('macros_saved_restaurants') || '[]'); } catch { return []; }
+}
+function saveSavedRestaurants(list) {
+  localStorage.setItem('macros_saved_restaurants', JSON.stringify(list));
+}
+
 // ── Food Description Parser ──
 const QUANTITY_WORDS = {
   'a': 1, 'an': 1, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
@@ -802,6 +921,12 @@ function openAddModal() {
   // Update modal title to show meal
   const mealName = MEALS.find(m => m.id === currentMeal)?.name;
   document.getElementById('modal-title').textContent = mealName ? `Add to ${mealName}` : 'Add Food';
+
+  // Reset eat out tab
+  closeEatoutMenu();
+  renderEatoutRemaining();
+  renderEatoutSavedPills();
+  renderEatoutRestaurantList('');
 
   renderModalCategoryPills();
   renderModalLibrary();
@@ -1937,6 +2062,279 @@ sb.auth.onAuthStateChange((event, session) => {
     showAuth();
   }
 })();
+
+// ══════════════════════════════════
+// EAT OUT TAB
+// ══════════════════════════════════
+let eatoutSelectedRestaurant = null;
+let eatoutViewMode = 'suggest'; // 'suggest' or 'menu'
+
+function getRemainingMacros() {
+  const totals = computeTotals();
+  const targets = getTargets();
+  return {
+    cal: Math.max(0, targets.cal[1] - totals.cal),
+    protein: Math.max(0, targets.protein[1] - totals.protein),
+    carbs: Math.max(0, targets.carbs[1] - totals.carbs),
+    fat: Math.max(0, targets.fat[1] - totals.fat),
+    calEaten: Math.round(totals.cal),
+    proteinEaten: Math.round(totals.protein),
+    carbsEaten: Math.round(totals.carbs),
+    fatEaten: Math.round(totals.fat),
+    sodiumEaten: Math.round(totals.sodium),
+  };
+}
+
+function renderEatoutRemaining() {
+  const el = document.getElementById('eatout-remaining');
+  const r = getRemainingMacros();
+  const targets = getTargets();
+  el.innerHTML = `
+    <div class="eatout-remaining-title">Remaining today</div>
+    <div class="eatout-remaining-macros">
+      <div class="eatout-remain-chip"><span class="eatout-remain-val">${Math.round(r.cal)}</span><span class="eatout-remain-label">cal</span></div>
+      <div class="eatout-remain-chip protein"><span class="eatout-remain-val">${Math.round(r.protein)}g</span><span class="eatout-remain-label">protein</span></div>
+      <div class="eatout-remain-chip"><span class="eatout-remain-val">${Math.round(r.carbs)}g</span><span class="eatout-remain-label">carbs</span></div>
+      <div class="eatout-remain-chip"><span class="eatout-remain-val">${Math.round(r.fat)}g</span><span class="eatout-remain-label">fat</span></div>
+    </div>
+    <div class="eatout-remaining-note">${r.cal <= 200 ? 'Very little budget left — go light' : r.protein > 30 ? 'Prioritizing protein' : 'Looking good'}</div>
+  `;
+}
+
+function renderEatoutRestaurantList(filter) {
+  const list = document.getElementById('eatout-restaurant-list');
+  const q = (filter || '').toLowerCase().trim();
+  const names = Object.keys(RESTAURANT_DB);
+  const filtered = q ? names.filter(n => n.toLowerCase().includes(q)) : names;
+
+  list.innerHTML = '';
+  if (filtered.length === 0 && q) {
+    list.innerHTML = '<div class="meal-empty">No restaurants found</div>';
+    return;
+  }
+
+  filtered.forEach(name => {
+    const items = RESTAURANT_DB[name];
+    const topProtein = Math.max(...items.map(i => i.protein));
+    const calRange = `${Math.min(...items.map(i => i.calories))}–${Math.max(...items.map(i => i.calories))}`;
+    const card = document.createElement('div');
+    card.className = 'eatout-restaurant-card';
+    card.innerHTML = `
+      <div class="eatout-rest-name">${name}</div>
+      <div class="eatout-rest-meta">${items.length} items · ${calRange} cal · up to ${topProtein}g protein</div>
+    `;
+    card.addEventListener('click', () => openEatoutMenu(name));
+    list.appendChild(card);
+  });
+}
+
+function renderEatoutSavedPills() {
+  const container = document.getElementById('eatout-saved-pills');
+  const saved = getSavedRestaurants();
+  container.innerHTML = '';
+  if (saved.length === 0) return;
+
+  saved.forEach(name => {
+    const pill = document.createElement('button');
+    pill.className = 'eatout-saved-pill';
+    pill.textContent = name;
+    pill.addEventListener('click', () => openEatoutMenu(name));
+    container.appendChild(pill);
+  });
+}
+
+function openEatoutMenu(restaurantName) {
+  eatoutSelectedRestaurant = restaurantName;
+  eatoutViewMode = 'suggest';
+  document.getElementById('eatout-restaurant-list').parentElement.querySelector('.modal-search').style.display = 'none';
+  document.getElementById('eatout-saved-pills').style.display = 'none';
+  document.getElementById('eatout-restaurant-list').style.display = 'none';
+  document.getElementById('eatout-menu-section').style.display = 'block';
+  document.getElementById('eatout-restaurant-name').textContent = restaurantName;
+
+  // Update save button state
+  const saved = getSavedRestaurants();
+  const saveBtn = document.getElementById('eatout-save-restaurant');
+  saveBtn.innerHTML = saved.includes(restaurantName) ? '&#9733;' : '&#9734;';
+  saveBtn.classList.toggle('saved', saved.includes(restaurantName));
+
+  // Set suggest view active
+  document.getElementById('eatout-suggest-toggle').classList.add('active');
+  document.getElementById('eatout-menu-toggle').classList.remove('active');
+
+  renderEatoutMenuItems();
+}
+
+function closeEatoutMenu() {
+  eatoutSelectedRestaurant = null;
+  document.getElementById('eatout-restaurant-search').style.display = '';
+  document.getElementById('eatout-saved-pills').style.display = '';
+  document.getElementById('eatout-restaurant-list').style.display = '';
+  document.getElementById('eatout-menu-section').style.display = 'none';
+}
+
+function scoreEatoutItem(item) {
+  const r = getRemainingMacros();
+  let score = 0;
+
+  // Protein fill (most important) — how much of remaining protein does this cover?
+  if (r.protein > 0) {
+    const proteinFill = Math.min(item.protein / r.protein, 1);
+    score += proteinFill * 50;
+  }
+
+  // Calorie fit — prefer items within budget
+  if (r.cal > 0) {
+    if (item.calories <= r.cal) {
+      score += 20 * (1 - item.calories / (r.cal * 1.5)); // closer to budget = fine
+      score += 10; // bonus for being under
+    } else {
+      score -= 30; // penalty for over budget
+    }
+  } else {
+    score -= 40; // no cal budget
+  }
+
+  // Protein-to-calorie ratio bonus
+  if (item.calories > 0) {
+    const protRatio = item.protein / item.calories;
+    score += protRatio * 100; // higher ratio = better
+  }
+
+  // Sodium penalty
+  if (item.sodium > SODIUM_WARNING_THRESHOLD) score -= 10;
+  if (r.sodiumEaten + item.sodium > settings.sodiumLimit) score -= 15;
+
+  return score;
+}
+
+function renderEatoutMenuItems() {
+  const container = document.getElementById('eatout-menu-items');
+  const items = RESTAURANT_DB[eatoutSelectedRestaurant] || [];
+  const r = getRemainingMacros();
+  container.innerHTML = '';
+
+  let sortedItems;
+  if (eatoutViewMode === 'suggest') {
+    // Score and sort by best fit
+    sortedItems = items
+      .map(item => ({ ...item, _score: scoreEatoutItem(item) }))
+      .sort((a, b) => b._score - a._score);
+
+    // Show top recommendation
+    if (sortedItems.length > 0 && sortedItems[0]._score > 0) {
+      const top = sortedItems[0];
+      const topCard = document.createElement('div');
+      topCard.className = 'eatout-top-pick';
+      topCard.innerHTML = `
+        <div class="eatout-top-pick-label">Best match for your remaining macros</div>
+        <div class="eatout-top-pick-name">${top.name}</div>
+        <div class="eatout-top-pick-macros">
+          ${top.calories} cal · P:${top.protein}g · C:${top.carbs}g · F:${top.fat}g
+          ${top.sodium > SODIUM_WARNING_THRESHOLD ? '<span class="eatout-sodium-warn">High sodium</span>' : ''}
+        </div>
+        <div class="eatout-top-pick-why">
+          Fills ${r.protein > 0 ? Math.min(100, Math.round(top.protein / r.protein * 100)) : 0}% of remaining protein
+          ${top.calories <= r.cal ? ' · Within calorie budget' : ' · Over calorie budget'}
+        </div>
+      `;
+      topCard.addEventListener('click', () => {
+        servingFood = {
+          name: `${top.name} (${eatoutSelectedRestaurant})`,
+          calories: top.calories, protein: top.protein, carbs: top.carbs,
+          fat: top.fat, fiber: 0, sodium: top.sodium,
+          category: currentMeal || 'lunch', tags: ['restaurant'], serving_label: '1 order',
+        };
+        showServings(servingFood);
+      });
+      container.appendChild(topCard);
+    }
+  } else {
+    sortedItems = [...items];
+  }
+
+  sortedItems.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'eatout-menu-item';
+    const overBudget = item.calories > r.cal;
+    const highSodium = item.sodium > SODIUM_WARNING_THRESHOLD;
+    const proteinPct = r.protein > 0 ? Math.min(100, Math.round(item.protein / r.protein * 100)) : 0;
+
+    card.innerHTML = `
+      <div class="eatout-item-info">
+        <div class="eatout-item-name">${item.name}</div>
+        <div class="eatout-item-macros">
+          <span class="${overBudget ? 'eatout-over' : ''}">${item.calories} cal</span>
+          <span class="eatout-item-protein">P:${item.protein}g</span>
+          <span>C:${item.carbs}g</span>
+          <span>F:${item.fat}g</span>
+          <span class="${highSodium ? 'eatout-sodium-warn' : ''}">Na:${item.sodium}mg</span>
+        </div>
+        ${eatoutViewMode === 'suggest' ? `<div class="eatout-item-fit">${proteinPct}% of protein need${overBudget ? ' · over budget' : ''}</div>` : ''}
+      </div>
+      <button class="eatout-add-btn">+</button>
+    `;
+
+    card.querySelector('.eatout-add-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const food = {
+        name: `${item.name} (${eatoutSelectedRestaurant})`,
+        calories: item.calories, protein: item.protein, carbs: item.carbs,
+        fat: item.fat, fiber: 0, sodium: item.sodium,
+        category: currentMeal || 'lunch', tags: ['restaurant'], serving_label: '1 order',
+      };
+      servingFood = food;
+      showServings(food);
+    });
+
+    container.appendChild(card);
+  });
+}
+
+function initEatoutTab() {
+  // Restaurant search
+  document.getElementById('eatout-restaurant-search').addEventListener('input', (e) => {
+    renderEatoutRestaurantList(e.target.value);
+  });
+
+  // Back button
+  document.getElementById('eatout-back-btn').addEventListener('click', closeEatoutMenu);
+
+  // Save restaurant button
+  document.getElementById('eatout-save-restaurant').addEventListener('click', () => {
+    if (!eatoutSelectedRestaurant) return;
+    const saved = getSavedRestaurants();
+    const idx = saved.indexOf(eatoutSelectedRestaurant);
+    if (idx >= 0) {
+      saved.splice(idx, 1);
+    } else {
+      saved.push(eatoutSelectedRestaurant);
+    }
+    saveSavedRestaurants(saved);
+    const btn = document.getElementById('eatout-save-restaurant');
+    btn.innerHTML = saved.includes(eatoutSelectedRestaurant) ? '&#9733;' : '&#9734;';
+    btn.classList.toggle('saved', saved.includes(eatoutSelectedRestaurant));
+    renderEatoutSavedPills();
+  });
+
+  // View toggle (suggest vs full menu)
+  document.getElementById('eatout-suggest-toggle').addEventListener('click', () => {
+    eatoutViewMode = 'suggest';
+    document.getElementById('eatout-suggest-toggle').classList.add('active');
+    document.getElementById('eatout-menu-toggle').classList.remove('active');
+    renderEatoutMenuItems();
+  });
+  document.getElementById('eatout-menu-toggle').addEventListener('click', () => {
+    eatoutViewMode = 'menu';
+    document.getElementById('eatout-menu-toggle').classList.remove('active');
+    document.getElementById('eatout-suggest-toggle').classList.remove('active');
+    document.getElementById('eatout-menu-toggle').classList.add('active');
+    renderEatoutMenuItems();
+  });
+}
+
+// Initialize eat out tab on load
+initEatoutTab();
 
 // ══════════════════════════════════
 // SERVICE WORKER

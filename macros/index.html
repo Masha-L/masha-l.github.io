@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
   <!-- AUTH SCREEN -->
@@ -215,6 +215,7 @@
         <button class="modal-tab" data-tab="search">Search</button>
         <button class="modal-tab" data-tab="quick">Quick Add</button>
         <button class="modal-tab" data-tab="describe">Describe</button>
+        <button class="modal-tab" data-tab="eatout">Eat Out</button>
       </div>
       <div class="modal-body">
         <!-- Library Tab -->
@@ -271,6 +272,27 @@
             <label class="checkbox-label"><input type="checkbox" id="qa-save-lib"> Save to library</label>
             <button type="submit" class="btn-primary">Add to Meal</button>
           </form>
+        </div>
+        <!-- Eat Out Tab -->
+        <div class="tab-content" id="tab-eatout">
+          <div class="eatout-remaining" id="eatout-remaining"></div>
+          <div class="eatout-section">
+            <input type="text" class="modal-search" id="eatout-restaurant-search" placeholder="Search restaurants..." autocomplete="off">
+            <div class="eatout-saved-pills" id="eatout-saved-pills"></div>
+            <div class="eatout-restaurant-list" id="eatout-restaurant-list"></div>
+          </div>
+          <div class="eatout-menu-section" id="eatout-menu-section" style="display:none">
+            <div class="eatout-menu-header" id="eatout-menu-header">
+              <button class="eatout-back-btn" id="eatout-back-btn">&larr;</button>
+              <h3 id="eatout-restaurant-name"></h3>
+              <button class="eatout-save-btn" id="eatout-save-restaurant" title="Save restaurant">&#9734;</button>
+            </div>
+            <div class="eatout-suggest-bar" id="eatout-suggest-bar">
+              <button class="eatout-suggest-btn active" id="eatout-suggest-toggle" data-view="suggest">What should I order?</button>
+              <button class="eatout-suggest-btn" id="eatout-menu-toggle" data-view="menu">Full Menu</button>
+            </div>
+            <div class="eatout-menu-items" id="eatout-menu-items"></div>
+          </div>
         </div>
       </div>
       <!-- Servings multiplier -->
@@ -351,6 +373,6 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script src="app.js?v=5"></script>
+  <script src="app.js?v=6"></script>
 </body>
 </html>
