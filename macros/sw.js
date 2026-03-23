@@ -1,9 +1,9 @@
-const CACHE_NAME = 'macros-v5';
+const CACHE_NAME = 'macros-v8';
 const ASSETS = [
   './',
   './index.html',
-  './style.css',
-  './app.js',
+  './style.css?v=8',
+  './app.js?v=8',
   './manifest.json',
   './icon-192.png',
   './icon-512.png'

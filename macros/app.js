@@ -741,6 +741,7 @@ async function addLogEntry(meal, food, servings) {
 }
 
 async function removeLogEntry(id) {
+  if (!currentUser) return;
   await sb.from('macro_log').delete().eq('id', id);
   await loadDayLog(currentDate);
   renderHome();
@@ -768,11 +769,13 @@ async function addFoodToLibrary(food) {
 }
 
 async function updateFoodInLibrary(id, updates) {
+  if (!currentUser) return;
   await sb.from('macro_foods').update(updates).eq('id', id);
   await loadLibrary();
 }
 
 async function deleteFoodFromLibrary(id) {
+  if (!currentUser) return;
   await sb.from('macro_foods').delete().eq('id', id);
   await loadLibrary();
   renderLibrary();
@@ -1519,6 +1522,7 @@ document.getElementById('forgot-form').addEventListener('submit', async (e) => {
 // ══════════════════════════════════
 async function renderStats() {
   const content = document.getElementById('stats-content');
+  if (!currentUser) { content.innerHTML = '<div class="meal-empty">Log in to see stats</div>'; return; }
   content.innerHTML = '<div style="text-align:center;padding:2rem;"><div class="loading-spinner"></div></div>';
 
   const range = statsPeriod === 'week' ? 7 : 30;
@@ -2197,6 +2201,7 @@ async function saveWeightEntry(date, lbs, note) {
 }
 
 async function deleteWeightEntry(id) {
+  if (!currentUser) return;
   await sb.from('macro_weight').delete().eq('id', id);
   await loadWeightEntries();
 }
