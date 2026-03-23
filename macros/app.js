@@ -16,10 +16,10 @@ const MEALS = [
 ];
 
 const MODES = {
-  recomp:   { label:'Recomp',   cal:[1800,2000], protein:[94,134], fat:[55,65], carbs:[200,250], fiber:[25,30] },
-  cutting:  { label:'Cutting',  cal:[1400,1600], protein:[110,140], fat:[40,55], carbs:[130,170], fiber:[25,30] },
-  maintain: { label:'Maintenance', cal:[1900,2100], protein:[80,120], fat:[55,70], carbs:[220,270], fiber:[25,30] },
-  marathon: { label:'Marathon Fueling', cal:[2200,2500], protein:[90,120], fat:[55,70], carbs:[300,380], fiber:[25,30] },
+  recomp:   { label:'Recomp',   cal:[2100,2300], protein:[87,109], fat:[52,66], carbs:[250,320], fiber:[25,30] },
+  cutting:  { label:'Cutting',  cal:[1800,2000], protein:[100,120], fat:[45,60], carbs:[200,260], fiber:[25,30] },
+  maintain: { label:'Maintenance', cal:[2100,2300], protein:[87,109], fat:[52,66], carbs:[250,320], fiber:[25,30] },
+  marathon: { label:'Marathon Fueling', cal:[2400,2600], protein:[87,109], fat:[55,70], carbs:[320,400], fiber:[25,30] },
 };
 
 const SEED_FOODS = [
@@ -49,7 +49,7 @@ const SEED_FOODS = [
 let currentUser = null;
 let currentDate = todayStr();
 let currentMeal = null;
-let settings = { mode:'recomp', weight:130, height:64, bodyFat:25.9, steps:8000, workouts:4, zone2:120, sodiumLimit:2000 };
+let settings = { mode:'recomp', weight:148, height:68.5, bodyFat:25.9, steps:8000, workouts:4, zone2:120, sodiumLimit:2000 };
 let library = [];   // macro_foods rows
 let dayLog = [];     // macro_log rows for currentDate
 let waterCups = 0;
@@ -511,20 +511,83 @@ document.querySelectorAll('#add-food-modal .modal-tab').forEach(tab => {
   });
 });
 
+function scoreFood(food) {
+  // Score foods by how well they fill gaps in today's macros
+  const totals = computeTotals();
+  const targets = getTargets();
+  let score = 0;
+
+  // Protein gap is most important for recomp
+  const proteinGap = targets.protein[1] - totals.protein;
+  if (proteinGap > 0 && food.protein > 0) {
+    score += (food.protein / proteinGap) * 50; // protein-dense foods rank higher when protein is low
+  }
+
+  // Calorie fit: reward foods that keep us in range, penalize if we'd go over
+  const calRemaining = targets.cal[1] - totals.cal;
+  if (calRemaining > 0) {
+    if (food.calories <= calRemaining) {
+      score += 10; // fits in budget
+    } else {
+      score -= 20; // would blow past target
+    }
+  } else {
+    score -= 30; // already over, penalize all
+  }
+
+  // Sodium: penalize high-sodium foods if we're already at 70%+
+  const sodiumPct = totals.sodium / settings.sodiumLimit;
+  if (sodiumPct > 0.7 && food.sodium > 300) {
+    score -= 15;
+  }
+
+  // Fiber boost if under target
+  if (totals.fiber < targets.fiber[0] && food.fiber > 2) {
+    score += 5;
+  }
+
+  return score;
+}
+
 function renderModalLibrary(filter) {
   const q = (filter || document.getElementById('modal-lib-search').value || '').toLowerCase();
   const list = document.getElementById('modal-lib-list');
-  const filtered = library.filter(f => !q || f.name.toLowerCase().includes(q));
+  let filtered = library.filter(f => !q || f.name.toLowerCase().includes(q));
+
+  // Smart sort: prioritize by what's missing in today's macros
+  filtered = filtered.map(f => ({ ...f, _score: scoreFood(f) }))
+    .sort((a, b) => b._score - a._score);
+
   list.innerHTML = '';
   if (filtered.length === 0) {
     list.innerHTML = '<div class="meal-empty">No foods found</div>';
     return;
   }
+
+  // Show gap hint at top
+  const totals = computeTotals();
+  const targets = getTargets();
+  const proteinLeft = Math.max(0, Math.round(targets.protein[0] - totals.protein));
+  const calLeft = Math.max(0, Math.round(targets.cal[0] - totals.cal));
+  if (proteinLeft > 0 || calLeft > 0) {
+    const hint = document.createElement('div');
+    hint.className = 'modal-gap-hint';
+    const parts = [];
+    if (proteinLeft > 0) parts.push(`${proteinLeft}g protein`);
+    if (calLeft > 0) parts.push(`${calLeft} cal`);
+    hint.textContent = `Still need: ${parts.join(', ')}`;
+    list.appendChild(hint);
+  }
+
   filtered.forEach(f => {
     const item = document.createElement('div');
     item.className = 'modal-food-item';
+    // Highlight protein-rich foods when protein is needed
+    const proteinNeeded = totals.protein < targets.protein[0];
+    const highProtein = f.protein >= 15;
+    const highlight = proteinNeeded && highProtein ? ' style="border-color:rgba(16,185,129,0.4)"' : '';
     item.innerHTML = `
-      <div class="modal-food-name">${f.name}</div>
+      <div class="modal-food-name">${f.name}${proteinNeeded && highProtein ? ' <span style="font-size:.6rem;color:#10b981;">HIGH PROTEIN</span>' : ''}</div>
       <div class="modal-food-serving">${f.serving_label || '1 serving'}</div>
       <div class="modal-food-macros">
         <span>${f.calories} cal</span>
@@ -533,6 +596,7 @@ function renderModalLibrary(filter) {
         <span>F:${r1(f.fat)}g</span>
       </div>
     `;
+    if (highlight) item.setAttribute('style', 'border-color:rgba(16,185,129,0.4)');
     item.addEventListener('click', () => showServings(f));
     list.appendChild(item);
   });
