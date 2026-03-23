@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#0a0a0a">
+  <meta name="theme-color" content="#0d0d0d">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Macros</title>
@@ -13,182 +13,289 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app">
-    <!-- HOME -->
+  <!-- AUTH SCREEN -->
+  <div id="auth-screen" class="screen active">
+    <div class="auth-container">
+      <div class="auth-logo">
+        <svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="none" stroke="#10b981" stroke-width="3"/><path d="M20 38 L28 28 L36 34 L44 22" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h1>Macros</h1>
+        <p class="auth-subtitle">Track smarter, not harder</p>
+      </div>
+      <form id="auth-form">
+        <input type="email" id="auth-email" placeholder="Email" required autocomplete="email">
+        <input type="password" id="auth-password" placeholder="Password" required autocomplete="current-password">
+        <button type="submit" id="auth-submit" class="btn-primary">Log In</button>
+        <p id="auth-error" class="error-text"></p>
+        <p class="auth-toggle">
+          <span id="auth-toggle-text">Don't have an account?</span>
+          <a href="#" id="auth-toggle-link">Sign Up</a>
+        </p>
+        <a href="#" id="auth-forgot" class="forgot-link">Forgot password?</a>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div id="app-screen" class="screen">
+    <!-- HOME PAGE -->
     <section id="page-home" class="page active">
       <header class="date-header">
-        <button class="date-nav" id="prev-day">&larr;</button>
+        <button class="date-nav" id="prev-day" aria-label="Previous day">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
         <div class="date-center">
           <h1 id="date-display"></h1>
           <span class="mode-badge" id="mode-badge">Recomp</span>
         </div>
-        <button class="date-nav" id="next-day">&rarr;</button>
+        <button class="date-nav" id="next-day" aria-label="Next day">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
       </header>
 
-      <div class="gauges-section">
+      <div class="gauges-card">
         <div class="calorie-gauge-wrap">
-          <canvas id="calorie-gauge" width="260" height="150"></canvas>
-          <div class="calorie-label">
-            <span id="cal-current">0</span>
-            <span class="cal-unit">kcal</span>
-            <span id="cal-target" class="cal-target-text"></span>
+          <svg id="calorie-gauge" viewBox="0 0 200 120" class="calorie-svg">
+            <path d="M 20 110 A 80 80 0 0 1 180 110" fill="none" stroke="#2a2a2a" stroke-width="14" stroke-linecap="round"/>
+            <path id="cal-arc" d="M 20 110 A 80 80 0 0 1 180 110" fill="none" stroke="#10b981" stroke-width="14" stroke-linecap="round" stroke-dasharray="0 999"/>
+            <text id="cal-low-label" class="gauge-range-text" x="0" y="0" fill="#555" font-size="8"></text>
+            <text id="cal-high-label" class="gauge-range-text" x="0" y="0" fill="#555" font-size="8"></text>
+          </svg>
+          <div class="calorie-center">
+            <span class="calorie-number" id="cal-eaten">0</span>
+            <span class="calorie-label">eaten</span>
           </div>
         </div>
         <div class="macro-gauges">
-          <div class="mini-gauge" data-macro="protein">
-            <canvas width="100" height="65"></canvas>
-            <div class="mini-label"><span class="mini-val">0</span><span class="mini-name">Protein</span></div>
+          <div class="mini-gauge" id="gauge-protein">
+            <svg viewBox="0 0 60 40" class="mini-svg">
+              <path d="M 6 36 A 24 24 0 0 1 54 36" fill="none" stroke="#2a2a2a" stroke-width="5" stroke-linecap="round"/>
+              <path class="mini-arc" d="M 6 36 A 24 24 0 0 1 54 36" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 999"/>
+            </svg>
+            <span class="mini-value">0g</span>
+            <span class="mini-label">Prot</span>
+            <span class="mini-target">0 / 0g</span>
           </div>
-          <div class="mini-gauge" data-macro="carbs">
-            <canvas width="100" height="65"></canvas>
-            <div class="mini-label"><span class="mini-val">0</span><span class="mini-name">Carbs</span></div>
+          <div class="mini-gauge" id="gauge-carbs">
+            <svg viewBox="0 0 60 40" class="mini-svg">
+              <path d="M 6 36 A 24 24 0 0 1 54 36" fill="none" stroke="#2a2a2a" stroke-width="5" stroke-linecap="round"/>
+              <path class="mini-arc" d="M 6 36 A 24 24 0 0 1 54 36" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 999"/>
+            </svg>
+            <span class="mini-value">0g</span>
+            <span class="mini-label">Carb</span>
+            <span class="mini-target">0 / 0g</span>
           </div>
-          <div class="mini-gauge" data-macro="fat">
-            <canvas width="100" height="65"></canvas>
-            <div class="mini-label"><span class="mini-val">0</span><span class="mini-name">Fat</span></div>
+          <div class="mini-gauge" id="gauge-fat">
+            <svg viewBox="0 0 60 40" class="mini-svg">
+              <path d="M 6 36 A 24 24 0 0 1 54 36" fill="none" stroke="#2a2a2a" stroke-width="5" stroke-linecap="round"/>
+              <path class="mini-arc" d="M 6 36 A 24 24 0 0 1 54 36" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 999"/>
+            </svg>
+            <span class="mini-value">0g</span>
+            <span class="mini-label">Fat</span>
+            <span class="mini-target">0 / 0g</span>
           </div>
-          <div class="mini-gauge" data-macro="fiber">
-            <canvas width="100" height="65"></canvas>
-            <div class="mini-label"><span class="mini-val">0</span><span class="mini-name">Fiber</span></div>
+          <div class="mini-gauge" id="gauge-fiber">
+            <svg viewBox="0 0 60 40" class="mini-svg">
+              <path d="M 6 36 A 24 24 0 0 1 54 36" fill="none" stroke="#2a2a2a" stroke-width="5" stroke-linecap="round"/>
+              <path class="mini-arc" d="M 6 36 A 24 24 0 0 1 54 36" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 999"/>
+            </svg>
+            <span class="mini-value">0g</span>
+            <span class="mini-label">Fib</span>
+            <span class="mini-target">0 / 0g</span>
           </div>
-        </div>
-        <div class="sodium-bar-wrap">
-          <div class="sodium-bar-label">
-            <span>Sodium</span>
-            <span id="sodium-val">0 / 2000mg</span>
-          </div>
-          <div class="sodium-bar"><div class="sodium-fill" id="sodium-fill"></div></div>
-          <div class="sodium-warning hidden" id="sodium-warning">&#9888; Sodium limit exceeded</div>
-        </div>
-        <div class="water-tracker">
-          <span class="water-label">Water</span>
-          <div class="water-cups" id="water-cups"></div>
-          <span class="water-count" id="water-count">0 / 8</span>
         </div>
       </div>
 
+      <!-- Sodium Bar -->
+      <div class="sodium-card" id="sodium-card">
+        <div class="sodium-header">
+          <span class="sodium-title">Sodium</span>
+          <span class="sodium-value" id="sodium-value">0 / 2000mg</span>
+        </div>
+        <div class="sodium-bar-bg">
+          <div class="sodium-bar-fill" id="sodium-bar"></div>
+        </div>
+        <p class="sodium-warning" id="sodium-warning" style="display:none">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Genome: ACE DD + ADD1 — salt-sensitive
+        </p>
+      </div>
+
+      <!-- Water Tracker -->
+      <div class="water-card">
+        <div class="water-header">
+          <span class="water-title">Water</span>
+          <span class="water-count" id="water-count">0 cups</span>
+        </div>
+        <div class="water-cups" id="water-cups"></div>
+        <button class="water-add" id="water-add">+ Add Cup</button>
+      </div>
+
+      <!-- Meal Sections -->
       <div class="meals-section" id="meals-section"></div>
-      <footer class="app-footer">Powered by Ada and Masha</footer>
+
+      <footer class="app-footer">
+        <p>Powered by Ada & Masha</p>
+      </footer>
     </section>
 
-    <!-- STATS -->
+    <!-- STATS PAGE -->
     <section id="page-stats" class="page">
-      <header class="page-header"><h1>Stats</h1></header>
-      <div class="stats-toggle">
-        <button class="stats-btn active" data-period="week">Weekly</button>
-        <button class="stats-btn" data-period="month">Monthly</button>
-      </div>
-      <div id="stats-content"></div>
-      <footer class="app-footer">Powered by Ada and Masha</footer>
+      <header class="page-header">
+        <h1>Stats</h1>
+        <div class="stats-toggle" id="stats-toggle">
+          <button class="stats-btn active" data-range="week">Weekly</button>
+          <button class="stats-btn" data-range="month">Monthly</button>
+        </div>
+      </header>
+      <div id="stats-content" class="stats-content"></div>
+      <footer class="app-footer"><p>Powered by Ada & Masha</p></footer>
     </section>
 
-    <!-- LIBRARY -->
+    <!-- LIBRARY PAGE -->
     <section id="page-library" class="page">
-      <header class="page-header"><h1>Library</h1></header>
-      <div class="library-search-wrap">
-        <input type="text" id="library-search" placeholder="Search foods..." autocomplete="off">
+      <header class="page-header">
+        <h1>Food Library</h1>
+        <div class="library-search-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" id="library-search" placeholder="Search foods...">
+        </div>
+      </header>
+      <div class="library-filters">
+        <div class="filter-row" id="category-pills"></div>
+        <div class="filter-row" id="tag-pills"></div>
       </div>
-      <div class="library-filters" id="library-cat-filters"></div>
-      <div class="library-filters" id="library-tag-filters"></div>
-      <div class="library-list" id="library-list"></div>
-      <button class="fab" id="add-custom-btn" title="Add custom food">+</button>
-      <footer class="app-footer">Powered by Ada and Masha</footer>
+      <div id="library-list" class="library-list"></div>
+      <div class="library-actions">
+        <button class="btn-primary" id="lib-add-food">+ Add Food</button>
+      </div>
+      <footer class="app-footer"><p>Powered by Ada & Masha</p></footer>
     </section>
 
-    <!-- SETTINGS -->
+    <!-- SETTINGS PAGE -->
     <section id="page-settings" class="page">
       <header class="page-header"><h1>Settings</h1></header>
       <div class="settings-content" id="settings-content"></div>
-      <footer class="app-footer">Powered by Ada and Masha</footer>
+      <footer class="app-footer"><p>Powered by Ada & Masha</p></footer>
     </section>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav" id="bottom-nav">
+      <button class="nav-btn active" data-page="home">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        <span>Home</span>
+      </button>
+      <button class="nav-btn" data-page="stats">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        <span>Stats</span>
+      </button>
+      <button class="nav-btn" data-page="library">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        <span>Library</span>
+      </button>
+      <button class="nav-btn" data-page="settings">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <span>Settings</span>
+      </button>
+    </nav>
   </div>
 
-  <!-- Bottom Nav -->
-  <nav class="bottom-nav">
-    <button class="nav-btn active" data-page="home">
-      <svg viewBox="0 0 24 24" width="24" height="24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-      <span>Home</span>
-    </button>
-    <button class="nav-btn" data-page="stats">
-      <svg viewBox="0 0 24 24" width="24" height="24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
-      <span>Stats</span>
-    </button>
-    <button class="nav-btn" data-page="library">
-      <svg viewBox="0 0 24 24" width="24" height="24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
-      <span>Library</span>
-    </button>
-    <button class="nav-btn" data-page="settings">
-      <svg viewBox="0 0 24 24" width="24" height="24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 00-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1115.6 12 3.6 3.6 0 0112 15.6z"/></svg>
-      <span>Settings</span>
-    </button>
-  </nav>
-
-  <!-- Add Food Modal -->
-  <div class="modal-overlay hidden" id="add-food-modal">
+  <!-- ADD FOOD MODAL -->
+  <div class="modal-overlay" id="add-food-modal">
     <div class="modal">
       <div class="modal-header">
-        <h2 id="modal-meal-title">Add Food</h2>
+        <h2 id="modal-title">Add Food</h2>
         <button class="modal-close" id="modal-close">&times;</button>
       </div>
       <div class="modal-tabs">
         <button class="modal-tab active" data-tab="library">Library</button>
-        <button class="modal-tab" data-tab="search">USDA Search</button>
+        <button class="modal-tab" data-tab="search">Search</button>
         <button class="modal-tab" data-tab="quick">Quick Add</button>
       </div>
       <div class="modal-body">
-        <div class="modal-tab-content active" id="tab-library">
-          <input type="text" id="modal-lib-search" placeholder="Search library..." autocomplete="off">
+        <!-- Library Tab -->
+        <div class="tab-content active" id="tab-library">
+          <input type="text" class="modal-search" id="modal-lib-search" placeholder="Search your foods...">
           <div class="modal-food-list" id="modal-lib-list"></div>
         </div>
-        <div class="modal-tab-content" id="tab-search">
-          <div class="usda-search-wrap">
-            <input type="text" id="usda-search-input" placeholder="Search USDA database..." autocomplete="off">
-            <button id="usda-search-btn">Search</button>
+        <!-- USDA Search Tab -->
+        <div class="tab-content" id="tab-search">
+          <div class="search-input-wrap">
+            <input type="text" class="modal-search" id="modal-usda-search" placeholder="Search USDA database...">
+            <button class="search-btn" id="usda-search-btn">Search</button>
           </div>
-          <div class="modal-food-list" id="usda-results"></div>
+          <div class="modal-food-list" id="modal-usda-list"></div>
         </div>
-        <div class="modal-tab-content" id="tab-quick">
-          <div class="quick-add-form">
-            <input type="text" id="qa-name" placeholder="Food name" autocomplete="off">
-            <div class="qa-row">
-              <div class="qa-field"><label>Cal</label><input type="number" id="qa-cal" min="0"></div>
-              <div class="qa-field"><label>Protein</label><input type="number" id="qa-protein" min="0" step="0.1"></div>
-              <div class="qa-field"><label>Carbs</label><input type="number" id="qa-carbs" min="0" step="0.1"></div>
+        <!-- Quick Add Tab -->
+        <div class="tab-content" id="tab-quick">
+          <form id="quick-add-form" class="quick-form">
+            <input type="text" id="qa-name" placeholder="Food name" required>
+            <div class="form-row">
+              <div class="form-field"><label>Calories</label><input type="number" id="qa-cal" required></div>
+              <div class="form-field"><label>Protein (g)</label><input type="number" id="qa-protein" step="0.1" required></div>
             </div>
-            <div class="qa-row">
-              <div class="qa-field"><label>Fat</label><input type="number" id="qa-fat" min="0" step="0.1"></div>
-              <div class="qa-field"><label>Fiber</label><input type="number" id="qa-fiber" min="0" step="0.1"></div>
-              <div class="qa-field"><label>Sodium (mg)</label><input type="number" id="qa-sodium" min="0"></div>
+            <div class="form-row">
+              <div class="form-field"><label>Carbs (g)</label><input type="number" id="qa-carbs" step="0.1" required></div>
+              <div class="form-field"><label>Fat (g)</label><input type="number" id="qa-fat" step="0.1" required></div>
             </div>
-            <button class="btn-primary" id="qa-add">Add to Meal</button>
-          </div>
+            <div class="form-row">
+              <div class="form-field"><label>Fiber (g)</label><input type="number" id="qa-fiber" step="0.1" value="0"></div>
+              <div class="form-field"><label>Sodium (mg)</label><input type="number" id="qa-sodium" value="0"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Category</label>
+                <select id="qa-category">
+                  <option value="breakfast">Breakfast</option>
+                  <option value="coffee">Coffee</option>
+                  <option value="lunch">Lunch</option>
+                  <option value="dinner">Dinner</option>
+                  <option value="snack">Snack</option>
+                  <option value="ingredient">Ingredient</option>
+                </select>
+              </div>
+              <div class="form-field"><label>Serving</label><input type="text" id="qa-serving" placeholder="1 serving"></div>
+            </div>
+            <label class="checkbox-label"><input type="checkbox" id="qa-save-lib"> Save to library</label>
+            <button type="submit" class="btn-primary">Add to Meal</button>
+          </form>
         </div>
+      </div>
+      <!-- Servings multiplier -->
+      <div class="servings-row" id="servings-row" style="display:none">
+        <label>Servings:</label>
+        <button class="serv-btn" id="serv-minus">−</button>
+        <span id="serv-count">1</span>
+        <button class="serv-btn" id="serv-plus">+</button>
+        <button class="btn-primary serv-confirm" id="serv-confirm">Add</button>
       </div>
     </div>
   </div>
 
-  <!-- Edit Library Item Modal -->
-  <div class="modal-overlay hidden" id="edit-food-modal">
+  <!-- EDIT FOOD MODAL -->
+  <div class="modal-overlay" id="edit-food-modal">
     <div class="modal">
       <div class="modal-header">
         <h2>Edit Food</h2>
         <button class="modal-close" id="edit-modal-close">&times;</button>
       </div>
       <div class="modal-body">
-        <div class="quick-add-form">
-          <input type="text" id="ef-name" placeholder="Food name" autocomplete="off">
-          <div class="qa-row">
-            <div class="qa-field"><label>Cal</label><input type="number" id="ef-cal" min="0"></div>
-            <div class="qa-field"><label>Protein</label><input type="number" id="ef-protein" min="0" step="0.1"></div>
-            <div class="qa-field"><label>Carbs</label><input type="number" id="ef-carbs" min="0" step="0.1"></div>
+        <form id="edit-food-form" class="quick-form">
+          <input type="hidden" id="ef-id">
+          <input type="text" id="ef-name" placeholder="Food name" required>
+          <div class="form-row">
+            <div class="form-field"><label>Calories</label><input type="number" id="ef-cal" required></div>
+            <div class="form-field"><label>Protein (g)</label><input type="number" id="ef-protein" step="0.1" required></div>
           </div>
-          <div class="qa-row">
-            <div class="qa-field"><label>Fat</label><input type="number" id="ef-fat" min="0" step="0.1"></div>
-            <div class="qa-field"><label>Fiber</label><input type="number" id="ef-fiber" min="0" step="0.1"></div>
-            <div class="qa-field"><label>Sodium (mg)</label><input type="number" id="ef-sodium" min="0"></div>
+          <div class="form-row">
+            <div class="form-field"><label>Carbs (g)</label><input type="number" id="ef-carbs" step="0.1" required></div>
+            <div class="form-field"><label>Fat (g)</label><input type="number" id="ef-fat" step="0.1" required></div>
           </div>
-          <div class="qa-row">
-            <div class="qa-field full">
+          <div class="form-row">
+            <div class="form-field"><label>Fiber (g)</label><input type="number" id="ef-fiber" step="0.1"></div>
+            <div class="form-field"><label>Sodium (mg)</label><input type="number" id="ef-sodium"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
               <label>Category</label>
               <select id="ef-category">
                 <option value="breakfast">Breakfast</option>
@@ -199,44 +306,38 @@
                 <option value="ingredient">Ingredient</option>
               </select>
             </div>
+            <div class="form-field"><label>Serving</label><input type="text" id="ef-serving" placeholder="1 serving"></div>
           </div>
-          <div class="qa-row">
-            <div class="qa-field full">
-              <label>Tags</label>
-              <div class="tag-checkboxes" id="ef-tags"></div>
+          <div class="form-row">
+            <div class="form-field full">
+              <label>Tags (comma separated)</label>
+              <input type="text" id="ef-tags" placeholder="quick, homemade">
             </div>
           </div>
-          <div class="edit-actions">
-            <button class="btn-danger" id="ef-delete">Delete</button>
-            <button class="btn-primary" id="ef-save">Save</button>
-          </div>
-        </div>
+          <button type="submit" class="btn-primary">Save Changes</button>
+        </form>
       </div>
     </div>
   </div>
 
-  <!-- Serving Size Modal -->
-  <div class="modal-overlay hidden" id="serving-modal">
-    <div class="modal modal-sm">
+  <!-- FORGOT PASSWORD MODAL -->
+  <div class="modal-overlay" id="forgot-modal">
+    <div class="modal modal-small">
       <div class="modal-header">
-        <h2 id="serving-food-name">Adjust Serving</h2>
-        <button class="modal-close" id="serving-modal-close">&times;</button>
+        <h2>Reset Password</h2>
+        <button class="modal-close" id="forgot-close">&times;</button>
       </div>
       <div class="modal-body">
-        <div class="serving-adjust">
-          <label>Servings</label>
-          <div class="serving-controls">
-            <button class="serving-btn" id="serving-minus">&minus;</button>
-            <input type="number" id="serving-amount" value="1" min="0.25" step="0.25">
-            <button class="serving-btn" id="serving-plus">+</button>
-          </div>
-          <div class="serving-preview" id="serving-preview"></div>
-          <button class="btn-primary" id="serving-confirm">Add</button>
-        </div>
+        <form id="forgot-form" class="quick-form">
+          <input type="email" id="forgot-email" placeholder="Your email" required>
+          <button type="submit" class="btn-primary">Send Reset Link</button>
+          <p id="forgot-msg" class="success-text"></p>
+        </form>
       </div>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
