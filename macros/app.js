@@ -548,8 +548,26 @@ function arcPoint(cx, cy, r, angleDeg) {
 // ══════════════════════════════════
 // RENDER GAUGES
 // ══════════════════════════════════
+function getEffectiveTargets() {
+  // Return targets that reflect custom slider values if set
+  const modeTargets = getTargets();
+  const ct = getCustomTargets();
+  // Build range: low is min of mode-low and custom, high is custom target
+  const mkRange = (modeRange, custom) => {
+    const lo = Math.min(modeRange[0], custom);
+    return [lo, custom];
+  };
+  return {
+    cal: mkRange(modeTargets.cal, ct.cal),
+    protein: mkRange(modeTargets.protein, ct.protein),
+    carbs: mkRange(modeTargets.carbs, ct.carbs),
+    fat: mkRange(modeTargets.fat, ct.fat),
+    fiber: mkRange(modeTargets.fiber, ct.fiber),
+  };
+}
+
 function renderGauges(totals) {
-  const targets = getTargets();
+  const targets = getEffectiveTargets();
   const svg = document.getElementById('calorie-gauge');
 
   // Calorie gauge — arc goes from 180° (left) to 0° (right)
@@ -824,7 +842,7 @@ function renderHome() {
   renderWeightCard();
 
   // Over range check
-  if (totals.cal > getTargets().cal[1]) badge.classList.add('over');
+  if (totals.cal > getEffectiveTargets().cal[1]) badge.classList.add('over');
 
   // Gauges
   renderGauges(totals);
@@ -1035,7 +1053,7 @@ document.querySelectorAll('#add-food-modal .modal-tab').forEach(tab => {
 // Internal raw score for sorting
 function scoreFoodRaw(food) {
   const totals = computeTotals();
-  const targets = getTargets();
+  const targets = getEffectiveTargets();
   let score = 0;
 
   const proteinGap = targets.protein[1] - totals.protein;
@@ -1062,7 +1080,7 @@ function scoreFoodRaw(food) {
 // 0-10 display score for badges
 function scoreFood(food) {
   const totals = computeTotals();
-  const targets = getTargets();
+  const targets = getEffectiveTargets();
   let score = 5; // baseline
 
   // Protein gap fill (0-3 points)
@@ -1118,7 +1136,7 @@ function renderModalCategoryPills() {
 
 function isProteinGap() {
   const totals = computeTotals();
-  const targets = getTargets();
+  const targets = getEffectiveTargets();
   return totals.protein < targets.protein[0];
 }
 
@@ -1144,7 +1162,7 @@ function renderModalLibrary(filter) {
 
   // Show gap hint at top
   const totals = computeTotals();
-  const targets = getTargets();
+  const targets = getEffectiveTargets();
   const proteinLeft = Math.max(0, Math.round(targets.protein[0] - totals.protein));
   const calLeft = Math.max(0, Math.round(targets.cal[0] - totals.cal));
   const proteinIsGap = isProteinGap();
@@ -2175,8 +2193,14 @@ function debounce(fn, ms) {
 // ══════════════════════════════════
 // WEIGHT TRACKING
 // ══════════════════════════════════
-const WEIGHT_START = 148;
-const WEIGHT_GOAL = 130;
+const WEIGHT_START_DEFAULT = 148;
+
+function getWeightStart() {
+  // Use first weigh-in if available, otherwise default
+  if (weightEntries.length > 0) return parseFloat(weightEntries[0].weight_lbs);
+  return WEIGHT_START_DEFAULT;
+}
+function getWeightGoal() { return settings.goalWeight || 130; }
 
 async function loadWeightEntries() {
   if (!currentUser) return;
@@ -2225,15 +2249,23 @@ function renderWeightCard() {
 
   currentEl.textContent = `${r1(currentWeight)} lbs`;
 
-  // Progress: 148 → 130 = 18 lbs total range
-  const totalRange = WEIGHT_START - WEIGHT_GOAL;
-  const lost = Math.max(0, WEIGHT_START - currentWeight);
-  const remaining = Math.max(0, currentWeight - WEIGHT_GOAL);
+  // Progress: start → goal
+  const wStart = getWeightStart();
+  const wGoal = getWeightGoal();
+  const totalRange = wStart - wGoal;
+  const lost = Math.max(0, wStart - currentWeight);
+  const remaining = Math.max(0, currentWeight - wGoal);
   const pct = Math.min(100, Math.max(0, (lost / totalRange) * 100));
 
   bar.style.width = pct + '%';
   marker.style.display = 'block';
   marker.style.left = pct + '%';
+
+  // Update dynamic labels
+  const goalLabel = document.getElementById('weight-goal-label');
+  if (goalLabel) goalLabel.textContent = `${wGoal} lbs`;
+  const startLabel = document.querySelector('.weight-progress-labels span:first-child');
+  if (startLabel) startLabel.textContent = Math.round(wStart);
 
   statsEl.innerHTML = `
     <span class="lost">${r1(lost)} lbs lost</span>
@@ -2294,8 +2326,10 @@ function renderWeightStats(container) {
   const entries = weightEntries;
   const latest = parseFloat(entries[entries.length - 1].weight_lbs);
   const first = parseFloat(entries[0].weight_lbs);
-  const totalLost = r1(WEIGHT_START - latest);
-  const remaining = r1(Math.max(0, latest - WEIGHT_GOAL));
+  const wStart = getWeightStart();
+  const wGoal = getWeightGoal();
+  const totalLost = r1(wStart - latest);
+  const remaining = r1(Math.max(0, latest - wGoal));
 
   // Weekly averages
   const weekMap = {};
@@ -2337,8 +2371,8 @@ function renderWeightStats(container) {
 
   // Use all entries for chart
   const chartEntries = entries.map(e => ({ date: e.date, w: parseFloat(e.weight_lbs) }));
-  const minW = Math.min(WEIGHT_GOAL - 2, ...chartEntries.map(e => e.w));
-  const maxW = Math.max(WEIGHT_START + 2, ...chartEntries.map(e => e.w));
+  const minW = Math.min(wGoal - 2, ...chartEntries.map(e => e.w));
+  const maxW = Math.max(wStart + 2, ...chartEntries.map(e => e.w));
   const wRange = maxW - minW;
 
   const toY = (w) => padT + plotH - ((w - minW) / wRange * plotH);
@@ -2369,8 +2403,8 @@ function renderWeightStats(container) {
     yLabels.push({ y: toY(w), label: Math.round(w) });
   }
 
-  const goalY = r1(toY(WEIGHT_GOAL));
-  const startY = r1(toY(WEIGHT_START));
+  const goalY = r1(toY(wGoal));
+  const startY = r1(toY(wStart));
 
   const chartSvg = `
     <svg viewBox="0 0 ${chartW} ${chartH}" xmlns="http://www.w3.org/2000/svg">
@@ -2382,7 +2416,7 @@ function renderWeightStats(container) {
       ${dateLabels.map(l => `<text x="${r1(l.x)}" y="${chartH - 5}" fill="#666" font-size="7" text-anchor="middle">${l.label}</text>`).join('')}
       <!-- Start line -->
       <line x1="${padL}" y1="${startY}" x2="${chartW - padR}" y2="${startY}" stroke="#555" stroke-width="0.5" stroke-dasharray="4 3"/>
-      <text x="${chartW - padR + 2}" y="${r1(parseFloat(startY) + 3)}" fill="#555" font-size="7" text-anchor="start">148</text>
+      <text x="${chartW - padR + 2}" y="${r1(parseFloat(startY) + 3)}" fill="#555" font-size="7" text-anchor="start">${Math.round(wStart)}</text>
       <!-- Goal line -->
       <line x1="${padL}" y1="${goalY}" x2="${chartW - padR}" y2="${goalY}" stroke="#10b981" stroke-width="1" stroke-dasharray="6 3"/>
       <text x="${chartW - padR + 2}" y="${r1(parseFloat(goalY) + 3)}" fill="#10b981" font-size="7" text-anchor="start">Goal</text>
@@ -2554,7 +2588,7 @@ let eatoutViewMode = 'suggest'; // 'suggest' or 'menu'
 
 function getRemainingMacros() {
   const totals = computeTotals();
-  const targets = getTargets();
+  const targets = getEffectiveTargets();
   return {
     cal: Math.max(0, targets.cal[1] - totals.cal),
     protein: Math.max(0, targets.protein[1] - totals.protein),
@@ -2571,7 +2605,7 @@ function getRemainingMacros() {
 function renderEatoutRemaining() {
   const el = document.getElementById('eatout-remaining');
   const r = getRemainingMacros();
-  const targets = getTargets();
+  const targets = getEffectiveTargets();
   el.innerHTML = `
     <div class="eatout-remaining-title">Remaining today</div>
     <div class="eatout-remaining-macros">
