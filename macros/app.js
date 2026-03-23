@@ -16,7 +16,7 @@ const MEALS = [
 ];
 
 const MODES = {
-  recomp:   { label:'Recomp',   cal:[1650,1850], protein:[87,109], fat:[52,66], carbs:[180,230], fiber:[25,30] },
+  recomp:   { label:'Recomp',   cal:[1650,1850], protein:[100,120], fat:[50,65], carbs:[160,210], fiber:[25,30] },
   cutting:  { label:'Cutting',  cal:[1800,2000], protein:[100,120], fat:[45,60], carbs:[200,260], fiber:[25,30] },
   maintain: { label:'Maintenance', cal:[2100,2300], protein:[87,109], fat:[52,66], carbs:[250,320], fiber:[25,30] },
   marathon: { label:'Marathon Fueling', cal:[2400,2600], protein:[87,109], fat:[55,70], carbs:[320,400], fiber:[25,30] },
