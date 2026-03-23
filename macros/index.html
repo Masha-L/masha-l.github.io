@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
   <!-- AUTH SCREEN -->
@@ -214,6 +214,7 @@
         <button class="modal-tab active" data-tab="library">Library</button>
         <button class="modal-tab" data-tab="search">Search</button>
         <button class="modal-tab" data-tab="quick">Quick Add</button>
+        <button class="modal-tab" data-tab="describe">Describe</button>
       </div>
       <div class="modal-body">
         <!-- Library Tab -->
@@ -229,6 +230,13 @@
             <button class="search-btn" id="usda-search-btn">Search</button>
           </div>
           <div class="modal-food-list" id="modal-usda-list"></div>
+        </div>
+        <!-- Describe Tab -->
+        <div class="tab-content" id="tab-describe">
+          <textarea id="describe-input" class="describe-textarea" rows="3" placeholder="e.g., 2 eggs and toast with avocado"></textarea>
+          <button class="btn-primary describe-estimate-btn" id="describe-estimate-btn">Estimate Macros</button>
+          <div id="describe-results" class="describe-results"></div>
+          <button class="btn-primary describe-log-btn" id="describe-log-btn" style="display:none">Log All</button>
         </div>
         <!-- Quick Add Tab -->
         <div class="tab-content" id="tab-quick">
@@ -343,6 +351,6 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>

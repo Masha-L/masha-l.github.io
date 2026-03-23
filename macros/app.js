@@ -45,6 +45,229 @@ const SEED_FOODS = [
   {name:'Trail mix',calories:175,protein:5,carbs:15,fat:12,fiber:2,sodium:45,category:'snack',tags:['quick'],serving_label:'1/4 cup'},
 ];
 
+// ── Reference Foods (built-in, not saved to Supabase) ──
+const REFERENCE_FOODS = [
+  // Include all SEED_FOODS by spread + additional common foods
+  ...SEED_FOODS,
+  // Fruits
+  {name:'Banana',calories:105,protein:1.3,carbs:27,fat:0.4,fiber:3.1,sodium:1,category:'snack',tags:[],serving_label:'1 medium'},
+  {name:'Apple',calories:95,protein:0.5,carbs:25,fat:0.3,fiber:4.4,sodium:2,category:'snack',tags:[],serving_label:'1 medium'},
+  {name:'Orange',calories:62,protein:1.2,carbs:15,fat:0.2,fiber:3.1,sodium:0,category:'snack',tags:[],serving_label:'1 medium'},
+  // Grains & Carbs
+  {name:'White rice',calories:206,protein:4.3,carbs:45,fat:0.4,fiber:0.6,sodium:2,category:'ingredient',tags:[],serving_label:'1 cup cooked'},
+  {name:'Pasta',calories:220,protein:8,carbs:43,fat:1.3,fiber:2.5,sodium:1,category:'ingredient',tags:[],serving_label:'1 cup cooked'},
+  {name:'Bread',calories:79,protein:2.7,carbs:15,fat:1,fiber:0.6,sodium:147,category:'ingredient',tags:[],serving_label:'1 slice'},
+  {name:'Bagel',calories:270,protein:10,carbs:53,fat:1.5,fiber:2.3,sodium:430,category:'breakfast',tags:[],serving_label:'1 bagel'},
+  {name:'Pancake',calories:86,protein:2.5,carbs:11,fat:3.5,fiber:0.5,sodium:167,category:'breakfast',tags:[],serving_label:'1 pancake (4")'},
+  {name:'Waffle',calories:95,protein:2.4,carbs:13,fat:3.7,fiber:0.8,sodium:220,category:'breakfast',tags:[],serving_label:'1 waffle'},
+  {name:'Muffin',calories:340,protein:5,carbs:50,fat:13,fiber:2,sodium:350,category:'breakfast',tags:[],serving_label:'1 large muffin'},
+  {name:'Cereal',calories:150,protein:3,carbs:33,fat:1,fiber:3,sodium:200,category:'breakfast',tags:[],serving_label:'1 cup'},
+  {name:'Granola',calories:200,protein:5,carbs:30,fat:8,fiber:3,sodium:10,category:'breakfast',tags:[],serving_label:'1/2 cup'},
+  {name:'Rice cake',calories:35,protein:0.7,carbs:7.3,fat:0.3,fiber:0.4,sodium:29,category:'snack',tags:[],serving_label:'1 cake'},
+  {name:'Popcorn',calories:106,protein:3,carbs:21,fat:1.2,fiber:3.6,sodium:1,category:'snack',tags:[],serving_label:'3 cups popped'},
+  // Dairy & Spreads
+  {name:'Cheese',calories:113,protein:7,carbs:0.4,fat:9.3,fiber:0,sodium:174,category:'ingredient',tags:[],serving_label:'1 oz'},
+  {name:'Butter',calories:102,protein:0.1,carbs:0,fat:11.5,fiber:0,sodium:91,category:'ingredient',tags:[],serving_label:'1 tbsp'},
+  {name:'Cream cheese',calories:99,protein:1.7,carbs:1.6,fat:9.8,fiber:0,sodium:93,category:'ingredient',tags:[],serving_label:'2 tbsp'},
+  {name:'Cottage cheese',calories:110,protein:12.5,carbs:4.5,fat:4.5,fiber:0,sodium:400,category:'snack',tags:[],serving_label:'1/2 cup'},
+  {name:'String cheese',calories:80,protein:7,carbs:1,fat:5,fiber:0,sodium:200,category:'snack',tags:[],serving_label:'1 stick'},
+  {name:'Whole milk',calories:149,protein:8,carbs:12,fat:8,fiber:0,sodium:105,category:'ingredient',tags:[],serving_label:'1 cup'},
+  {name:'2% milk',calories:122,protein:8.1,carbs:11.7,fat:4.8,fiber:0,sodium:115,category:'ingredient',tags:[],serving_label:'1 cup'},
+  {name:'Skim milk',calories:83,protein:8.3,carbs:12.2,fat:0.2,fiber:0,sodium:128,category:'ingredient',tags:[],serving_label:'1 cup'},
+  {name:'Oat milk',calories:120,protein:3,carbs:16,fat:5,fiber:2,sodium:100,category:'ingredient',tags:[],serving_label:'1 cup'},
+  // Nut butters & Spreads
+  {name:'Peanut butter',calories:188,protein:8,carbs:6,fat:16,fiber:2,sodium:136,category:'ingredient',tags:[],serving_label:'2 tbsp'},
+  {name:'Almond butter',calories:196,protein:6.8,carbs:6,fat:17.8,fiber:3.3,sodium:2,category:'ingredient',tags:[],serving_label:'2 tbsp'},
+  {name:'Honey',calories:64,protein:0.1,carbs:17,fat:0,fiber:0,sodium:1,category:'ingredient',tags:[],serving_label:'1 tbsp'},
+  {name:'Syrup',calories:52,protein:0,carbs:13.4,fat:0,fiber:0,sodium:2,category:'ingredient',tags:[],serving_label:'1 tbsp'},
+  // Proteins
+  {name:'Chicken thigh',calories:230,protein:28,carbs:0,fat:13,fiber:0,sodium:85,category:'dinner',tags:[],serving_label:'1 thigh (bone-in)'},
+  {name:'Ground turkey',calories:170,protein:21,carbs:0,fat:9.4,fiber:0,sodium:70,category:'dinner',tags:[],serving_label:'4 oz'},
+  {name:'Ground beef',calories:287,protein:19.4,carbs:0,fat:23,fiber:0,sodium:75,category:'dinner',tags:[],serving_label:'4 oz (80/20)'},
+  {name:'Steak',calories:271,protein:26,carbs:0,fat:18,fiber:0,sodium:60,category:'dinner',tags:[],serving_label:'6 oz'},
+  {name:'Tuna',calories:130,protein:29,carbs:0,fat:1,fiber:0,sodium:40,category:'lunch',tags:[],serving_label:'1 can (5 oz)'},
+  {name:'Shrimp',calories:84,protein:20,carbs:0.2,fat:0.3,fiber:0,sodium:119,category:'dinner',tags:[],serving_label:'4 oz'},
+  {name:'Tofu',calories:94,protein:10,carbs:2.3,fat:5,fiber:0.5,sodium:9,category:'dinner',tags:[],serving_label:'1/2 cup firm'},
+  // Legumes
+  {name:'Black beans',calories:114,protein:7.6,carbs:20,fat:0.5,fiber:7.5,sodium:1,category:'ingredient',tags:[],serving_label:'1/2 cup'},
+  {name:'Kidney beans',calories:112,protein:7.7,carbs:20,fat:0.4,fiber:5.7,sodium:1,category:'ingredient',tags:[],serving_label:'1/2 cup'},
+  {name:'Lentils',calories:115,protein:9,carbs:20,fat:0.4,fiber:7.8,sodium:2,category:'ingredient',tags:[],serving_label:'1/2 cup cooked'},
+  {name:'Edamame',calories:120,protein:11,carbs:9,fat:5,fiber:4,sodium:5,category:'snack',tags:[],serving_label:'1/2 cup shelled'},
+  // Vegetables
+  {name:'Broccoli',calories:31,protein:2.6,carbs:6,fat:0.3,fiber:2.4,sodium:30,category:'ingredient',tags:[],serving_label:'1 cup'},
+  {name:'Spinach',calories:7,protein:0.9,carbs:1.1,fat:0.1,fiber:0.7,sodium:24,category:'ingredient',tags:[],serving_label:'1 cup raw'},
+  {name:'Cucumber',calories:16,protein:0.7,carbs:3.6,fat:0.1,fiber:0.5,sodium:2,category:'ingredient',tags:[],serving_label:'1 cup sliced'},
+  {name:'Tomato',calories:22,protein:1.1,carbs:4.8,fat:0.2,fiber:1.5,sodium:6,category:'ingredient',tags:[],serving_label:'1 medium'},
+  {name:'Lettuce',calories:5,protein:0.5,carbs:1,fat:0.1,fiber:0.5,sodium:5,category:'ingredient',tags:[],serving_label:'1 cup shredded'},
+  {name:'Corn',calories:88,protein:3.3,carbs:19,fat:1.4,fiber:2,sodium:1,category:'ingredient',tags:[],serving_label:'1 ear'},
+  {name:'Potato',calories:163,protein:4.3,carbs:37,fat:0.2,fiber:3.8,sodium:13,category:'ingredient',tags:[],serving_label:'1 medium'},
+  // Fast food / Prepared
+  {name:'French fries',calories:365,protein:4,carbs:48,fat:17,fiber:4,sodium:210,category:'snack',tags:['takeout'],serving_label:'medium order'},
+  {name:'Chips',calories:160,protein:2,carbs:15,fat:10,fiber:1,sodium:170,category:'snack',tags:[],serving_label:'1 oz'},
+  {name:'Cookie',calories:200,protein:2,carbs:28,fat:9,fiber:1,sodium:120,category:'snack',tags:[],serving_label:'1 large cookie'},
+  {name:'Ice cream',calories:207,protein:3.5,carbs:23,fat:11,fiber:0.7,sodium:80,category:'snack',tags:[],serving_label:'1/2 cup'},
+  {name:'Pizza slice',calories:285,protein:12,carbs:36,fat:10,fiber:2.5,sodium:640,category:'dinner',tags:['takeout'],serving_label:'1 slice'},
+  {name:'Burger',calories:540,protein:34,carbs:40,fat:27,fiber:2,sodium:790,category:'lunch',tags:['takeout'],serving_label:'1 burger'},
+  {name:'Sandwich',calories:350,protein:20,carbs:35,fat:14,fiber:3,sodium:680,category:'lunch',tags:[],serving_label:'1 sandwich'},
+  {name:'Wrap',calories:300,protein:15,carbs:35,fat:12,fiber:2,sodium:600,category:'lunch',tags:[],serving_label:'1 wrap'},
+  {name:'Sushi roll',calories:255,protein:9,carbs:38,fat:7,fiber:1.5,sodium:500,category:'dinner',tags:[],serving_label:'6-8 pieces'},
+  {name:'Ramen',calories:436,protein:17,carbs:56,fat:16,fiber:2,sodium:1800,category:'dinner',tags:['takeout'],serving_label:'1 bowl'},
+  {name:'Soup',calories:150,protein:8,carbs:18,fat:5,fiber:2,sodium:800,category:'lunch',tags:[],serving_label:'1 bowl'},
+  {name:'Caesar salad',calories:260,protein:9,carbs:12,fat:20,fiber:3,sodium:580,category:'lunch',tags:[],serving_label:'1 bowl'},
+  {name:'Garden salad',calories:80,protein:3,carbs:10,fat:3,fiber:3,sodium:120,category:'lunch',tags:[],serving_label:'1 bowl'},
+  // Drinks
+  {name:'Smoothie',calories:250,protein:10,carbs:40,fat:5,fiber:4,sodium:80,category:'snack',tags:[],serving_label:'16 oz'},
+  {name:'Orange juice',calories:112,protein:1.7,carbs:26,fat:0.5,fiber:0.5,sodium:2,category:'breakfast',tags:[],serving_label:'1 cup'},
+  {name:'Soda',calories:140,protein:0,carbs:39,fat:0,fiber:0,sodium:45,category:'snack',tags:[],serving_label:'12 oz can'},
+  {name:'Coffee black',calories:2,protein:0.3,carbs:0,fat:0,fiber:0,sodium:5,category:'coffee',tags:[],serving_label:'1 cup'},
+  {name:'Tea',calories:2,protein:0,carbs:0.5,fat:0,fiber:0,sodium:7,category:'coffee',tags:[],serving_label:'1 cup'},
+  {name:'Protein bar',calories:220,protein:20,carbs:25,fat:8,fiber:3,sodium:200,category:'snack',tags:[],serving_label:'1 bar'},
+  {name:'Energy drink',calories:110,protein:0,carbs:28,fat:0,fiber:0,sodium:200,category:'snack',tags:[],serving_label:'8.4 oz can'},
+  // Nuts & Snacks
+  {name:'Almonds',calories:164,protein:6,carbs:6,fat:14,fiber:3.5,sodium:0,category:'snack',tags:[],serving_label:'1 oz (23 almonds)'},
+  {name:'Walnuts',calories:185,protein:4.3,carbs:3.9,fat:18.5,fiber:1.9,sodium:1,category:'snack',tags:[],serving_label:'1 oz'},
+  {name:'Cashews',calories:157,protein:5.2,carbs:8.6,fat:12.4,fiber:0.9,sodium:3,category:'snack',tags:[],serving_label:'1 oz'},
+  {name:'Dark chocolate',calories:170,protein:2.2,carbs:13,fat:12,fiber:3.1,sodium:6,category:'snack',tags:[],serving_label:'1 oz'},
+  // Avocado (standalone, not half)
+  {name:'Avocado',calories:218,protein:2.7,carbs:12,fat:20,fiber:9,sodium:10,category:'ingredient',tags:[],serving_label:'1 whole'},
+];
+
+// ── Food Description Parser ──
+const QUANTITY_WORDS = {
+  'a': 1, 'an': 1, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
+  'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
+  'half': 0.5, 'quarter': 0.25, 'couple': 2, 'few': 3, 'some': 1,
+};
+
+const SIZE_MULTIPLIERS = {
+  'large': 1.25, 'big': 1.25, 'extra large': 1.5, 'xl': 1.5,
+  'small': 0.75, 'mini': 0.5, 'tiny': 0.5,
+  'double': 2, 'triple': 3,
+};
+
+// Unit words we strip when matching food names
+const UNIT_WORDS = ['cup', 'cups', 'slice', 'slices', 'piece', 'pieces', 'bowl', 'bowls',
+  'serving', 'servings', 'scoop', 'scoops', 'tbsp', 'tablespoon', 'tablespoons',
+  'tsp', 'teaspoon', 'teaspoons', 'oz', 'ounce', 'ounces', 'can', 'cans',
+  'glass', 'glasses', 'plate', 'plates', 'handful', 'handfuls', 'bag', 'bags'];
+
+function singularize(word) {
+  if (word.endsWith('ies')) return word.slice(0, -3) + 'y';
+  if (word.endsWith('es') && !word.endsWith('ses') && !word.endsWith('ces')) return word.slice(0, -2);
+  if (word.endsWith('s') && !word.endsWith('ss')) return word.slice(0, -1);
+  return word;
+}
+
+function parseDescribedFood(input) {
+  // Split by delimiters
+  const segments = input
+    .split(/\s*(?:,|\band\b|\bwith\b|\bplus\b|\+)\s*/i)
+    .map(s => s.trim())
+    .filter(Boolean);
+
+  return segments.map(seg => parseSegment(seg));
+}
+
+function parseSegment(segment) {
+  const words = segment.toLowerCase().split(/\s+/);
+  let quantity = 1;
+  let sizeMultiplier = 1;
+  let foodWords = [];
+  let i = 0;
+
+  // Extract numeric quantity at start
+  if (words[0] && /^\d+(\.\d+)?$/.test(words[0])) {
+    quantity = parseFloat(words[0]);
+    i = 1;
+  } else if (words[0] && QUANTITY_WORDS[words[0]] !== undefined) {
+    quantity = QUANTITY_WORDS[words[0]];
+    i = 1;
+  }
+
+  // Check for "and a half" pattern
+  if (words[i] === 'and' && words[i+1] === 'a' && words[i+2] === 'half') {
+    quantity += 0.5;
+    i += 3;
+  }
+
+  // Extract size modifier
+  if (words[i] && SIZE_MULTIPLIERS[words[i]]) {
+    sizeMultiplier = SIZE_MULTIPLIERS[words[i]];
+    i++;
+  }
+  // Check two-word size ("extra large")
+  if (i >= 2 && SIZE_MULTIPLIERS[words[i-2] + ' ' + words[i-1]]) {
+    sizeMultiplier = SIZE_MULTIPLIERS[words[i-2] + ' ' + words[i-1]];
+  }
+
+  // Remaining words are the food name — strip unit words
+  foodWords = words.slice(i).filter(w => !UNIT_WORDS.includes(w) && w !== 'of');
+
+  const foodQuery = foodWords.join(' ').trim();
+  if (!foodQuery) return { original: segment, quantity, sizeMultiplier, match: null, confidence: 'unknown' };
+
+  // Match against reference foods + library
+  const allFoods = [...REFERENCE_FOODS, ...library];
+  const result = matchFood(foodQuery, allFoods);
+
+  return {
+    original: segment,
+    quantity,
+    sizeMultiplier,
+    ...result,
+  };
+}
+
+function matchFood(query, foods) {
+  const q = query.toLowerCase();
+  const qSingular = singularize(q);
+  const qWords = q.split(/\s+/);
+
+  let bestMatch = null;
+  let bestScore = 0;
+  let confidence = 'unknown';
+
+  for (const food of foods) {
+    const name = food.name.toLowerCase();
+    const nameSingular = singularize(name);
+    let score = 0;
+
+    // Exact match
+    if (name === q || nameSingular === qSingular) {
+      score = 100;
+    }
+    // Name contains query or query contains name
+    else if (name.includes(q) || q.includes(name)) {
+      score = 80;
+    }
+    // Singular forms match partially
+    else if (nameSingular.includes(qSingular) || qSingular.includes(nameSingular)) {
+      score = 70;
+    }
+    // Word-level matching
+    else {
+      const nameWords = name.split(/\s+/);
+      const matchedWords = qWords.filter(w => 
+        nameWords.some(nw => nw === w || singularize(nw) === singularize(w) || nw.startsWith(w) || w.startsWith(nw))
+      );
+      if (matchedWords.length > 0) {
+        score = (matchedWords.length / Math.max(qWords.length, nameWords.length)) * 60;
+      }
+    }
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestMatch = food;
+    }
+  }
+
+  if (bestScore >= 70) confidence = 'exact';
+  else if (bestScore >= 30) confidence = 'fuzzy';
+  else confidence = 'unknown';
+
+  return { match: bestMatch, confidence, matchScore: bestScore };
+}
+
 // ── State ──
 let currentUser = null;
 let currentDate = todayStr();
@@ -568,6 +791,10 @@ function openAddModal() {
   document.getElementById('modal-lib-search').value = '';
   document.getElementById('modal-usda-search').value = '';
   document.getElementById('modal-usda-list').innerHTML = '';
+  document.getElementById('describe-input').value = '';
+  document.getElementById('describe-results').innerHTML = '';
+  document.getElementById('describe-log-btn').style.display = 'none';
+  describeResults = [];
   document.getElementById('servings-row').style.display = 'none';
   servingFood = null;
   servingCount = 1;
@@ -859,6 +1086,166 @@ document.getElementById('quick-add-form').addEventListener('submit', async (e) =
   await addLogEntry(currentMeal, food, 1);
   closeAddModal();
   e.target.reset();
+});
+
+// ══════════════════════════════════
+// DESCRIBE TAB
+// ══════════════════════════════════
+let describeResults = []; // parsed results for logging
+
+document.getElementById('describe-estimate-btn').addEventListener('click', () => {
+  const input = document.getElementById('describe-input').value.trim();
+  if (!input) return;
+  describeResults = parseDescribedFood(input);
+  renderDescribeResults();
+});
+
+// Allow Enter key (but Shift+Enter for newline)
+document.getElementById('describe-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    document.getElementById('describe-estimate-btn').click();
+  }
+});
+
+function renderDescribeResults() {
+  const container = document.getElementById('describe-results');
+  const logBtn = document.getElementById('describe-log-btn');
+  container.innerHTML = '';
+
+  if (describeResults.length === 0) {
+    logBtn.style.display = 'none';
+    return;
+  }
+
+  const hasMatches = describeResults.some(r => r.match);
+  logBtn.style.display = hasMatches ? 'block' : 'none';
+
+  describeResults.forEach((result, idx) => {
+    const card = document.createElement('div');
+    card.className = `describe-result-card confidence-${result.confidence}`;
+
+    if (result.match) {
+      const food = result.match;
+      const qty = result.quantity;
+      const sizeMult = result.sizeMultiplier || 1;
+      const totalMult = qty * sizeMult;
+      const cal = Math.round(food.calories * totalMult);
+      const prot = r1(food.protein * totalMult);
+      const carbs = r1(food.carbs * totalMult);
+      const fat = r1(food.fat * totalMult);
+      const fiber = r1((food.fiber || 0) * totalMult);
+      const sodium = Math.round((food.sodium || 0) * totalMult);
+
+      const confLabel = result.confidence === 'exact' ? 'Matched' : 'Fuzzy match';
+      const confClass = result.confidence;
+      const sizeNote = sizeMult !== 1 ? ` (${Object.entries(SIZE_MULTIPLIERS).find(([k,v]) => v === sizeMult)?.[0] || sizeMult + 'x'})` : '';
+
+      card.innerHTML = `
+        <div class="describe-result-header">
+          <span class="describe-result-name">${food.name}</span>
+          <span class="describe-result-qty">${qty}x${sizeNote}</span>
+        </div>
+        <div class="describe-result-macros">
+          <span>${cal} cal</span>
+          <span>P:${prot}g</span>
+          <span>C:${carbs}g</span>
+          <span>F:${fat}g</span>
+          <span>Fib:${fiber}g</span>
+          <span>Na:${sodium}mg</span>
+        </div>
+        <span class="describe-confidence-tag ${confClass}">${confLabel}</span>
+        <div class="describe-edit-row">
+          <div><label>Qty</label><input type="number" step="0.5" min="0.5" value="${qty}" data-idx="${idx}" data-field="quantity"></div>
+          <div><label>Cal</label><input type="number" value="${cal}" data-idx="${idx}" data-field="calories"></div>
+          <div><label>P</label><input type="number" step="0.1" value="${prot}" data-idx="${idx}" data-field="protein"></div>
+          <div><label>C</label><input type="number" step="0.1" value="${carbs}" data-idx="${idx}" data-field="carbs"></div>
+          <div><label>F</label><input type="number" step="0.1" value="${fat}" data-idx="${idx}" data-field="fat"></div>
+        </div>
+      `;
+
+      // Handle quantity changes to recalculate macros
+      const qtyInput = card.querySelector('[data-field="quantity"]');
+      qtyInput.addEventListener('change', () => {
+        describeResults[idx].quantity = parseFloat(qtyInput.value) || 1;
+        renderDescribeResults();
+      });
+    } else {
+      card.innerHTML = `
+        <div class="describe-result-header">
+          <span class="describe-result-name">"${result.original}"</span>
+        </div>
+        <span class="describe-confidence-tag unknown">Not found</span>
+        <span class="describe-unknown-link" data-idx="${idx}">Add manually &rarr;</span>
+      `;
+
+      card.querySelector('.describe-unknown-link').addEventListener('click', () => {
+        // Switch to Quick Add tab with the name pre-filled
+        document.querySelectorAll('#add-food-modal .modal-tab').forEach(t => t.classList.remove('active'));
+        document.querySelector('#add-food-modal .modal-tab[data-tab="quick"]').classList.add('active');
+        document.querySelectorAll('#add-food-modal .tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById('tab-quick').classList.add('active');
+        document.getElementById('qa-name').value = result.original;
+        document.getElementById('qa-name').focus();
+      });
+    }
+
+    container.appendChild(card);
+  });
+}
+
+document.getElementById('describe-log-btn').addEventListener('click', async () => {
+  if (!currentMeal) { toast('Select a meal first'); return; }
+
+  let logged = 0;
+  for (const result of describeResults) {
+    if (!result.match) continue;
+    const food = result.match;
+    const qty = result.quantity;
+    const sizeMult = result.sizeMultiplier || 1;
+
+    // Check if user edited the macros directly
+    const idx = describeResults.indexOf(result);
+    const card = document.querySelectorAll('.describe-result-card')[idx];
+    let finalFood;
+
+    if (card) {
+      const calInput = card.querySelector('[data-field="calories"]');
+      const protInput = card.querySelector('[data-field="protein"]');
+      const carbInput = card.querySelector('[data-field="carbs"]');
+      const fatInput = card.querySelector('[data-field="fat"]');
+
+      if (calInput) {
+        // Use edited values directly (already multiplied)
+        finalFood = {
+          ...food,
+          calories: parseFloat(calInput.value) || 0,
+          protein: parseFloat(protInput.value) || 0,
+          carbs: parseFloat(carbInput.value) || 0,
+          fat: parseFloat(fatInput.value) || 0,
+          fiber: (food.fiber || 0) * qty * sizeMult,
+          sodium: (food.sodium || 0) * qty * sizeMult,
+        };
+        await addLogEntry(currentMeal, finalFood, 1);
+        logged++;
+        continue;
+      }
+    }
+
+    // Fallback: use computed values
+    finalFood = { ...food };
+    await addLogEntry(currentMeal, finalFood, qty * sizeMult);
+    logged++;
+  }
+
+  if (logged > 0) {
+    toast(`Logged ${logged} item${logged > 1 ? 's' : ''}`);
+    document.getElementById('describe-input').value = '';
+    document.getElementById('describe-results').innerHTML = '';
+    document.getElementById('describe-log-btn').style.display = 'none';
+    describeResults = [];
+    closeAddModal();
+  }
 });
 
 // ══════════════════════════════════
