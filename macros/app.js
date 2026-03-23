@@ -399,6 +399,84 @@ let servingFood = null;
 let servingCount = 1;
 let weightEntries = [];
 
+// ── Custom Macro Targets ──
+function loadCustomMacros() {
+  const saved = localStorage.getItem('macros_custom_targets');
+  if (saved) { try { return JSON.parse(saved); } catch(e) { /* ignore */ } }
+  return null;
+}
+function saveCustomMacros(ct) { localStorage.setItem('macros_custom_targets', JSON.stringify(ct)); }
+function getCustomTargets() {
+  let ct = loadCustomMacros();
+  const t = MODES[settings.mode] || MODES.recomp;
+  if (!ct || ct.mode !== settings.mode) {
+    ct = {
+      mode: settings.mode,
+      cal: Math.round((t.cal[0] + t.cal[1]) / 2),
+      protein: Math.round((t.protein[0] + t.protein[1]) / 2),
+      carbs: Math.round((t.carbs[0] + t.carbs[1]) / 2),
+      fat: Math.round((t.fat[0] + t.fat[1]) / 2),
+      fiber: Math.round((t.fiber[0] + t.fiber[1]) / 2),
+      locked: { protein: false, carbs: false, fat: false },
+      adaptToCalories: false
+    };
+    saveCustomMacros(ct);
+  }
+  // Ensure locked and adaptToCalories exist (migration)
+  if (!ct.locked) ct.locked = { protein: false, carbs: false, fat: false };
+  if (ct.adaptToCalories === undefined) ct.adaptToCalories = false;
+  return ct;
+}
+function computeMacroCals(ct) {
+  return (ct.protein * 4) + (ct.carbs * 4) + (ct.fat * 9);
+}
+function redistributeMacros(ct, newCal) {
+  // Redistribute unlocked macros proportionally to match newCal
+  const locked = ct.locked;
+  let lockedCals = 0;
+  let unlocked = [];
+  if (locked.protein) lockedCals += ct.protein * 4; else unlocked.push('protein');
+  if (locked.carbs) lockedCals += ct.carbs * 4; else unlocked.push('carbs');
+  if (locked.fat) lockedCals += ct.fat * 9; else unlocked.push('fat');
+
+  const remaining = Math.max(0, newCal - lockedCals);
+  if (unlocked.length === 0) return; // all locked, nothing to redistribute
+
+  // Compute current proportions of unlocked macros by calorie contribution
+  let unlockedTotal = 0;
+  const calContrib = {};
+  for (const m of unlocked) {
+    const mult = m === 'fat' ? 9 : 4;
+    calContrib[m] = ct[m] * mult;
+    unlockedTotal += calContrib[m];
+  }
+
+  if (unlockedTotal === 0) {
+    // Edge case: distribute evenly
+    const perMacro = remaining / unlocked.length;
+    for (const m of unlocked) {
+      const mult = m === 'fat' ? 9 : 4;
+      ct[m] = Math.round(perMacro / mult);
+    }
+  } else {
+    for (const m of unlocked) {
+      const ratio = calContrib[m] / unlockedTotal;
+      const mult = m === 'fat' ? 9 : 4;
+      ct[m] = Math.round((remaining * ratio) / mult);
+    }
+  }
+  ct.cal = newCal;
+}
+
+// Slider bounds for each macro
+const MACRO_SLIDER_BOUNDS = {
+  cal:     { min: 1200, max: 3500, step: 25 },
+  protein: { min: 40,   max: 250,  step: 1 },
+  carbs:   { min: 50,   max: 500,  step: 1 },
+  fat:     { min: 20,   max: 150,  step: 1 },
+  fiber:   { min: 10,   max: 60,   step: 1 }
+};
+
 // ── Helpers ──
 function todayStr() {
   const d = new Date();
@@ -1690,10 +1768,47 @@ const ACTIVITY_LEVELS = [
   { value: 1.9, label: 'Very Active (2x/day, physical job)' },
 ];
 
+function renderMacroSlider(key, label, value, range, bounds, explain, lockable, ct) {
+  const isLocked = lockable && ct.locked[key];
+  const unit = key === 'cal' ? '' : 'g';
+  const unitHtml = unit ? `<small>${unit}</small>` : '';
+  // Compute highlight position as percentage of slider range
+  const sliderRange = bounds.max - bounds.min;
+  const leftPct = ((range[0] - bounds.min) / sliderRange) * 100;
+  const widthPct = ((range[1] - range[0]) / sliderRange) * 100;
+  // Lock SVGs
+  const lockSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>`;
+  const unlockSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 019.9-1"/></svg>`;
+  const calHint = key !== 'cal' ? `<div class="macro-slider-cal-hint">${value * (key === 'fat' ? 9 : 4)} cal</div>` : '';
+
+  return `
+    <div class="macro-slider-row ${isLocked ? 'locked' : ''}" data-macro="${key}">
+      <div class="macro-slider-header">
+        <span class="macro-slider-label">${label}</span>
+        <span class="macro-slider-value" id="slider-val-${key}">${value}${unitHtml}</span>
+        ${lockable ? `<button class="macro-lock-btn ${isLocked ? 'locked' : ''}" data-macro="${key}" title="${isLocked ? 'Unlock' : 'Lock'} ${label}">${isLocked ? lockSvg : unlockSvg}</button>` : ''}
+      </div>
+      <div class="macro-slider-wrap">
+        <div class="macro-slider-range-bg"></div>
+        <div class="macro-slider-range-highlight" style="left:${leftPct}%;width:${widthPct}%"></div>
+        <input type="range" min="${bounds.min}" max="${bounds.max}" step="${bounds.step}" value="${value}" data-macro="${key}" ${isLocked ? 'disabled' : ''}>
+      </div>
+      <div class="macro-slider-bounds">
+        <span>${bounds.min}${unit}</span>
+        <span>Recommended: ${range[0]}-${range[1]}${unit}</span>
+        <span>${bounds.max}${unit}</span>
+      </div>
+      ${explain ? `<div class="macro-slider-explain">${explain}</div>` : ''}
+      ${calHint}
+    </div>
+  `;
+}
+
 function renderSettings() {
   const content = document.getElementById('settings-content');
   const email = currentUser?.email || '';
   const t = getTargets();
+  const ct = getCustomTargets();
   const { weightKg, leanMassKg, bmr } = computeBMR();
   const tdee = computeTDEE();
   const goalWeightKg = lbsToKg(settings.goalWeight);
@@ -1813,26 +1928,22 @@ function renderSettings() {
       </div>
     </div>
 
-    <div class="settings-section">
+    <div class="settings-section" id="macro-targets-section">
       <h3>Macro Targets <small class="settings-mode-label">${MODES[settings.mode]?.label || 'Recomp'}</small></h3>
-      <div class="macro-target-row">
-        <div class="stat-row"><span class="stat-label">Calories</span><span class="stat-value">${t.cal[0]} &ndash; ${t.cal[1]}</span></div>
+      <div class="macro-adapt-row">
+        <div class="macro-adapt-label">Adapt to calorie aim<small>Auto-adjust macros when calories change</small></div>
+        <label class="toggle-switch"><input type="checkbox" id="adapt-toggle" ${ct.adaptToCalories ? 'checked' : ''}><span class="toggle-track"></span></label>
       </div>
-      <div class="macro-target-row">
-        <div class="stat-row"><span class="stat-label">Protein</span><span class="stat-value">${t.protein[0]} &ndash; ${t.protein[1]}g</span></div>
-        <div class="macro-explanation">1g per lb goal weight for muscle preservation during cut</div>
+      ${renderMacroSlider('cal', 'Calories', ct.cal, t.cal, MACRO_SLIDER_BOUNDS.cal, '', false, ct)}
+      ${renderMacroSlider('protein', 'Protein', ct.protein, t.protein, MACRO_SLIDER_BOUNDS.protein, '1g/lb goal weight for muscle preservation', true, ct)}
+      ${renderMacroSlider('fat', 'Fat', ct.fat, t.fat, MACRO_SLIDER_BOUNDS.fat, '0.35-0.45g/lb bodyweight for hormone health', true, ct)}
+      ${renderMacroSlider('carbs', 'Carbs', ct.carbs, t.carbs, MACRO_SLIDER_BOUNDS.carbs, 'Remaining cals — important for marathon training', true, ct)}
+      ${renderMacroSlider('fiber', 'Fiber', ct.fiber, t.fiber, MACRO_SLIDER_BOUNDS.fiber, '', false, ct)}
+      <div class="macro-total-row">
+        <span class="macro-total-label">Macro total</span>
+        <span class="macro-total-value ${Math.abs(computeMacroCals(ct) - ct.cal) > 100 ? (computeMacroCals(ct) > ct.cal ? 'over' : 'under') : ''}" id="macro-total-display">${computeMacroCals(ct)} / ${ct.cal} cal</span>
       </div>
-      <div class="macro-target-row">
-        <div class="stat-row"><span class="stat-label">Fat</span><span class="stat-value">${t.fat[0]} &ndash; ${t.fat[1]}g</span></div>
-        <div class="macro-explanation">0.35-0.45g per lb bodyweight for hormone health</div>
-      </div>
-      <div class="macro-target-row">
-        <div class="stat-row"><span class="stat-label">Carbs</span><span class="stat-value">${t.carbs[0]} &ndash; ${t.carbs[1]}g</span></div>
-        <div class="macro-explanation">Remaining calories &mdash; important for marathon training</div>
-      </div>
-      <div class="macro-target-row">
-        <div class="stat-row"><span class="stat-label">Fiber</span><span class="stat-value">${t.fiber[0]} &ndash; ${t.fiber[1]}g</span></div>
-      </div>
+      <button class="macro-reset-btn" id="macro-reset-btn">Reset to ${MODES[settings.mode]?.label || 'mode'} defaults</button>
     </div>
 
     <div class="settings-section">
@@ -1861,6 +1972,7 @@ function renderSettings() {
   content.querySelectorAll('.mode-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
       settings.mode = btn.dataset.mode;
+      localStorage.removeItem('macros_custom_targets'); // Reset custom targets for new mode
       await saveSettingsToDb();
       renderSettings();
       renderHome();
@@ -1964,6 +2076,91 @@ function renderSettings() {
     URL.revokeObjectURL(url);
     toast('Data exported');
   });
+
+  // ── Macro Slider Events ──
+  const macroSection = document.getElementById('macro-targets-section');
+  if (macroSection) {
+    // Slider input (live update value display without full re-render)
+    macroSection.querySelectorAll('input[type=range]').forEach(slider => {
+      slider.addEventListener('input', () => {
+        const macro = slider.dataset.macro;
+        const val = parseInt(slider.value);
+        const ct = getCustomTargets();
+        const unit = macro === 'cal' ? '' : '<small>g</small>';
+
+        // Update value display
+        const valEl = document.getElementById(`slider-val-${macro}`);
+        if (valEl) valEl.innerHTML = `${val}${unit}`;
+
+        // If cal slider changed and adapt is on, redistribute
+        if (macro === 'cal' && ct.adaptToCalories) {
+          ct.cal = val;
+          redistributeMacros(ct, val);
+          saveCustomMacros(ct);
+          // Update other slider positions and values
+          ['protein', 'carbs', 'fat'].forEach(m => {
+            const s = macroSection.querySelector(`input[type=range][data-macro="${m}"]`);
+            const v = document.getElementById(`slider-val-${m}`);
+            if (s) s.value = ct[m];
+            if (v) v.innerHTML = `${ct[m]}<small>g</small>`;
+            // Update cal hint
+            const row = macroSection.querySelector(`.macro-slider-row[data-macro="${m}"]`);
+            const hint = row?.querySelector('.macro-slider-cal-hint');
+            if (hint) hint.textContent = `${ct[m] * (m === 'fat' ? 9 : 4)} cal`;
+          });
+        } else {
+          ct[macro] = val;
+          saveCustomMacros(ct);
+          // Update cal hint for non-cal macros
+          if (macro !== 'cal') {
+            const row = macroSection.querySelector(`.macro-slider-row[data-macro="${macro}"]`);
+            const hint = row?.querySelector('.macro-slider-cal-hint');
+            if (hint) hint.textContent = `${val * (macro === 'fat' ? 9 : 4)} cal`;
+          }
+        }
+
+        // Update total display
+        const freshCt = getCustomTargets();
+        const totalEl = document.getElementById('macro-total-display');
+        if (totalEl) {
+          const macroCals = computeMacroCals(freshCt);
+          totalEl.textContent = `${macroCals} / ${freshCt.cal} cal`;
+          totalEl.className = 'macro-total-value' + (Math.abs(macroCals - freshCt.cal) > 100 ? (macroCals > freshCt.cal ? ' over' : ' under') : '');
+        }
+      });
+    });
+
+    // Lock buttons
+    macroSection.querySelectorAll('.macro-lock-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const macro = btn.dataset.macro;
+        const ct = getCustomTargets();
+        ct.locked[macro] = !ct.locked[macro];
+        saveCustomMacros(ct);
+        renderSettings();
+      });
+    });
+
+    // Adapt toggle
+    const adaptToggle = document.getElementById('adapt-toggle');
+    if (adaptToggle) {
+      adaptToggle.addEventListener('change', () => {
+        const ct = getCustomTargets();
+        ct.adaptToCalories = adaptToggle.checked;
+        saveCustomMacros(ct);
+      });
+    }
+
+    // Reset button
+    const resetBtn = document.getElementById('macro-reset-btn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        localStorage.removeItem('macros_custom_targets');
+        renderSettings();
+        toast('Macro targets reset');
+      });
+    }
+  }
 }
 
 function debounce(fn, ms) {
