@@ -104,11 +104,24 @@ function setArc(pathEl, fraction, totalLength) {
   pathEl.setAttribute('stroke-dasharray', `${filled} ${totalLength}`);
 }
 
-function getArcColor(value, range) {
+function getMiniGaugeColor(value, range) {
+  if (value > range[1] * 1.2) return '#666';     // gray — way over
+  if (value > range[1]) return '#ef4444';          // red — over
+  if (value >= range[0]) return '#4ade80';          // green — in range
+  return '#f59e0b';                                 // yellow — under
+}
+
+function getCalArcColor(value, range) {
   if (value > range[1] * 1.1) return '#ef4444';
   if (value > range[1]) return '#f59e0b';
   if (value >= range[0]) return '#4ade80';
   return '#10b981';
+}
+
+// Get point on arc for tick marks
+function arcPoint(cx, cy, r, angleDeg) {
+  const rad = (angleDeg * Math.PI) / 180;
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
 
 // ══════════════════════════════════
@@ -116,37 +129,78 @@ function getArcColor(value, range) {
 // ══════════════════════════════════
 function renderGauges(totals) {
   const targets = getTargets();
+  const svg = document.getElementById('calorie-gauge');
 
-  // Calorie gauge
-  const calMid = (targets.cal[0] + targets.cal[1]) / 2;
-  const calFrac = totals.cal / (calMid * 2);
+  // Calorie gauge — arc goes from 180° (left) to 0° (right)
+  const calMax = targets.cal[1] * 1.3; // max displayable
+  const calFrac = Math.min(totals.cal / calMax, 1);
   const calArc = document.getElementById('cal-arc');
   setArc(calArc, calFrac, CAL_ARC_LENGTH);
-  calArc.setAttribute('stroke', getArcColor(totals.cal, targets.cal));
+  calArc.setAttribute('stroke', getCalArcColor(totals.cal, targets.cal));
 
   document.getElementById('cal-eaten').textContent = Math.round(totals.cal);
 
-  // Range labels on the SVG
+  // Remove old ticks
+  svg.querySelectorAll('.tick-group').forEach(el => el.remove());
+
+  // Add tick marks for low and high targets
+  const tickGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  tickGroup.classList.add('tick-group');
+  const cx = 100, cy = 110, r = 80;
+
+  [targets.cal[0], targets.cal[1]].forEach((val, idx) => {
+    const frac = val / calMax;
+    const angle = 180 - (frac * 180); // 180° = left, 0° = right
+    const outerPt = arcPoint(cx, cy, r + 10, angle);
+    const innerPt = arcPoint(cx, cy, r - 10, angle);
+    const labelPt = arcPoint(cx, cy, r + 20, angle);
+
+    const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    tick.setAttribute('x1', innerPt.x);
+    tick.setAttribute('y1', innerPt.y);
+    tick.setAttribute('x2', outerPt.x);
+    tick.setAttribute('y2', outerPt.y);
+    tick.setAttribute('stroke', '#888');
+    tick.setAttribute('stroke-width', '1.5');
+    tickGroup.appendChild(tick);
+
+    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('x', labelPt.x);
+    label.setAttribute('y', labelPt.y);
+    label.setAttribute('text-anchor', 'middle');
+    label.setAttribute('dominant-baseline', 'middle');
+    label.setAttribute('fill', '#888');
+    label.setAttribute('font-size', '8');
+    label.textContent = val;
+    tickGroup.appendChild(label);
+  });
+
+  svg.appendChild(tickGroup);
+
+  // Hide old range text labels
   const calLow = document.getElementById('cal-low-label');
   const calHigh = document.getElementById('cal-high-label');
-  if (calLow) { calLow.textContent = targets.cal[0]; calLow.setAttribute('x', '28'); calLow.setAttribute('y', '100'); }
-  if (calHigh) { calHigh.textContent = targets.cal[1]; calHigh.setAttribute('x', '152'); calHigh.setAttribute('y', '100'); }
+  if (calLow) calLow.textContent = '';
+  if (calHigh) calHigh.textContent = '';
 
-  // Mini gauges
+  // Mini gauges with color coding
   const macroKeys = ['protein', 'carbs', 'fat', 'fiber'];
-  const macroColors = ['#10b981', '#3b82f6', '#f59e0b', '#a78bfa'];
   const gaugeEls = document.querySelectorAll('.mini-gauge');
 
   gaugeEls.forEach((el, i) => {
     const key = macroKeys[i];
     const range = targets[key];
-    const mid = (range[0] + range[1]) / 2;
-    const frac = totals[key] / (mid * 2);
+    const max = range[1] * 1.3;
+    const frac = Math.min(totals[key] / max, 1);
     const arc = el.querySelector('.mini-arc');
     setArc(arc, frac, MINI_ARC_LENGTH);
-    arc.setAttribute('stroke', getArcColor(totals[key], range));
+    const color = getMiniGaugeColor(totals[key], range);
+    arc.setAttribute('stroke', color);
 
-    el.querySelector('.mini-value').textContent = Math.round(totals[key]) + 'g';
+    const valueEl = el.querySelector('.mini-value');
+    valueEl.textContent = Math.round(totals[key]) + 'g';
+    valueEl.style.color = color;
+
     el.querySelector('.mini-target').textContent = `${Math.round(totals[key])} / ${range[1]}g`;
   });
 }
@@ -378,6 +432,7 @@ function renderWater() {
 function renderMeals() {
   const container = document.getElementById('meals-section');
   container.innerHTML = '';
+  const proteinGap = isProteinGap();
 
   for (const meal of MEALS) {
     const items = mealEntries(meal.id);
@@ -409,12 +464,13 @@ function renderMeals() {
         const row = document.createElement('div');
         row.className = 'meal-item';
         const hiSodium = (item.sodium || 0) > 500;
+        const pClass = proteinGap ? ' protein-highlight' : '';
         row.innerHTML = `
           <div class="meal-item-info">
             <div class="meal-item-name">${item.name}</div>
             <div class="meal-item-macros">
               <span>${Math.round(item.calories)} cal</span>
-              <span>P:${r1(item.protein)}g</span>
+              <span class="${pClass}">P:${r1(item.protein)}g</span>
               <span>C:${r1(item.carbs)}g</span>
               <span>F:${r1(item.fat)}g</span>
               <span>Fib:${r1(item.fiber)}g</span>
@@ -475,6 +531,17 @@ document.getElementById('water-add').addEventListener('click', async () => {
   }
 });
 
+// Reset Day button
+document.getElementById('reset-day-btn').addEventListener('click', async () => {
+  if (!confirm('Clear all food logged for today? This cannot be undone.')) return;
+  if (!currentUser) return;
+  const { error } = await sb.from('macro_log').delete().eq('user_id', currentUser.id).eq('date', currentDate);
+  if (error) { toast('Error resetting day'); console.error(error); return; }
+  dayLog = [];
+  renderHome();
+  toast('Day cleared');
+});
+
 // ══════════════════════════════════
 // ADD FOOD MODAL
 // ══════════════════════════════════
@@ -482,7 +549,10 @@ const addModal = document.getElementById('add-food-modal');
 
 function openAddModal() {
   addModal.classList.add('active');
-  renderModalLibrary();
+
+  // Auto-filter by meal category
+  modalCatFilter = currentMeal || 'all';
+
   // Reset tabs
   document.querySelectorAll('#add-food-modal .modal-tab').forEach(t => t.classList.remove('active'));
   document.querySelector('#add-food-modal .modal-tab[data-tab="library"]').classList.add('active');
@@ -494,6 +564,13 @@ function openAddModal() {
   document.getElementById('servings-row').style.display = 'none';
   servingFood = null;
   servingCount = 1;
+
+  // Update modal title to show meal
+  const mealName = MEALS.find(m => m.id === currentMeal)?.name;
+  document.getElementById('modal-title').textContent = mealName ? `Add to ${mealName}` : 'Add Food';
+
+  renderModalCategoryPills();
+  renderModalLibrary();
 }
 
 function closeAddModal() { addModal.classList.remove('active'); }
@@ -511,42 +588,94 @@ document.querySelectorAll('#add-food-modal .modal-tab').forEach(tab => {
   });
 });
 
-function scoreFood(food) {
-  // Score foods by how well they fill gaps in today's macros
+// Internal raw score for sorting
+function scoreFoodRaw(food) {
   const totals = computeTotals();
   const targets = getTargets();
   let score = 0;
 
-  // Protein gap is most important for recomp
   const proteinGap = targets.protein[1] - totals.protein;
   if (proteinGap > 0 && food.protein > 0) {
-    score += (food.protein / proteinGap) * 50; // protein-dense foods rank higher when protein is low
+    score += (food.protein / proteinGap) * 50;
   }
 
-  // Calorie fit: reward foods that keep us in range, penalize if we'd go over
   const calRemaining = targets.cal[1] - totals.cal;
   if (calRemaining > 0) {
-    if (food.calories <= calRemaining) {
-      score += 10; // fits in budget
-    } else {
-      score -= 20; // would blow past target
-    }
+    if (food.calories <= calRemaining) score += 10;
+    else score -= 20;
   } else {
-    score -= 30; // already over, penalize all
+    score -= 30;
   }
 
-  // Sodium: penalize high-sodium foods if we're already at 70%+
   const sodiumPct = totals.sodium / settings.sodiumLimit;
-  if (sodiumPct > 0.7 && food.sodium > 300) {
-    score -= 15;
-  }
+  if (sodiumPct > 0.7 && food.sodium > 300) score -= 15;
 
-  // Fiber boost if under target
-  if (totals.fiber < targets.fiber[0] && food.fiber > 2) {
-    score += 5;
-  }
+  if (totals.fiber < targets.fiber[0] && food.fiber > 2) score += 5;
 
   return score;
+}
+
+// 0-10 display score for badges
+function scoreFood(food) {
+  const totals = computeTotals();
+  const targets = getTargets();
+  let score = 5; // baseline
+
+  // Protein gap fill (0-3 points)
+  const proteinGap = targets.protein[1] - totals.protein;
+  if (proteinGap > 0 && food.protein > 0) {
+    score += Math.min(3, (food.protein / proteinGap) * 3);
+  } else if (proteinGap <= 0 && food.protein > 20) {
+    score -= 1; // already have enough protein
+  }
+
+  // Calorie budget (0-3 points)
+  const calRemaining = targets.cal[1] - totals.cal;
+  if (calRemaining > 0) {
+    if (food.calories <= calRemaining * 0.5) score += 3;
+    else if (food.calories <= calRemaining) score += 1.5;
+    else score -= 3;
+  } else {
+    score -= 4; // over budget
+  }
+
+  // Sodium risk (-2 to +1)
+  const sodiumPct = totals.sodium / settings.sodiumLimit;
+  if (sodiumPct > 0.7 && food.sodium > 300) score -= 2;
+  else if (food.sodium < 100) score += 0.5;
+
+  // Fiber bonus
+  if (totals.fiber < targets.fiber[0] && food.fiber > 2) score += 1;
+
+  return Math.max(0, Math.min(10, Math.round(score)));
+}
+
+function getScoreClass(score) {
+  if (score >= 8) return 'score-green';
+  if (score >= 4) return 'score-yellow';
+  return 'score-red';
+}
+
+let modalCatFilter = 'all';
+
+function renderModalCategoryPills() {
+  const container = document.getElementById('modal-cat-pills');
+  if (!container) return;
+  container.innerHTML = '';
+  const cats = ['all', 'coffee', 'breakfast', 'lunch', 'dinner', 'snack', 'ingredient'];
+  cats.forEach(cat => {
+    const pill = document.createElement('span');
+    pill.className = 'modal-cat-pill' + (modalCatFilter === cat ? ' active' : '');
+    pill.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+    pill.addEventListener('click', () => { modalCatFilter = cat; renderModalCategoryPills(); renderModalLibrary(); });
+    container.appendChild(pill);
+  });
+}
+
+function isProteinGap() {
+  const totals = computeTotals();
+  const targets = getTargets();
+  return totals.protein < targets.protein[0];
 }
 
 function renderModalLibrary(filter) {
@@ -554,8 +683,13 @@ function renderModalLibrary(filter) {
   const list = document.getElementById('modal-lib-list');
   let filtered = library.filter(f => !q || f.name.toLowerCase().includes(q));
 
+  // Category filter
+  if (modalCatFilter !== 'all') {
+    filtered = filtered.filter(f => f.category === modalCatFilter);
+  }
+
   // Smart sort: prioritize by what's missing in today's macros
-  filtered = filtered.map(f => ({ ...f, _score: scoreFood(f) }))
+  filtered = filtered.map(f => ({ ...f, _score: scoreFoodRaw(f), _displayScore: scoreFood(f) }))
     .sort((a, b) => b._score - a._score);
 
   list.innerHTML = '';
@@ -569,34 +703,35 @@ function renderModalLibrary(filter) {
   const targets = getTargets();
   const proteinLeft = Math.max(0, Math.round(targets.protein[0] - totals.protein));
   const calLeft = Math.max(0, Math.round(targets.cal[0] - totals.cal));
+  const proteinIsGap = isProteinGap();
+
   if (proteinLeft > 0 || calLeft > 0) {
     const hint = document.createElement('div');
     hint.className = 'modal-gap-hint';
     const parts = [];
     if (proteinLeft > 0) parts.push(`${proteinLeft}g protein`);
     if (calLeft > 0) parts.push(`${calLeft} cal`);
-    hint.textContent = `Still need: ${parts.join(', ')}`;
+    hint.innerHTML = `Still need: ${parts.join(', ')}${proteinIsGap ? ' <span class="protein-gap-badge">protein priority</span>' : ''}`;
     list.appendChild(hint);
   }
 
   filtered.forEach(f => {
     const item = document.createElement('div');
     item.className = 'modal-food-item';
-    // Highlight protein-rich foods when protein is needed
-    const proteinNeeded = totals.protein < targets.protein[0];
-    const highProtein = f.protein >= 15;
-    const highlight = proteinNeeded && highProtein ? ' style="border-color:rgba(16,185,129,0.4)"' : '';
+    const ds = f._displayScore;
+    const scoreClass = getScoreClass(ds);
+    const proteinClass = proteinIsGap && f.protein >= 10 ? ' protein-highlight' : '';
     item.innerHTML = `
-      <div class="modal-food-name">${f.name}${proteinNeeded && highProtein ? ' <span style="font-size:.6rem;color:#10b981;">HIGH PROTEIN</span>' : ''}</div>
+      <div class="modal-food-name">${f.name}</div>
       <div class="modal-food-serving">${f.serving_label || '1 serving'}</div>
       <div class="modal-food-macros">
         <span>${f.calories} cal</span>
-        <span>P:${r1(f.protein)}g</span>
+        <span class="${proteinClass}">P:${r1(f.protein)}g</span>
         <span>C:${r1(f.carbs)}g</span>
         <span>F:${r1(f.fat)}g</span>
       </div>
+      <div class="score-badge ${scoreClass}">${ds}</div>
     `;
-    if (highlight) item.setAttribute('style', 'border-color:rgba(16,185,129,0.4)');
     item.addEventListener('click', () => showServings(f));
     list.appendChild(item);
   });
@@ -634,6 +769,8 @@ document.getElementById('usda-search-btn').addEventListener('click', async () =>
         tags: [],
         usda_fdc_id: String(f.fdcId),
       };
+      const ds = scoreFood(food);
+      const sc = getScoreClass(ds);
       const item = document.createElement('div');
       item.className = 'modal-food-item';
       item.innerHTML = `
@@ -646,6 +783,7 @@ document.getElementById('usda-search-btn').addEventListener('click', async () =>
           <span>F:${food.fat}g</span>
           <span>Na:${food.sodium}mg</span>
         </div>
+        <div class="score-badge ${sc}">${ds}</div>
       `;
       item.addEventListener('click', () => showServings(food));
       list.appendChild(item);

@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
   <!-- AUTH SCREEN -->
@@ -130,7 +130,11 @@
         <button class="water-add" id="water-add">+ Add Cup</button>
       </div>
 
-      <!-- Meal Sections -->
+      <!-- Daily Meals -->
+      <div class="daily-meals-header">
+        <span class="daily-meals-title">Daily Meals</span>
+        <button class="reset-day-btn" id="reset-day-btn">Reset Day</button>
+      </div>
       <div class="meals-section" id="meals-section"></div>
 
       <footer class="app-footer">
@@ -215,6 +219,7 @@
         <!-- Library Tab -->
         <div class="tab-content active" id="tab-library">
           <input type="text" class="modal-search" id="modal-lib-search" placeholder="Search your foods...">
+          <div class="modal-category-pills" id="modal-cat-pills"></div>
           <div class="modal-food-list" id="modal-lib-list"></div>
         </div>
         <!-- USDA Search Tab -->
@@ -338,6 +343,6 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>
