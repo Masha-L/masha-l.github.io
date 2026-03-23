@@ -917,9 +917,10 @@ function renderMeals() {
         row.className = 'meal-item';
         const hiSodium = (item.sodium || 0) > 500;
         const pClass = proteinGap ? ' protein-highlight' : '';
+        const servingsLabel = (item.servings && item.servings !== 1) ? ` <span class="meal-item-servings">${r1(item.servings)}x</span>` : '';
         row.innerHTML = `
-          <div class="meal-item-info">
-            <div class="meal-item-name">${item.name}</div>
+          <div class="meal-item-info" data-entry-id="${item.id}">
+            <div class="meal-item-name">${item.name}${servingsLabel}</div>
             <div class="meal-item-macros">
               <span>${Math.round(item.calories)} cal</span>
               <span class="${pClass}">P:${r1(item.protein)}g</span>
@@ -954,9 +955,21 @@ function renderMeals() {
     });
   });
 
+  // Edit serving handlers (tap on item info)
+  container.querySelectorAll('.meal-item-info[data-entry-id]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      const entryId = el.dataset.entryId;
+      const entry = dayLog.find(e => e.id === entryId);
+      if (entry) openEditServingModal(entry);
+    });
+  });
+
   // Remove handlers
   container.querySelectorAll('.meal-item-remove').forEach(btn => {
-    btn.addEventListener('click', () => removeLogEntry(btn.dataset.id));
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      removeLogEntry(btn.dataset.id);
+    });
   });
 }
 
@@ -2859,3 +2872,139 @@ initEatoutTab();
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
+
+// ══════════════════════════════════
+// EDIT SERVING MODAL
+// ══════════════════════════════════
+let editServingEntry = null; // the log entry being edited
+let editServingPerUnit = null; // per-serving macro values
+
+const esModal = document.getElementById('edit-serving-modal');
+const esInput = document.getElementById('es-serving-input');
+
+function openEditServingModal(entry) {
+  editServingEntry = entry;
+  const currentServings = entry.servings || 1;
+
+  // Calculate per-serving values by dividing current totals by current servings
+  editServingPerUnit = {
+    calories: (entry.calories || 0) / currentServings,
+    protein: (entry.protein || 0) / currentServings,
+    carbs: (entry.carbs || 0) / currentServings,
+    fat: (entry.fat || 0) / currentServings,
+    fiber: (entry.fiber || 0) / currentServings,
+    sodium: (entry.sodium || 0) / currentServings,
+  };
+
+  document.getElementById('es-food-name').textContent = entry.name;
+  document.getElementById('es-macros-preview').textContent =
+    `Per serving: ${Math.round(editServingPerUnit.calories)} cal · P:${r1(editServingPerUnit.protein)}g · C:${r1(editServingPerUnit.carbs)}g · F:${r1(editServingPerUnit.fat)}g`;
+
+  esInput.value = currentServings;
+  updateEditServingPreview(currentServings);
+  highlightQuickBtn(currentServings);
+
+  esModal.classList.add('active');
+}
+
+function closeEditServingModal() {
+  esModal.classList.remove('active');
+  editServingEntry = null;
+  editServingPerUnit = null;
+}
+
+function updateEditServingPreview(servings) {
+  if (!editServingPerUnit) return;
+  const s = parseFloat(servings) || 0;
+  const cal = Math.round(editServingPerUnit.calories * s);
+  const prot = r1(editServingPerUnit.protein * s);
+  const carbs = r1(editServingPerUnit.carbs * s);
+  const fat = r1(editServingPerUnit.fat * s);
+  const fiber = r1(editServingPerUnit.fiber * s);
+  const sodium = Math.round(editServingPerUnit.sodium * s);
+
+  document.getElementById('es-updated-macros').innerHTML = `
+    <div class="es-macro-row"><span>Calories</span><span>${cal}</span></div>
+    <div class="es-macro-row"><span>Protein</span><span>${prot}g</span></div>
+    <div class="es-macro-row"><span>Carbs</span><span>${carbs}g</span></div>
+    <div class="es-macro-row"><span>Fat</span><span>${fat}g</span></div>
+    <div class="es-macro-row"><span>Fiber</span><span>${fiber}g</span></div>
+    <div class="es-macro-row"><span>Sodium</span><span>${sodium}mg</span></div>
+  `;
+}
+
+function highlightQuickBtn(val) {
+  document.querySelectorAll('.es-quick-btn').forEach(btn => {
+    btn.classList.toggle('active', parseFloat(btn.dataset.val) === parseFloat(val));
+  });
+}
+
+// Close modal
+document.getElementById('es-close').addEventListener('click', closeEditServingModal);
+esModal.addEventListener('click', (e) => { if (e.target === esModal) closeEditServingModal(); });
+
+// Serving input change
+esInput.addEventListener('input', () => {
+  const v = parseFloat(esInput.value) || 0;
+  updateEditServingPreview(v);
+  highlightQuickBtn(v);
+});
+
+// +/- buttons
+document.getElementById('es-minus').addEventListener('click', () => {
+  let v = parseFloat(esInput.value) || 1;
+  v = Math.max(0.25, Math.round((v - 0.5) * 100) / 100);
+  esInput.value = v;
+  updateEditServingPreview(v);
+  highlightQuickBtn(v);
+});
+document.getElementById('es-plus').addEventListener('click', () => {
+  let v = parseFloat(esInput.value) || 0;
+  v = Math.round((v + 0.5) * 100) / 100;
+  esInput.value = v;
+  updateEditServingPreview(v);
+  highlightQuickBtn(v);
+});
+
+// Quick buttons
+document.querySelectorAll('.es-quick-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const v = parseFloat(btn.dataset.val);
+    esInput.value = v;
+    updateEditServingPreview(v);
+    highlightQuickBtn(v);
+  });
+});
+
+// Save
+document.getElementById('es-save').addEventListener('click', async () => {
+  if (!editServingEntry || !editServingPerUnit || !currentUser) return;
+  const newServings = parseFloat(esInput.value);
+  if (!newServings || newServings <= 0) { toast('Invalid serving size'); return; }
+
+  const updates = {
+    servings: newServings,
+    calories: editServingPerUnit.calories * newServings,
+    protein: editServingPerUnit.protein * newServings,
+    carbs: editServingPerUnit.carbs * newServings,
+    fat: editServingPerUnit.fat * newServings,
+    fiber: editServingPerUnit.fiber * newServings,
+    sodium: editServingPerUnit.sodium * newServings,
+  };
+
+  const { error } = await sb.from('macro_log').update(updates).eq('id', editServingEntry.id);
+  if (error) { toast('Error updating entry'); console.error(error); return; }
+
+  closeEditServingModal();
+  await loadDayLog(currentDate);
+  renderHome();
+  toast('Serving updated');
+});
+
+// Delete from edit modal
+document.getElementById('es-delete').addEventListener('click', async () => {
+  if (!editServingEntry) return;
+  if (!confirm('Delete this entry?')) return;
+  closeEditServingModal();
+  await removeLogEntry(editServingEntry.id);
+});

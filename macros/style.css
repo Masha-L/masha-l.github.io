@@ -480,3 +480,24 @@ a{color:#10b981;text-decoration:none}
 
 /* ============ TOAST ============ */
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:.6rem 1.25rem;border-radius:8px;font-size:.8rem;z-index:300;animation:fadeIn .2s;pointer-events:none}
+
+/* ── Edit Serving Modal ── */
+.es-food-name{font-size:1.1rem;font-weight:600;color:#e5e5e5;margin-bottom:.5rem}
+.es-macros-preview{font-size:.8rem;color:#888;margin-bottom:1rem}
+.es-label{font-size:.85rem;color:#aaa;display:block;margin-bottom:.5rem}
+.es-serving-controls{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem}
+.es-serving-input{width:80px;text-align:center;background:#1a1a1a;border:1px solid #333;color:#e5e5e5;border-radius:8px;padding:.5rem;font-size:1.1rem;-moz-appearance:textfield}
+.es-serving-input::-webkit-outer-spin-button,.es-serving-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.es-quick-btns{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.es-quick-btn{background:#1a1a1a;border:1px solid #333;color:#ccc;padding:.4rem .75rem;border-radius:8px;font-size:.85rem;cursor:pointer;transition:all .15s}
+.es-quick-btn:hover,.es-quick-btn.active{background:#10b981;color:#fff;border-color:#10b981}
+.es-updated-macros{background:#1a1a1a;border-radius:10px;padding:.75rem;margin-bottom:1rem;font-size:.85rem;color:#ccc}
+.es-updated-macros .es-macro-row{display:flex;justify-content:space-between;padding:.2rem 0}
+.es-updated-macros .es-macro-row span:last-child{color:#e5e5e5;font-weight:500}
+.es-actions{display:flex;flex-direction:column;gap:.5rem}
+.es-delete-btn{background:transparent;border:1px solid #ef4444;color:#ef4444;padding:.6rem;border-radius:10px;font-size:.9rem;cursor:pointer;transition:all .15s}
+.es-delete-btn:hover{background:#ef4444;color:#fff}
+.meal-item{cursor:pointer;transition:background .15s}
+.meal-item:active{background:rgba(255,255,255,.05)}
+.meal-item-servings{font-size:.75rem;color:#10b981;font-weight:500;margin-left:.25rem}
+.meal-item-info{flex:1;cursor:pointer}

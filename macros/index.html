@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="style.css?v=9">
+  <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
   <!-- AUTH SCREEN -->
@@ -394,6 +394,41 @@
     </div>
   </div>
 
+<!-- EDIT SERVING MODAL -->
+<div class="modal-overlay" id="edit-serving-modal">
+  <div class="modal modal-small">
+    <div class="modal-header">
+      <h2 id="es-title">Edit Serving</h2>
+      <button class="modal-close" id="es-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="es-food-name" id="es-food-name"></div>
+      <div class="es-macros-preview" id="es-macros-preview"></div>
+      <div class="es-serving-section">
+        <label class="es-label">Servings</label>
+        <div class="es-serving-controls">
+          <button class="serv-btn" id="es-minus">&minus;</button>
+          <input type="number" id="es-serving-input" class="es-serving-input" step="0.25" min="0.25" value="1">
+          <button class="serv-btn" id="es-plus">+</button>
+        </div>
+        <div class="es-quick-btns" id="es-quick-btns">
+          <button class="es-quick-btn" data-val="0.25">0.25</button>
+          <button class="es-quick-btn" data-val="0.5">0.5</button>
+          <button class="es-quick-btn" data-val="1">1</button>
+          <button class="es-quick-btn" data-val="1.5">1.5</button>
+          <button class="es-quick-btn" data-val="2">2</button>
+          <button class="es-quick-btn" data-val="3">3</button>
+        </div>
+      </div>
+      <div class="es-updated-macros" id="es-updated-macros"></div>
+      <div class="es-actions">
+        <button class="btn-primary" id="es-save">Save</button>
+        <button class="btn-danger es-delete-btn" id="es-delete">Delete Entry</button>
+      </div>
+    </div>
+  </div>
+</div>
+
   <!-- WEIGH-IN MODAL -->
   <div class="modal-overlay" id="weighin-modal">
     <div class="modal modal-small">
@@ -428,6 +463,6 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script src="app.js?v=9"></script>
+  <script src="app.js?v=10"></script>
 </body>
 </html>
