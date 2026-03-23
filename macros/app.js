@@ -1,1067 +1,1173 @@
-/* ============================================================
-   Macros — Macro Tracking PWA
-   Supabase backend with localStorage fallback
-   ============================================================ */
+/* ===== Macros PWA — app.js ===== */
+'use strict';
 
+// ── Supabase ──
 const SUPABASE_URL = 'https://xfmcweloaladfnmfvkuk.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmbWN3ZWxvYWxhZGZubWZ2a3VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NzIwNDMsImV4cCI6MjA4OTU0ODA0M30.q2W-rI7wwdFMyYTiQEA301z69qiVi3OgZb8cYmGBU6I';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmbWN3ZWxvYWxhZGZubWZ2a3VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NzIwNDMsImV4cCI6MjA4OTU0ODA0M30.q2W-rI7wwdFMyYTiQEA301z69qiVi3OgZb8cYmGBU6I';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+// ── Constants ──
+const MEALS = [
+  { id: 'coffee', name: 'Coffee' },
+  { id: 'breakfast', name: 'Breakfast' },
+  { id: 'lunch', name: 'Lunch' },
+  { id: 'snack', name: 'Snack' },
+  { id: 'dinner', name: 'Dinner' },
+];
 
-// ─── State ────────────────────────────────────────────────────
-let currentUser = null;
-let currentDate = new Date();
-let settings = null;
-let foods = [];
-let log = [];
-let waterCups = 0;
-let useSupabase = true;
-let currentMeal = 'breakfast';
-let selectedFood = null;
-let servingsCount = 1;
-let statsRange = 'week';
-
-const MEALS = ['coffee', 'breakfast', 'lunch', 'snack', 'dinner'];
-const MEAL_LABELS = { coffee: 'Coffee', breakfast: 'Breakfast', lunch: 'Lunch', snack: 'Snack', dinner: 'Dinner' };
-const CATEGORIES = ['all', 'coffee', 'breakfast', 'lunch', 'dinner', 'snack', 'ingredient'];
-const TAGS = ['all', 'homemade', 'quick', 'takeout', 'hungryroot'];
-
-const DEFAULT_SETTINGS = {
-  weight_lbs: null, height_in: null, body_fat_pct: null,
-  mode: 'recomp',
-  cal_target_low: 1800, cal_target_high: 2000,
-  protein_target_low: 94, protein_target_high: 134,
-  carb_target: 225, fat_target: 60, fiber_target: 28,
-  sodium_limit: 2000, avg_steps: 8000, workouts_per_week: 4, zone2_min_per_week: 90
-};
-
-const MODE_PRESETS = {
-  recomp:      { cal_target_low:1800, cal_target_high:2000, protein_target_low:94,  protein_target_high:134, carb_target:225, fat_target:60,  fiber_target:28 },
-  cutting:     { cal_target_low:1500, cal_target_high:1700, protein_target_low:120, protein_target_high:134, carb_target:150, fat_target:50,  fiber_target:28 },
-  maintenance: { cal_target_low:1900, cal_target_high:2100, protein_target_low:94,  protein_target_high:120, carb_target:225, fat_target:65,  fiber_target:28 },
-  marathon:    { cal_target_low:2200, cal_target_high:2500, protein_target_low:94,  protein_target_high:120, carb_target:300, fat_target:70,  fiber_target:30 }
+const MODES = {
+  recomp:   { label:'Recomp',   cal:[1800,2000], protein:[94,134], fat:[55,65], carbs:[200,250], fiber:[25,30] },
+  cutting:  { label:'Cutting',  cal:[1400,1600], protein:[110,140], fat:[40,55], carbs:[130,170], fiber:[25,30] },
+  maintain: { label:'Maintenance', cal:[1900,2100], protein:[80,120], fat:[55,70], carbs:[220,270], fiber:[25,30] },
+  marathon: { label:'Marathon Fueling', cal:[2200,2500], protein:[90,120], fat:[55,70], carbs:[300,380], fiber:[25,30] },
 };
 
 const SEED_FOODS = [
-  { name:'Large Egg', category:'breakfast', serving_label:'1 large egg', calories:72, protein:6.2, carbs:0.4, fat:5, fiber:0, sodium:71, tags:['quick'] },
-  { name:'Turkey Sausage Patty', category:'breakfast', serving_label:'1 patty (56g)', calories:108, protein:11, carbs:1, fat:7, fiber:0, sodium:340, tags:['quick'] },
-  { name:'Sourdough Toast', category:'breakfast', serving_label:'1 slice', calories:96, protein:3.9, carbs:18, fat:1, fiber:1, sodium:170, tags:['quick'] },
-  { name:'Half Avocado', category:'breakfast', serving_label:'1/2 avocado', calories:109, protein:1.4, carbs:6, fat:10, fiber:5, sodium:5, tags:['quick'] },
-  { name:'Shredded Cheese', category:'ingredient', serving_label:'28g', calories:113, protein:6.4, carbs:1.5, fat:9, fiber:0, sodium:180, tags:['quick'] },
-  { name:'Flour Tortilla', category:'ingredient', serving_label:'1 tortilla', calories:140, protein:3.7, carbs:24, fat:3.5, fiber:1, sodium:330, tags:['quick'] },
-  { name:'Greek Yogurt', category:'breakfast', serving_label:'1 container', calories:120, protein:15, carbs:11, fat:2, fiber:0, sodium:55, tags:['quick'] },
-  { name:'Protein Shake', category:'snack', serving_label:'1 shake', calories:220, protein:40, carbs:12, fat:3, fiber:6, sodium:200, tags:['quick'] },
-  { name:'Drip Coffee + Whole Milk', category:'coffee', serving_label:'1 cup', calories:40, protein:2, carbs:3, fat:2, fiber:0, sodium:18, tags:['quick'] },
-  { name:'Cold Brew + Whole Milk', category:'coffee', serving_label:'1 cup', calories:80, protein:4, carbs:6, fat:4, fiber:0, sodium:26, tags:['quick'] },
-  { name:'Grilled Chicken Breast', category:'lunch', serving_label:'6 oz', calories:280, protein:52, carbs:0, fat:6, fiber:0, sodium:120, tags:['quick'] },
-  { name:'Brown Rice', category:'lunch', serving_label:'1 cup cooked', calories:216, protein:5, carbs:45, fat:1.8, fiber:3.5, sodium:10, tags:['quick'] },
-  { name:'Salmon Fillet', category:'dinner', serving_label:'6 oz', calories:350, protein:38, carbs:0, fat:21, fiber:0, sodium:75, tags:[] },
-  { name:'Sweet Potato', category:'dinner', serving_label:'1 medium', calories:103, protein:2.3, carbs:24, fat:0.1, fiber:3.8, sodium:41, tags:['quick'] },
-  { name:'Poke Bowl', category:'lunch', serving_label:'1 bowl', calories:550, protein:35, carbs:55, fat:18, fiber:4, sodium:900, tags:['takeout'] },
-  { name:'Chia Pudding w/ Raspberries', category:'snack', serving_label:'1 bowl', calories:313, protein:20, carbs:32, fat:12, fiber:14, sodium:30, tags:['homemade'] },
-  { name:'Hungryroot Meal (avg)', category:'dinner', serving_label:'1 meal', calories:450, protein:30, carbs:40, fat:18, fiber:6, sodium:650, tags:['hungryroot'] },
-  { name:'Oatmeal with Berries', category:'breakfast', serving_label:'1 bowl', calories:280, protein:8, carbs:48, fat:6, fiber:5, sodium:10, tags:['quick'] },
-  { name:'Hummus + Veggies', category:'snack', serving_label:'1 serving', calories:180, protein:5, carbs:18, fat:10, fiber:4, sodium:300, tags:['quick'] },
-  { name:'Trail Mix', category:'snack', serving_label:'1/4 cup', calories:175, protein:5, carbs:15, fat:12, fiber:2, sodium:45, tags:['quick'] }
+  {name:'Drip coffee with whole milk',calories:40,protein:2,carbs:3,fat:2,fiber:0,sodium:15,category:'coffee',tags:['quick'],serving_label:'1 cup'},
+  {name:'Cold brew with whole milk',calories:80,protein:4,carbs:6,fat:4,fiber:0,sodium:26,category:'coffee',tags:['quick'],serving_label:'1 cup'},
+  {name:'Large egg',calories:72,protein:6.2,carbs:0.4,fat:5,fiber:0,sodium:71,category:'breakfast',tags:['quick'],serving_label:'1 large egg'},
+  {name:'Turkey sausage patty',calories:108,protein:11,carbs:1,fat:7,fiber:0,sodium:340,category:'breakfast',tags:['quick'],serving_label:'1 patty (56g)'},
+  {name:'Sourdough toast',calories:96,protein:3.9,carbs:18,fat:1,fiber:1,sodium:170,category:'breakfast',tags:['quick'],serving_label:'1 slice'},
+  {name:'Half avocado',calories:109,protein:1.4,carbs:6,fat:10,fiber:4.5,sodium:5,category:'ingredient',tags:['quick'],serving_label:'1/2 avocado'},
+  {name:'Shredded cheese',calories:113,protein:6.4,carbs:1.5,fat:9,fiber:0,sodium:180,category:'ingredient',tags:['quick'],serving_label:'28g'},
+  {name:'Flour tortilla',calories:140,protein:3.7,carbs:24,fat:3.5,fiber:1.5,sodium:330,category:'ingredient',tags:['quick'],serving_label:'1 tortilla'},
+  {name:'Greek yogurt',calories:120,protein:15,carbs:11,fat:2,fiber:0,sodium:55,category:'breakfast',tags:['quick'],serving_label:'1 container'},
+  {name:'Protein shake',calories:220,protein:40,carbs:12,fat:3,fiber:1,sodium:200,category:'snack',tags:['quick'],serving_label:'1 shake'},
+  {name:'Grilled chicken breast',calories:280,protein:52,carbs:0,fat:6,fiber:0,sodium:120,category:'lunch',tags:['homemade'],serving_label:'6 oz'},
+  {name:'Brown rice',calories:216,protein:5,carbs:45,fat:1.8,fiber:3.5,sodium:10,category:'ingredient',tags:['homemade'],serving_label:'1 cup cooked'},
+  {name:'Salmon fillet',calories:350,protein:38,carbs:0,fat:21,fiber:0,sodium:75,category:'dinner',tags:['homemade'],serving_label:'6 oz'},
+  {name:'Sweet potato',calories:103,protein:2.3,carbs:24,fat:0.1,fiber:3.8,sodium:41,category:'ingredient',tags:['homemade'],serving_label:'1 medium'},
+  {name:'Poke bowl',calories:550,protein:35,carbs:55,fat:18,fiber:3,sodium:900,category:'lunch',tags:['takeout'],serving_label:'1 bowl'},
+  {name:'Chia pudding w/ raspberries',calories:313,protein:20,carbs:32,fat:12,fiber:14,sodium:30,category:'snack',tags:['homemade'],serving_label:'1 bowl'},
+  {name:'Hungryroot meal (avg)',calories:450,protein:30,carbs:40,fat:18,fiber:6,sodium:650,category:'dinner',tags:['hungryroot'],serving_label:'1 meal'},
+  {name:'Oatmeal with berries',calories:280,protein:8,carbs:48,fat:6,fiber:5,sodium:10,category:'breakfast',tags:['homemade'],serving_label:'1 bowl'},
+  {name:'Hummus + veggies',calories:180,protein:5,carbs:18,fat:10,fiber:4,sodium:300,category:'snack',tags:['quick'],serving_label:'1 serving'},
+  {name:'Trail mix',calories:175,protein:5,carbs:15,fat:12,fiber:2,sodium:45,category:'snack',tags:['quick'],serving_label:'1/4 cup'},
 ];
 
-// ─── Utilities ────────────────────────────────────────────────
-const $ = (s, p) => (p || document).querySelector(s);
-const $$ = (s, p) => [...(p || document).querySelectorAll(s)];
-const fmtDate = d => d.toISOString().slice(0, 10);
-const fmtDisplay = d => d.toLocaleDateString('en-US', { weekday:'long', month:'short', day:'numeric' });
-const n = v => Number(v) || 0;
-const uid = () => crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random()*16|0; return (c === 'x' ? r : (r&0x3|0x8)).toString(16); });
+// ── State ──
+let currentUser = null;
+let currentDate = todayStr();
+let currentMeal = null;
+let settings = { mode:'recomp', weight:130, height:64, bodyFat:25.9, steps:8000, workouts:4, zone2:120, sodiumLimit:2000 };
+let library = [];   // macro_foods rows
+let dayLog = [];     // macro_log rows for currentDate
+let waterCups = 0;
+let servingFood = null;
+let servingCount = 1;
 
+// ── Helpers ──
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function dateObj(s) { const [y,m,d] = s.split('-').map(Number); return new Date(y,m-1,d); }
+function formatDate(s) {
+  const t = todayStr();
+  if (s === t) return 'Today';
+  const yd = new Date(); yd.setDate(yd.getDate()-1);
+  const ydStr = `${yd.getFullYear()}-${String(yd.getMonth()+1).padStart(2,'0')}-${String(yd.getDate()).padStart(2,'0')}`;
+  if (s === ydStr) return 'Yesterday';
+  return dateObj(s).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+}
+function shiftDate(s, n) {
+  const d = dateObj(s); d.setDate(d.getDate()+n);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function r1(v) { return Math.round((v||0)*10)/10; }
 function toast(msg) {
-  const t = document.createElement('div');
-  t.className = 'toast';
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 2000);
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2000);
 }
 
-// ─── Data Layer (Supabase with localStorage fallback) ────────
-const LS = {
-  get(key) { try { return JSON.parse(localStorage.getItem('macros_' + key)); } catch { return null; } },
-  set(key, val) { localStorage.setItem('macros_' + key, JSON.stringify(val)); },
-  remove(key) { localStorage.removeItem('macros_' + key); }
-};
-
-function isMissingTable(error) {
-  if (!error) return false;
-  const msg = (error.message || '') + (error.code || '');
-  return msg.includes('42P01') || msg.includes('relation') || msg.includes('does not exist');
+function getTargets() {
+  return MODES[settings.mode] || MODES.recomp;
 }
 
-async function dbGetSettings() {
-  if (useSupabase) {
-    const { data, error } = await sb.from('macro_settings').select('*').eq('user_id', currentUser.id).single();
-    if (!error && data) return data;
-    if (error && error.code === 'PGRST116') return null;
-    if (isMissingTable(error)) useSupabase = false;
-  }
-  return LS.get('settings_' + currentUser.id);
+// ══════════════════════════════════
+// SVG GAUGE HELPERS
+// ══════════════════════════════════
+// Main calorie arc path length
+const CAL_ARC_PATH = 'M 20 110 A 80 80 0 0 1 180 110';
+const CAL_ARC_LENGTH = Math.PI * 80; // ~251.3
+
+// Mini gauge arc path length
+const MINI_ARC_PATH = 'M 6 36 A 24 24 0 0 1 54 36';
+const MINI_ARC_LENGTH = Math.PI * 24; // ~75.4
+
+function setArc(pathEl, fraction, totalLength) {
+  const f = Math.max(0, Math.min(fraction, 1));
+  const filled = f * totalLength;
+  pathEl.setAttribute('stroke-dasharray', `${filled} ${totalLength}`);
 }
 
-async function dbSaveSettings(s) {
-  const row = { ...s, user_id: currentUser.id, updated_at: new Date().toISOString() };
-  if (useSupabase) {
-    const { error } = await sb.from('macro_settings').upsert(row, { onConflict: 'user_id' });
-    if (isMissingTable(error)) useSupabase = false;
-    else if (!error) { LS.set('settings_' + currentUser.id, row); return; }
-  }
-  LS.set('settings_' + currentUser.id, row);
+function getArcColor(value, range) {
+  if (value > range[1] * 1.1) return '#ef4444';
+  if (value > range[1]) return '#f59e0b';
+  if (value >= range[0]) return '#4ade80';
+  return '#10b981';
 }
 
-async function dbGetFoods() {
-  if (useSupabase) {
-    const { data, error } = await sb.from('macro_foods').select('*').eq('user_id', currentUser.id).order('name');
-    if (!error) { LS.set('foods_' + currentUser.id, data); return data; }
-    if (isMissingTable(error)) useSupabase = false;
-  }
-  return LS.get('foods_' + currentUser.id) || [];
-}
+// ══════════════════════════════════
+// RENDER GAUGES
+// ══════════════════════════════════
+function renderGauges(totals) {
+  const targets = getTargets();
 
-async function dbAddFood(food) {
-  const row = { ...food, id: food.id || uid(), user_id: currentUser.id, created_at: new Date().toISOString() };
-  if (useSupabase) {
-    const { error } = await sb.from('macro_foods').insert(row);
-    if (isMissingTable(error)) useSupabase = false;
-    else if (!error) { foods.push(row); LS.set('foods_' + currentUser.id, foods); return row; }
-  }
-  foods.push(row);
-  LS.set('foods_' + currentUser.id, foods);
-  return row;
-}
+  // Calorie gauge
+  const calMid = (targets.cal[0] + targets.cal[1]) / 2;
+  const calFrac = totals.cal / (calMid * 2);
+  const calArc = document.getElementById('cal-arc');
+  setArc(calArc, calFrac, CAL_ARC_LENGTH);
+  calArc.setAttribute('stroke', getArcColor(totals.cal, targets.cal));
 
-async function dbUpdateFood(id, updates) {
-  if (useSupabase) {
-    const { error } = await sb.from('macro_foods').update(updates).eq('id', id).eq('user_id', currentUser.id);
-    if (isMissingTable(error)) useSupabase = false;
-  }
-  const idx = foods.findIndex(f => f.id === id);
-  if (idx >= 0) Object.assign(foods[idx], updates);
-  LS.set('foods_' + currentUser.id, foods);
-}
+  document.getElementById('cal-eaten').textContent = Math.round(totals.cal);
 
-async function dbDeleteFood(id) {
-  if (useSupabase) {
-    await sb.from('macro_foods').delete().eq('id', id).eq('user_id', currentUser.id);
-  }
-  foods = foods.filter(f => f.id !== id);
-  LS.set('foods_' + currentUser.id, foods);
-}
+  // Range labels on the SVG
+  const calLow = document.getElementById('cal-low-label');
+  const calHigh = document.getElementById('cal-high-label');
+  if (calLow) { calLow.textContent = targets.cal[0]; calLow.setAttribute('x', '28'); calLow.setAttribute('y', '100'); }
+  if (calHigh) { calHigh.textContent = targets.cal[1]; calHigh.setAttribute('x', '152'); calHigh.setAttribute('y', '100'); }
 
-async function dbGetLog(date) {
-  if (useSupabase) {
-    const { data, error } = await sb.from('macro_log').select('*').eq('user_id', currentUser.id).eq('date', date).order('created_at');
-    if (!error) return data;
-    if (isMissingTable(error)) useSupabase = false;
-  }
-  const all = LS.get('log_' + currentUser.id) || [];
-  return all.filter(l => l.date === date);
-}
+  // Mini gauges
+  const macroKeys = ['protein', 'carbs', 'fat', 'fiber'];
+  const macroColors = ['#10b981', '#3b82f6', '#f59e0b', '#a78bfa'];
+  const gaugeEls = document.querySelectorAll('.mini-gauge');
 
-async function dbGetLogRange(startDate, endDate) {
-  if (useSupabase) {
-    const { data, error } = await sb.from('macro_log').select('*').eq('user_id', currentUser.id).gte('date', startDate).lte('date', endDate).order('date');
-    if (!error) return data;
-    if (isMissingTable(error)) useSupabase = false;
-  }
-  const all = LS.get('log_' + currentUser.id) || [];
-  return all.filter(l => l.date >= startDate && l.date <= endDate);
-}
+  gaugeEls.forEach((el, i) => {
+    const key = macroKeys[i];
+    const range = targets[key];
+    const mid = (range[0] + range[1]) / 2;
+    const frac = totals[key] / (mid * 2);
+    const arc = el.querySelector('.mini-arc');
+    setArc(arc, frac, MINI_ARC_LENGTH);
+    arc.setAttribute('stroke', getArcColor(totals[key], range));
 
-async function dbAddLog(entry) {
-  const row = { ...entry, id: entry.id || uid(), user_id: currentUser.id, date: fmtDate(currentDate), created_at: new Date().toISOString() };
-  // Remove tags from the row before inserting to macro_log (not a column there)
-  const { tags, ...dbRow } = row;
-  if (useSupabase) {
-    const { error } = await sb.from('macro_log').insert(dbRow);
-    if (isMissingTable(error)) useSupabase = false;
-    else if (!error) {
-      log.push({...row});
-      const all = LS.get('log_' + currentUser.id) || [];
-      all.push(row);
-      LS.set('log_' + currentUser.id, all);
-      return row;
-    }
-  }
-  log.push({...row});
-  const all = LS.get('log_' + currentUser.id) || [];
-  all.push(row);
-  LS.set('log_' + currentUser.id, all);
-  return row;
-}
-
-async function dbRemoveLog(id) {
-  if (useSupabase) {
-    await sb.from('macro_log').delete().eq('id', id).eq('user_id', currentUser.id);
-  }
-  log = log.filter(l => l.id !== id);
-  const all = LS.get('log_' + currentUser.id) || [];
-  LS.set('log_' + currentUser.id, all.filter(l => l.id !== id));
-}
-
-async function dbGetWater(date) {
-  if (useSupabase) {
-    const { data, error } = await sb.from('macro_water').select('*').eq('user_id', currentUser.id).eq('date', date).single();
-    if (!error && data) return n(data.cups);
-    if (error && error.code === 'PGRST116') return 0;
-    if (isMissingTable(error)) useSupabase = false;
-  }
-  const w = LS.get('water_' + currentUser.id) || {};
-  return n(w[date]);
-}
-
-async function dbSaveWater(date, cups) {
-  if (useSupabase) {
-    const { error } = await sb.from('macro_water').upsert({ user_id: currentUser.id, date, cups, updated_at: new Date().toISOString() }, { onConflict: 'user_id,date' });
-    if (isMissingTable(error)) useSupabase = false;
-    else if (!error) { const w = LS.get('water_' + currentUser.id) || {}; w[date] = cups; LS.set('water_' + currentUser.id, w); return; }
-  }
-  const w = LS.get('water_' + currentUser.id) || {};
-  w[date] = cups;
-  LS.set('water_' + currentUser.id, w);
-}
-
-// ─── Auth ────────────────────────────────────────────────────
-async function initAuth() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    currentUser = session.user;
-    await enterApp();
-  }
-  sb.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'SIGNED_IN' && session && !currentUser) {
-      currentUser = session.user;
-      await enterApp();
-    } else if (event === 'SIGNED_OUT') {
-      currentUser = null;
-      showAuth();
-    }
+    el.querySelector('.mini-value').textContent = Math.round(totals[key]) + 'g';
+    el.querySelector('.mini-target').textContent = `${Math.round(totals[key])} / ${range[1]}g`;
   });
 }
 
-let isSignUp = false;
-$('#auth-toggle-link').addEventListener('click', e => {
-  e.preventDefault();
-  isSignUp = !isSignUp;
-  $('#auth-submit').textContent = isSignUp ? 'Sign Up' : 'Log In';
-  $('#auth-toggle-text').textContent = isSignUp ? 'Already have an account?' : "Don't have an account?";
-  $('#auth-toggle-link').textContent = isSignUp ? 'Log In' : 'Sign Up';
-  $('#auth-error').textContent = '';
-});
-
-$('#auth-form').addEventListener('submit', async e => {
-  e.preventDefault();
-  const email = $('#auth-email').value.trim();
-  const password = $('#auth-password').value;
-  $('#auth-error').textContent = '';
-  $('#auth-submit').disabled = true;
-  $('#auth-submit').textContent = 'Loading...';
-
-  let result;
-  if (isSignUp) {
-    result = await sb.auth.signUp({ email, password });
-  } else {
-    result = await sb.auth.signInWithPassword({ email, password });
-  }
-  if (result.error) {
-    $('#auth-error').textContent = result.error.message;
-  }
-  $('#auth-submit').disabled = false;
-  $('#auth-submit').textContent = isSignUp ? 'Sign Up' : 'Log In';
-});
-
-$('#auth-forgot').addEventListener('click', e => {
-  e.preventDefault();
-  $('#forgot-modal').classList.add('active');
-  $('#forgot-email').value = $('#auth-email').value;
-});
-$('#forgot-close').addEventListener('click', () => $('#forgot-modal').classList.remove('active'));
-$('#forgot-form').addEventListener('submit', async e => {
-  e.preventDefault();
-  const { error } = await sb.auth.resetPasswordForEmail($('#forgot-email').value.trim());
-  $('#forgot-msg').textContent = error ? error.message : 'Reset link sent! Check your email.';
-});
-
-function showAuth() {
-  $('#auth-screen').classList.add('active');
-  $('#app-screen').classList.remove('active');
-}
-
-async function enterApp() {
-  $('#auth-screen').classList.remove('active');
-  $('#app-screen').classList.add('active');
-
-  // Check if Supabase tables exist
-  await checkSupabaseTables();
-
-  // Load settings
-  settings = await dbGetSettings();
-  if (!settings) {
-    settings = { ...DEFAULT_SETTINGS };
-    await dbSaveSettings(settings);
-    await seedFoods();
-  }
-
-  foods = await dbGetFoods();
-  await loadDay();
-  renderSettings();
-}
-
-async function checkSupabaseTables() {
-  const { error } = await sb.from('macro_settings').select('user_id').limit(1);
-  if (isMissingTable(error)) {
-    useSupabase = false;
-    console.warn('Supabase macro tables not found, using localStorage');
+// ══════════════════════════════════
+// DATA FUNCTIONS (Supabase + localStorage fallback)
+// ══════════════════════════════════
+async function loadSettings() {
+  if (!currentUser) return;
+  const { data } = await sb.from('macro_settings').select('*').eq('user_id', currentUser.id).single();
+  if (data) {
+    settings = {
+      mode: data.mode || 'recomp',
+      weight: data.weight_lbs || 130,
+      height: data.height_in || 64,
+      bodyFat: data.body_fat_pct || 25.9,
+      steps: data.avg_steps || 8000,
+      workouts: data.workouts_per_week || 4,
+      zone2: data.zone2_min_per_week || 120,
+      sodiumLimit: data.sodium_limit || 2000,
+    };
   }
 }
 
-async function seedFoods() {
-  for (const f of SEED_FOODS) {
-    await dbAddFood({ ...f, is_recipe: false, recipe_ingredients: null, usda_fdc_id: null });
-  }
+async function saveSettingsToDb() {
+  if (!currentUser) return;
+  const row = {
+    user_id: currentUser.id,
+    mode: settings.mode,
+    weight_lbs: settings.weight,
+    height_in: settings.height,
+    body_fat_pct: settings.bodyFat,
+    avg_steps: settings.steps,
+    workouts_per_week: settings.workouts,
+    zone2_min_per_week: settings.zone2,
+    sodium_limit: settings.sodiumLimit,
+    updated_at: new Date().toISOString(),
+  };
+  await sb.from('macro_settings').upsert(row, { onConflict: 'user_id' });
 }
 
-// ─── Navigation ──────────────────────────────────────────────
-$$('.nav-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const page = btn.dataset.page;
-    $$('.nav-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    $$('.page').forEach(p => p.classList.remove('active'));
-    $(`#page-${page}`).classList.add('active');
-    if (page === 'stats') renderStats();
-    if (page === 'library') renderLibrary();
-    if (page === 'settings') renderSettings();
-  });
-});
+async function loadLibrary() {
+  if (!currentUser) return;
+  const { data } = await sb.from('macro_foods').select('*').eq('user_id', currentUser.id).order('name');
+  library = data || [];
+}
 
-// ─── Date Navigation ─────────────────────────────────────────
-$('#prev-day').addEventListener('click', () => { currentDate.setDate(currentDate.getDate() - 1); loadDay(); });
-$('#next-day').addEventListener('click', () => { currentDate.setDate(currentDate.getDate() + 1); loadDay(); });
+async function seedLibrary() {
+  if (!currentUser || library.length > 0) return;
+  const rows = SEED_FOODS.map(f => ({
+    user_id: currentUser.id,
+    name: f.name,
+    category: f.category,
+    tags: f.tags,
+    serving_label: f.serving_label,
+    calories: f.calories,
+    protein: f.protein,
+    carbs: f.carbs,
+    fat: f.fat,
+    fiber: f.fiber,
+    sodium: f.sodium,
+  }));
+  await sb.from('macro_foods').insert(rows);
+  await loadLibrary();
+}
 
-async function loadDay() {
-  $('#date-display').textContent = fmtDisplay(currentDate);
-  log = await dbGetLog(fmtDate(currentDate));
-  waterCups = await dbGetWater(fmtDate(currentDate));
+async function loadDayLog(date) {
+  if (!currentUser) return;
+  const { data } = await sb.from('macro_log').select('*').eq('user_id', currentUser.id).eq('date', date).order('created_at');
+  dayLog = data || [];
+}
+
+async function loadWater(date) {
+  if (!currentUser) return;
+  const { data } = await sb.from('macro_water').select('*').eq('user_id', currentUser.id).eq('date', date).single();
+  waterCups = data?.cups || 0;
+}
+
+async function saveWater(date, cups) {
+  if (!currentUser) return;
+  await sb.from('macro_water').upsert({
+    user_id: currentUser.id,
+    date: date,
+    cups: cups,
+    updated_at: new Date().toISOString(),
+  }, { onConflict: 'user_id,date' });
+}
+
+async function addLogEntry(meal, food, servings) {
+  if (!currentUser) return;
+  const entry = {
+    user_id: currentUser.id,
+    date: currentDate,
+    meal: meal,
+    food_id: food.id || null,
+    name: food.name,
+    servings: servings,
+    calories: food.calories * servings,
+    protein: food.protein * servings,
+    carbs: food.carbs * servings,
+    fat: food.fat * servings,
+    fiber: (food.fiber || 0) * servings,
+    sodium: (food.sodium || 0) * servings,
+  };
+  const { error } = await sb.from('macro_log').insert(entry);
+  if (error) { toast('Error saving — try again'); console.error(error); return; }
+  await loadDayLog(currentDate);
+  renderHome();
+  toast(`Added ${food.name}`);
+}
+
+async function removeLogEntry(id) {
+  await sb.from('macro_log').delete().eq('id', id);
+  await loadDayLog(currentDate);
   renderHome();
 }
 
-// ─── Home Rendering ──────────────────────────────────────────
-function getTotals() {
-  return log.reduce((t, l) => ({
-    calories: t.calories + n(l.calories) * n(l.servings || 1),
-    protein: t.protein + n(l.protein) * n(l.servings || 1),
-    carbs: t.carbs + n(l.carbs) * n(l.servings || 1),
-    fat: t.fat + n(l.fat) * n(l.servings || 1),
-    fiber: t.fiber + n(l.fiber) * n(l.servings || 1),
-    sodium: t.sodium + n(l.sodium) * n(l.servings || 1)
-  }), { calories:0, protein:0, carbs:0, fat:0, fiber:0, sodium:0 });
+async function addFoodToLibrary(food) {
+  if (!currentUser) return null;
+  const row = {
+    user_id: currentUser.id,
+    name: food.name,
+    category: food.category || 'ingredient',
+    tags: food.tags || [],
+    serving_label: food.serving_label || '1 serving',
+    calories: food.calories,
+    protein: food.protein,
+    carbs: food.carbs,
+    fat: food.fat,
+    fiber: food.fiber || 0,
+    sodium: food.sodium || 0,
+  };
+  const { data, error } = await sb.from('macro_foods').insert(row).select().single();
+  if (error) { toast('Error saving food'); console.error(error); return null; }
+  await loadLibrary();
+  return data;
 }
 
+async function updateFoodInLibrary(id, updates) {
+  await sb.from('macro_foods').update(updates).eq('id', id);
+  await loadLibrary();
+}
+
+async function deleteFoodFromLibrary(id) {
+  await sb.from('macro_foods').delete().eq('id', id);
+  await loadLibrary();
+  renderLibrary();
+}
+
+// ══════════════════════════════════
+// COMPUTE TOTALS
+// ══════════════════════════════════
+function computeTotals() {
+  const t = { cal: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, sodium: 0 };
+  for (const entry of dayLog) {
+    t.cal += entry.calories || 0;
+    t.protein += entry.protein || 0;
+    t.carbs += entry.carbs || 0;
+    t.fat += entry.fat || 0;
+    t.fiber += entry.fiber || 0;
+    t.sodium += entry.sodium || 0;
+  }
+  return t;
+}
+
+function mealEntries(mealId) {
+  return dayLog.filter(e => e.meal === mealId);
+}
+
+function mealTotal(mealId) {
+  const entries = mealEntries(mealId);
+  const t = { cal: 0, protein: 0 };
+  for (const e of entries) { t.cal += e.calories || 0; t.protein += e.protein || 0; }
+  return t;
+}
+
+// ══════════════════════════════════
+// HOME PAGE
+// ══════════════════════════════════
 function renderHome() {
-  const t = getTotals();
-  renderCalorieGauge(t.calories);
-  renderMacroGauges(t);
-  renderSodium(t.sodium);
-  renderWater();
-  renderMeals();
-  updateModeBadge();
-}
-
-function updateModeBadge() {
-  const badge = $('#mode-badge');
-  const mode = settings?.mode || 'recomp';
-  const totals = getTotals();
-  const high = n(settings?.cal_target_high) || 2000;
+  document.getElementById('date-display').textContent = formatDate(currentDate);
+  const modeCfg = getTargets();
+  const badge = document.getElementById('mode-badge');
+  badge.textContent = modeCfg.label || MODES[settings.mode]?.label || 'Recomp';
   badge.className = 'mode-badge';
-  if (totals.calories > high) {
-    badge.textContent = mode.charAt(0).toUpperCase() + mode.slice(1) + ' Mode · Over Range';
-    badge.classList.add('over');
-  } else {
-    badge.textContent = mode.charAt(0).toUpperCase() + mode.slice(1) + ' Mode';
-    if (mode === 'cutting') badge.classList.add('cutting');
-  }
-}
+  
+  const totals = computeTotals();
 
-function renderCalorieGauge(eaten) {
-  const low = n(settings?.cal_target_low) || 1800;
-  const high = n(settings?.cal_target_high) || 2000;
-  const max = high * 1.3;
-  const pct = Math.min(eaten / max, 1);
+  // Over range check
+  if (totals.cal > getTargets().cal[1]) badge.classList.add('over');
 
-  const arc = $('#cal-arc');
-  // The background arc length (for the half-circle from M 20 110 A 80 80 0 0 1 180 110)
-  // Arc length = r * theta. r=80, theta=PI => arcLen = 80*PI ≈ 251.3
-  const arcLen = 80 * Math.PI;
-  const fillLen = arcLen * pct;
-  arc.setAttribute('stroke-dasharray', `${fillLen} ${arcLen * 2}`);
+  // Gauges
+  renderGauges(totals);
 
-  // Color
-  let color = '#10b981';
-  if (eaten > high) color = '#ef4444';
-  else if (eaten >= low && eaten <= high) color = '#10b981';
-  else if (eaten > low * 0.85) color = '#f59e0b';
-  arc.setAttribute('stroke', color);
+  // Sodium
+  const sodiumPct = Math.min((totals.sodium / settings.sodiumLimit) * 100, 100);
+  const sodiumBar = document.getElementById('sodium-bar');
+  sodiumBar.style.width = sodiumPct + '%';
+  sodiumBar.className = 'sodium-bar-fill';
+  if (totals.sodium > settings.sodiumLimit) sodiumBar.classList.add('danger');
+  else if (totals.sodium > settings.sodiumLimit * 0.8) sodiumBar.classList.add('warn');
+  document.getElementById('sodium-value').textContent = `${Math.round(totals.sodium)} / ${settings.sodiumLimit}mg`;
+  document.getElementById('sodium-warning').style.display = totals.sodium > settings.sodiumLimit ? 'flex' : 'none';
 
-  // Range labels positioned on the arc
-  // The arc goes from angle PI (left) to 0 (right), center at (100, 110), r=80
-  function posOnArc(val) {
-    const p = Math.min(val / max, 1);
-    const angle = Math.PI * (1 - p); // PI=left, 0=right
-    return { x: 100 + 88 * Math.cos(angle), y: 110 + 88 * Math.sin(angle) };
-  }
-  const lp = posOnArc(low);
-  const hp = posOnArc(high);
-  const lowLabel = $('#cal-low-label');
-  const highLabel = $('#cal-high-label');
-  lowLabel.setAttribute('x', lp.x - 8);
-  lowLabel.setAttribute('y', lp.y - 4);
-  lowLabel.textContent = low;
-  highLabel.setAttribute('x', hp.x - 8);
-  highLabel.setAttribute('y', hp.y - 4);
-  highLabel.textContent = high;
+  // Water
+  renderWater();
 
-  // Center text
-  $('#cal-eaten').textContent = Math.round(eaten);
-  const label = $('.calorie-label');
-  label.textContent = 'eaten';
-  label.style.color = color;
-}
-
-function renderMacroGauges(t) {
-  const gauges = [
-    { id: 'gauge-protein', value: t.protein, target: n(settings?.protein_target_high) || 134, label: 'Prot' },
-    { id: 'gauge-carbs', value: t.carbs, target: n(settings?.carb_target) || 225, label: 'Carb' },
-    { id: 'gauge-fat', value: t.fat, target: n(settings?.fat_target) || 60, label: 'Fat' },
-    { id: 'gauge-fiber', value: t.fiber, target: n(settings?.fiber_target) || 28, label: 'Fib' }
-  ];
-  // Mini arc: M 6 36 A 24 24 0 0 1 54 36, r=24, theta=PI => arcLen=24*PI
-  const arcLen = 24 * Math.PI;
-  gauges.forEach(g => {
-    const el = $(`#${g.id}`);
-    const pct = Math.min(g.value / (g.target * 1.3), 1);
-    const arc = $('.mini-arc', el);
-    arc.setAttribute('stroke-dasharray', `${arcLen * pct} ${arcLen * 2}`);
-
-    let color = '#10b981';
-    if (g.value > g.target * 1.1) color = '#f59e0b';
-    if (g.value > g.target * 1.3) color = '#ef4444';
-    arc.setAttribute('stroke', color);
-
-    $('.mini-value', el).textContent = Math.round(g.value) + 'g';
-    $('.mini-label', el).textContent = g.label;
-    $('.mini-target', el).textContent = `${Math.round(g.value)} / ${Math.round(g.target)}g`;
-  });
-}
-
-function renderSodium(sodium) {
-  const limit = n(settings?.sodium_limit) || 2000;
-  const pct = Math.min(sodium / (limit * 1.2), 1) * 100;
-  const bar = $('#sodium-bar');
-  bar.style.width = pct + '%';
-  bar.className = 'sodium-bar-fill';
-  if (sodium > limit) bar.classList.add('danger');
-  else if (sodium > limit * 0.8) bar.classList.add('warn');
-
-  $('#sodium-value').textContent = `${Math.round(sodium)} / ${limit}mg`;
-  $('#sodium-warning').style.display = sodium > limit ? 'flex' : 'none';
+  // Meals
+  renderMeals();
 }
 
 function renderWater() {
-  const container = $('#water-cups');
+  const container = document.getElementById('water-cups');
   container.innerHTML = '';
-  const total = Math.max(waterCups, 8);
-  for (let i = 0; i < total; i++) {
+  for (let i = 0; i < 8; i++) {
     const cup = document.createElement('div');
     cup.className = 'water-cup' + (i < waterCups ? ' filled' : '');
     cup.textContent = '💧';
+    cup.addEventListener('click', async () => {
+      waterCups = (i < waterCups) ? i : i + 1;
+      await saveWater(currentDate, waterCups);
+      renderWater();
+    });
     container.appendChild(cup);
   }
-  $('#water-count').textContent = waterCups + ' cup' + (waterCups !== 1 ? 's' : '');
+  document.getElementById('water-count').textContent = `${waterCups} cups`;
 }
 
-$('#water-add').addEventListener('click', async () => {
-  waterCups++;
-  await dbSaveWater(fmtDate(currentDate), waterCups);
-  renderWater();
-});
-
 function renderMeals() {
-  const container = $('#meals-section');
+  const container = document.getElementById('meals-section');
   container.innerHTML = '';
-  MEALS.forEach(meal => {
-    const items = log.filter(l => l.meal === meal);
-    const mealCal = items.reduce((s, i) => s + n(i.calories) * n(i.servings || 1), 0);
-    const mealProt = items.reduce((s, i) => s + n(i.protein) * n(i.servings || 1), 0);
 
-    // Look up tags from food library for each item
+  for (const meal of MEALS) {
+    const items = mealEntries(meal.id);
+    const mt = mealTotal(meal.id);
+
     const card = document.createElement('div');
     card.className = 'meal-card';
-    card.innerHTML = `
-      <div class="meal-header">
-        <div class="meal-header-left">
-          <span class="meal-name">${MEAL_LABELS[meal]}</span>
-          ${items.length ? `<span class="meal-total">${Math.round(mealCal)} cal · P: ${Math.round(mealProt)}g</span>` : ''}
-        </div>
-        <button class="meal-add-btn" data-meal="${meal}" aria-label="Add food to ${MEAL_LABELS[meal]}">+</button>
-      </div>
-      <div class="meal-items">
-        ${items.length === 0 ? `<div class="meal-empty">Empty. Tap + to add.</div>` :
-          items.map(item => {
-            const sv = n(item.servings || 1);
-            // Find tags from library food
-            const libFood = item.food_id ? foods.find(f => f.id === item.food_id) : null;
-            const tags = item.tags || (libFood ? libFood.tags : []) || [];
-            const tagHtml = tags.filter(t=>t).map(t => `<span class="food-tag ${t}">${t}</span>`).join('');
-            return `<div class="meal-item">
-              <div class="meal-item-info">
-                <div class="meal-item-name">${tagHtml}${item.name}${sv !== 1 ? ` (×${sv})` : ''}</div>
-                <div class="meal-item-macros">
-                  <span>${Math.round(n(item.calories)*sv)} cal</span>
-                  <span>P: ${Math.round(n(item.protein)*sv)}g</span>
-                  <span>C: ${Math.round(n(item.carbs)*sv)}g</span>
-                  <span>F: ${Math.round(n(item.fat)*sv)}g</span>
-                  <span>Fib: ${Math.round(n(item.fiber)*sv)}g</span>
-                </div>
-              </div>
-              <button class="meal-item-remove" data-id="${item.id}" aria-label="Remove">×</button>
-            </div>`;
-          }).join('')
-        }
-      </div>
-    `;
-    container.appendChild(card);
-  });
 
-  // Add food buttons
-  $$('.meal-add-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
+    // Header
+    const header = document.createElement('div');
+    header.className = 'meal-header';
+    header.innerHTML = `
+      <div class="meal-header-left">
+        <span class="meal-name">${meal.name}</span>
+        <span class="meal-total">${items.length ? Math.round(mt.cal) + ' cal · P: ' + Math.round(mt.protein) + 'g' : ''}</span>
+      </div>
+      <button class="meal-add-btn" data-meal="${meal.id}">+</button>
+    `;
+    card.appendChild(header);
+
+    // Items
+    const itemsDiv = document.createElement('div');
+    itemsDiv.className = 'meal-items';
+
+    if (items.length === 0) {
+      itemsDiv.innerHTML = '<div class="meal-empty">Tap + to add food</div>';
+    } else {
+      items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'meal-item';
+        const hiSodium = (item.sodium || 0) > 500;
+        row.innerHTML = `
+          <div class="meal-item-info">
+            <div class="meal-item-name">${item.name}</div>
+            <div class="meal-item-macros">
+              <span>${Math.round(item.calories)} cal</span>
+              <span>P:${r1(item.protein)}g</span>
+              <span>C:${r1(item.carbs)}g</span>
+              <span>F:${r1(item.fat)}g</span>
+              <span>Fib:${r1(item.fiber)}g</span>
+              <span style="${hiSodium?'color:#f59e0b':''}">Na:${Math.round(item.sodium||0)}mg</span>
+            </div>
+          </div>
+          <button class="meal-item-remove" data-id="${item.id}">&times;</button>
+        `;
+        itemsDiv.appendChild(row);
+      });
+    }
+    card.appendChild(itemsDiv);
+
+    // Toggle collapse
+    header.addEventListener('click', (e) => {
+      if (e.target.closest('.meal-add-btn')) return;
+      itemsDiv.style.display = itemsDiv.style.display === 'none' ? 'block' : 'none';
+    });
+
+    container.appendChild(card);
+  }
+
+  // Add food button handlers
+  container.querySelectorAll('.meal-add-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
       e.stopPropagation();
       currentMeal = btn.dataset.meal;
       openAddModal();
     });
   });
 
-  // Remove buttons
-  $$('.meal-item-remove').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      await dbRemoveLog(btn.dataset.id);
-      renderHome();
-      toast('Removed');
-    });
+  // Remove handlers
+  container.querySelectorAll('.meal-item-remove').forEach(btn => {
+    btn.addEventListener('click', () => removeLogEntry(btn.dataset.id));
   });
 }
 
-// ─── Add Food Modal ──────────────────────────────────────────
-function openAddModal() {
-  $('#add-food-modal').classList.add('active');
-  $('#modal-title').textContent = `Add to ${MEAL_LABELS[currentMeal]}`;
-  renderModalLibrary();
-  $$('.modal-tab').forEach(t => t.classList.remove('active'));
-  $$('.tab-content').forEach(t => t.classList.remove('active'));
-  $('.modal-tab[data-tab="library"]').classList.add('active');
-  $('#tab-library').classList.add('active');
-  $('#servings-row').style.display = 'none';
-  selectedFood = null;
-  servingsCount = 1;
-  $('#modal-lib-search').value = '';
-}
-
-$('#modal-close').addEventListener('click', () => $('#add-food-modal').classList.remove('active'));
-$('#add-food-modal').addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.classList.remove('active'); });
-
-$$('.modal-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    $$('.modal-tab').forEach(t => t.classList.remove('active'));
-    $$('.tab-content').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    $(`#tab-${tab.dataset.tab}`).classList.add('active');
-    $('#servings-row').style.display = 'none';
-    selectedFood = null;
-  });
+// Date nav
+document.getElementById('prev-day').addEventListener('click', async () => {
+  currentDate = shiftDate(currentDate, -1);
+  await loadDayLog(currentDate);
+  await loadWater(currentDate);
+  renderHome();
+});
+document.getElementById('next-day').addEventListener('click', async () => {
+  currentDate = shiftDate(currentDate, 1);
+  await loadDayLog(currentDate);
+  await loadWater(currentDate);
+  renderHome();
 });
 
-function renderModalLibrary(filter = '') {
-  const list = $('#modal-lib-list');
-  const filtered = foods.filter(f => !filter || f.name.toLowerCase().includes(filter.toLowerCase()));
-  list.innerHTML = filtered.length === 0 ? '<p style="color:#555;font-size:.8rem;text-align:center;padding:1rem">No foods found</p>' :
-    filtered.map(f => `
-      <div class="modal-food-item" data-food-id="${f.id}">
-        <div class="modal-food-name">${f.name}</div>
-        <div class="modal-food-serving">${f.serving_label || '1 serving'}</div>
-        <div class="modal-food-macros">
-          <span>${Math.round(n(f.calories))} cal</span>
-          <span>P: ${n(f.protein)}g</span>
-          <span>C: ${n(f.carbs)}g</span>
-          <span>F: ${n(f.fat)}g</span>
-          <span>Fib: ${n(f.fiber)}g</span>
-        </div>
-      </div>
-    `).join('');
-
-  $$('.modal-food-item', list).forEach(item => {
-    item.addEventListener('click', () => {
-      const food = foods.find(f => f.id === item.dataset.foodId);
-      if (food) selectFoodToAdd(food);
-    });
-  });
-}
-
-$('#modal-lib-search').addEventListener('input', e => renderModalLibrary(e.target.value));
-
-function selectFoodToAdd(food) {
-  selectedFood = food;
-  servingsCount = 1;
-  $('#serv-count').textContent = '1';
-  $('#servings-row').style.display = 'flex';
-  // Highlight selected
-  $$('.modal-food-item').forEach(item => {
-    item.style.borderColor = item.dataset.foodId === food.id || item.dataset.usdaIdx != null ? '#10b981' : '#2a2a2a';
-  });
-}
-
-$('#serv-minus').addEventListener('click', () => {
-  if (servingsCount > 0.5) {
-    servingsCount = Math.round((servingsCount - 0.5) * 10) / 10;
-    $('#serv-count').textContent = servingsCount;
+// Water add button
+document.getElementById('water-add').addEventListener('click', async () => {
+  if (waterCups < 8) {
+    waterCups++;
+    await saveWater(currentDate, waterCups);
+    renderWater();
   }
 });
-$('#serv-plus').addEventListener('click', () => {
-  servingsCount = Math.round((servingsCount + 0.5) * 10) / 10;
-  $('#serv-count').textContent = servingsCount;
-});
 
-$('#serv-confirm').addEventListener('click', async () => {
-  if (!selectedFood) return;
-  await dbAddLog({
-    meal: currentMeal,
-    food_id: selectedFood.id,
-    name: selectedFood.name,
-    servings: servingsCount,
-    calories: n(selectedFood.calories),
-    protein: n(selectedFood.protein),
-    carbs: n(selectedFood.carbs),
-    fat: n(selectedFood.fat),
-    fiber: n(selectedFood.fiber),
-    sodium: n(selectedFood.sodium),
-    tags: selectedFood.tags || []
+// ══════════════════════════════════
+// ADD FOOD MODAL
+// ══════════════════════════════════
+const addModal = document.getElementById('add-food-modal');
+
+function openAddModal() {
+  addModal.classList.add('active');
+  renderModalLibrary();
+  // Reset tabs
+  document.querySelectorAll('#add-food-modal .modal-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('#add-food-modal .modal-tab[data-tab="library"]').classList.add('active');
+  document.querySelectorAll('#add-food-modal .tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-library').classList.add('active');
+  document.getElementById('modal-lib-search').value = '';
+  document.getElementById('modal-usda-search').value = '';
+  document.getElementById('modal-usda-list').innerHTML = '';
+  document.getElementById('servings-row').style.display = 'none';
+  servingFood = null;
+  servingCount = 1;
+}
+
+function closeAddModal() { addModal.classList.remove('active'); }
+document.getElementById('modal-close').addEventListener('click', closeAddModal);
+addModal.addEventListener('click', (e) => { if (e.target === addModal) closeAddModal(); });
+
+// Modal tabs
+document.querySelectorAll('#add-food-modal .modal-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('#add-food-modal .modal-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('#add-food-modal .tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    document.getElementById('servings-row').style.display = 'none';
   });
-  $('#add-food-modal').classList.remove('active');
-  renderHome();
-  toast(`Added ${selectedFood.name}`);
 });
 
-// USDA Search
-$('#usda-search-btn').addEventListener('click', searchUSDA);
-$('#modal-usda-search').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); searchUSDA(); } });
+function renderModalLibrary(filter) {
+  const q = (filter || document.getElementById('modal-lib-search').value || '').toLowerCase();
+  const list = document.getElementById('modal-lib-list');
+  const filtered = library.filter(f => !q || f.name.toLowerCase().includes(q));
+  list.innerHTML = '';
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="meal-empty">No foods found</div>';
+    return;
+  }
+  filtered.forEach(f => {
+    const item = document.createElement('div');
+    item.className = 'modal-food-item';
+    item.innerHTML = `
+      <div class="modal-food-name">${f.name}</div>
+      <div class="modal-food-serving">${f.serving_label || '1 serving'}</div>
+      <div class="modal-food-macros">
+        <span>${f.calories} cal</span>
+        <span>P:${r1(f.protein)}g</span>
+        <span>C:${r1(f.carbs)}g</span>
+        <span>F:${r1(f.fat)}g</span>
+      </div>
+    `;
+    item.addEventListener('click', () => showServings(f));
+    list.appendChild(item);
+  });
+}
 
-async function searchUSDA() {
-  const q = $('#modal-usda-search').value.trim();
+document.getElementById('modal-lib-search').addEventListener('input', (e) => renderModalLibrary(e.target.value));
+
+// USDA search
+document.getElementById('usda-search-btn').addEventListener('click', async () => {
+  const q = document.getElementById('modal-usda-search').value.trim();
   if (!q) return;
-  const list = $('#modal-usda-list');
-  list.innerHTML = '<div style="text-align:center;padding:1rem"><div class="loading-spinner"></div></div>';
-
+  const list = document.getElementById('modal-usda-list');
+  list.innerHTML = '<div class="loading-spinner"></div>';
   try {
-    const res = await fetch(`https://api.nal.usda.gov/fdc/v1/foods/search?api_key=DEMO_KEY&query=${encodeURIComponent(q)}&pageSize=15&dataType=Survey%20(FNDDS),Foundation,SR%20Legacy`);
-    const data = await res.json();
-    const results = (data.foods || []).map(f => {
-      const get = (name) => {
-        const nut = (f.foodNutrients || []).find(n => n.nutrientName === name || (n.nutrientName && n.nutrientName.includes(name)));
-        return nut ? Number(nut.value) || 0 : 0;
-      };
-      return {
+    const resp = await fetch(`https://api.nal.usda.gov/fdc/v1/foods/search?api_key=DEMO_KEY&query=${encodeURIComponent(q)}&pageSize=10&dataType=Survey%20(FNDDS),SR%20Legacy,Foundation`);
+    const data = await resp.json();
+    list.innerHTML = '';
+    if (!data.foods || data.foods.length === 0) {
+      list.innerHTML = '<div class="meal-empty">No results</div>';
+      return;
+    }
+    data.foods.forEach(f => {
+      const nuts = {};
+      (f.foodNutrients || []).forEach(n => { nuts[n.nutrientName] = n.value; });
+      const food = {
         name: f.description,
-        fdcId: f.fdcId,
-        calories: get('Energy'),
-        protein: get('Protein'),
-        carbs: get('Carbohydrate'),
-        fat: get('Total lipid'),
-        fiber: get('Fiber'),
-        sodium: get('Sodium')
+        calories: Math.round(nuts['Energy'] || 0),
+        protein: r1(nuts['Protein'] || 0),
+        carbs: r1(nuts['Carbohydrate, by difference'] || 0),
+        fat: r1(nuts['Total lipid (fat)'] || 0),
+        fiber: r1(nuts['Fiber, total dietary'] || 0),
+        sodium: Math.round(nuts['Sodium, Na'] || 0),
+        serving_label: '100g',
+        category: currentMeal || 'ingredient',
+        tags: [],
+        usda_fdc_id: String(f.fdcId),
       };
-    });
-    list.innerHTML = results.length === 0 ? '<p style="color:#555;font-size:.8rem;text-align:center;padding:1rem">No results</p>' :
-      results.map((r, i) => `
-        <div class="modal-food-item" data-usda-idx="${i}">
-          <div class="modal-food-name">${r.name}</div>
-          <div class="modal-food-serving">per 100g</div>
-          <div class="modal-food-macros">
-            <span>${Math.round(r.calories)} cal</span>
-            <span>P: ${r.protein}g</span>
-            <span>C: ${r.carbs}g</span>
-            <span>F: ${r.fat}g</span>
-          </div>
+      const item = document.createElement('div');
+      item.className = 'modal-food-item';
+      item.innerHTML = `
+        <div class="modal-food-name">${food.name}</div>
+        <div class="modal-food-serving">per 100g</div>
+        <div class="modal-food-macros">
+          <span>${food.calories} cal</span>
+          <span>P:${food.protein}g</span>
+          <span>C:${food.carbs}g</span>
+          <span>F:${food.fat}g</span>
+          <span>Na:${food.sodium}mg</span>
         </div>
-      `).join('');
-
-    // Store results for click handler
-    list._results = results;
-    $$('.modal-food-item', list).forEach(item => {
-      item.addEventListener('click', async () => {
-        const idx = parseInt(item.dataset.usdaIdx);
-        const r = list._results[idx];
-        const food = await dbAddFood({
-          name: r.name, category: currentMeal === 'coffee' ? 'coffee' : currentMeal,
-          serving_label: '100g', calories: r.calories, protein: r.protein,
-          carbs: r.carbs, fat: r.fat, fiber: r.fiber, sodium: r.sodium,
-          tags: [], is_recipe: false, usda_fdc_id: String(r.fdcId)
-        });
-        selectFoodToAdd(food);
-        toast('Saved to library');
-      });
+      `;
+      item.addEventListener('click', () => showServings(food));
+      list.appendChild(item);
     });
   } catch (err) {
-    list.innerHTML = '<p style="color:#ef4444;font-size:.8rem;text-align:center;padding:1rem">Search failed. Try again.</p>';
+    list.innerHTML = '<div class="meal-empty">Search failed — try again</div>';
   }
+});
+
+// Enter key for USDA search
+document.getElementById('modal-usda-search').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); document.getElementById('usda-search-btn').click(); }
+});
+
+// Servings selector
+function showServings(food) {
+  servingFood = food;
+  servingCount = 1;
+  const row = document.getElementById('servings-row');
+  row.style.display = 'flex';
+  document.getElementById('serv-count').textContent = '1';
 }
 
-// Quick Add
-$('#quick-add-form').addEventListener('submit', async e => {
-  e.preventDefault();
-  const entry = {
-    meal: currentMeal,
-    name: $('#qa-name').value.trim(),
-    servings: 1,
-    calories: n($('#qa-cal').value),
-    protein: n($('#qa-protein').value),
-    carbs: n($('#qa-carbs').value),
-    fat: n($('#qa-fat').value),
-    fiber: n($('#qa-fiber').value),
-    sodium: n($('#qa-sodium').value),
-    tags: []
-  };
-  if ($('#qa-save-lib').checked) {
-    await dbAddFood({
-      name: entry.name, category: $('#qa-category').value,
-      serving_label: $('#qa-serving').value || '1 serving',
-      calories: entry.calories, protein: entry.protein,
-      carbs: entry.carbs, fat: entry.fat,
-      fiber: entry.fiber, sodium: entry.sodium,
-      tags: [], is_recipe: false
-    });
+document.getElementById('serv-minus').addEventListener('click', () => {
+  if (servingCount > 0.5) { servingCount = Math.round((servingCount - 0.5) * 10) / 10; }
+  document.getElementById('serv-count').textContent = servingCount;
+});
+document.getElementById('serv-plus').addEventListener('click', () => {
+  servingCount = Math.round((servingCount + 0.5) * 10) / 10;
+  document.getElementById('serv-count').textContent = servingCount;
+});
+document.getElementById('serv-confirm').addEventListener('click', async () => {
+  if (!servingFood || !currentMeal) return;
+  // If from USDA (no id), save to library first
+  if (!servingFood.id && servingFood.usda_fdc_id) {
+    const saved = await addFoodToLibrary(servingFood);
+    if (saved) servingFood = saved;
   }
-  await dbAddLog(entry);
-  $('#add-food-modal').classList.remove('active');
+  await addLogEntry(currentMeal, servingFood, servingCount);
+  closeAddModal();
+});
+
+// Quick add form
+document.getElementById('quick-add-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const food = {
+    name: document.getElementById('qa-name').value.trim(),
+    calories: parseFloat(document.getElementById('qa-cal').value) || 0,
+    protein: parseFloat(document.getElementById('qa-protein').value) || 0,
+    carbs: parseFloat(document.getElementById('qa-carbs').value) || 0,
+    fat: parseFloat(document.getElementById('qa-fat').value) || 0,
+    fiber: parseFloat(document.getElementById('qa-fiber').value) || 0,
+    sodium: parseFloat(document.getElementById('qa-sodium').value) || 0,
+    category: document.getElementById('qa-category').value,
+    serving_label: document.getElementById('qa-serving').value || '1 serving',
+    tags: [],
+  };
+  if (!food.name) return;
+
+  const saveToLib = document.getElementById('qa-save-lib').checked;
+  if (saveToLib) {
+    const saved = await addFoodToLibrary(food);
+    if (saved) food.id = saved.id;
+  }
+
+  await addLogEntry(currentMeal, food, 1);
+  closeAddModal();
   e.target.reset();
-  renderHome();
-  toast(`Added ${entry.name}`);
 });
 
-// ─── Stats ───────────────────────────────────────────────────
-$$('.stats-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    $$('.stats-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    statsRange = btn.dataset.range;
-    renderStats();
-  });
+// ══════════════════════════════════
+// EDIT FOOD MODAL
+// ══════════════════════════════════
+const editModal = document.getElementById('edit-food-modal');
+
+function openEditModal(food) {
+  editModal.classList.add('active');
+  document.getElementById('ef-id').value = food.id;
+  document.getElementById('ef-name').value = food.name;
+  document.getElementById('ef-cal').value = food.calories;
+  document.getElementById('ef-protein').value = food.protein;
+  document.getElementById('ef-carbs').value = food.carbs;
+  document.getElementById('ef-fat').value = food.fat;
+  document.getElementById('ef-fiber').value = food.fiber || 0;
+  document.getElementById('ef-sodium').value = food.sodium || 0;
+  document.getElementById('ef-category').value = food.category || 'ingredient';
+  document.getElementById('ef-serving').value = food.serving_label || '1 serving';
+  document.getElementById('ef-tags').value = (food.tags || []).join(', ');
+}
+
+document.getElementById('edit-modal-close').addEventListener('click', () => editModal.classList.remove('active'));
+editModal.addEventListener('click', (e) => { if (e.target === editModal) editModal.classList.remove('active'); });
+
+document.getElementById('edit-food-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = document.getElementById('ef-id').value;
+  const updates = {
+    name: document.getElementById('ef-name').value.trim(),
+    calories: parseFloat(document.getElementById('ef-cal').value) || 0,
+    protein: parseFloat(document.getElementById('ef-protein').value) || 0,
+    carbs: parseFloat(document.getElementById('ef-carbs').value) || 0,
+    fat: parseFloat(document.getElementById('ef-fat').value) || 0,
+    fiber: parseFloat(document.getElementById('ef-fiber').value) || 0,
+    sodium: parseFloat(document.getElementById('ef-sodium').value) || 0,
+    category: document.getElementById('ef-category').value,
+    serving_label: document.getElementById('ef-serving').value || '1 serving',
+    tags: document.getElementById('ef-tags').value.split(',').map(t => t.trim()).filter(Boolean),
+  };
+  await updateFoodInLibrary(id, updates);
+  editModal.classList.remove('active');
+  renderLibrary();
+  toast('Food updated');
 });
 
+// ══════════════════════════════════
+// FORGOT PASSWORD MODAL
+// ══════════════════════════════════
+document.getElementById('auth-forgot').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('forgot-modal').classList.add('active');
+});
+document.getElementById('forgot-close').addEventListener('click', () => document.getElementById('forgot-modal').classList.remove('active'));
+document.getElementById('forgot-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('forgot-email').value;
+  const { error } = await sb.auth.resetPasswordForEmail(email);
+  document.getElementById('forgot-msg').textContent = error ? error.message : 'Reset link sent — check your email';
+});
+
+// ══════════════════════════════════
+// STATS PAGE
+// ══════════════════════════════════
 async function renderStats() {
-  const days = statsRange === 'week' ? 7 : 30;
-  const end = new Date();
-  const start = new Date();
-  start.setDate(start.getDate() - days + 1);
-  const entries = await dbGetLogRange(fmtDate(start), fmtDate(end));
+  const content = document.getElementById('stats-content');
+  content.innerHTML = '<div style="text-align:center;padding:2rem;"><div class="loading-spinner"></div></div>';
 
+  const range = statsPeriod === 'week' ? 7 : 30;
+  const dates = [];
+  for (let i = 0; i < range; i++) {
+    dates.push(shiftDate(todayStr(), -i));
+  }
+
+  // Load all log entries for date range
+  const { data: logs } = await sb.from('macro_log')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .gte('date', dates[dates.length - 1])
+    .lte('date', dates[0])
+    .order('date');
+
+  const entries = logs || [];
+  const targets = getTargets();
+
+  // Group by date
   const byDate = {};
-  entries.forEach(e => { if (!byDate[e.date]) byDate[e.date] = []; byDate[e.date].push(e); });
-  const daysWithData = Object.keys(byDate).length || 1;
+  entries.forEach(e => {
+    if (!byDate[e.date]) byDate[e.date] = [];
+    byDate[e.date].push(e);
+  });
 
-  const dailyTotals = Object.entries(byDate).map(([date, items]) => ({
-    date,
-    calories: items.reduce((s, i) => s + n(i.calories) * n(i.servings || 1), 0),
-    protein: items.reduce((s, i) => s + n(i.protein) * n(i.servings || 1), 0),
-    carbs: items.reduce((s, i) => s + n(i.carbs) * n(i.servings || 1), 0),
-    fat: items.reduce((s, i) => s + n(i.fat) * n(i.servings || 1), 0),
-    fiber: items.reduce((s, i) => s + n(i.fiber) * n(i.servings || 1), 0),
-    sodium: items.reduce((s, i) => s + n(i.sodium) * n(i.servings || 1), 0)
-  }));
+  const daysTracked = Object.keys(byDate).length;
 
-  const avg = (field) => dailyTotals.reduce((s, d) => s + d[field], 0) / daysWithData;
-  const avgCal = avg('calories'), avgProt = avg('protein'), avgCarbs = avg('carbs');
-  const avgFat = avg('fat'), avgFiber = avg('fiber'), avgSodium = avg('sodium');
+  // Averages
+  const avg = { cal: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, sodium: 0 };
+  let proteinHitDays = 0;
+  let sodiumGoodDays = 0;
 
-  const protLow = n(settings?.protein_target_low) || 94;
-  const protHigh = n(settings?.protein_target_high) || 134;
-  const sodiumLimit = n(settings?.sodium_limit) || 2000;
-  const calHigh = n(settings?.cal_target_high) || 2000;
+  Object.values(byDate).forEach(dayEntries => {
+    const dt = { cal: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, sodium: 0 };
+    dayEntries.forEach(e => {
+      dt.cal += e.calories || 0;
+      dt.protein += e.protein || 0;
+      dt.carbs += e.carbs || 0;
+      dt.fat += e.fat || 0;
+      dt.fiber += e.fiber || 0;
+      dt.sodium += e.sodium || 0;
+    });
+    avg.cal += dt.cal;
+    avg.protein += dt.protein;
+    avg.carbs += dt.carbs;
+    avg.fat += dt.fat;
+    avg.fiber += dt.fiber;
+    avg.sodium += dt.sodium;
+    if (dt.protein >= targets.protein[0] && dt.protein <= targets.protein[1]) proteinHitDays++;
+    if (dt.sodium <= settings.sodiumLimit) sodiumGoodDays++;
+  });
 
-  const protHitDays = dailyTotals.filter(d => d.protein >= protLow && d.protein <= protHigh).length;
-  const protHitRate = Math.round(protHitDays / daysWithData * 100);
-  const sodiumOkDays = dailyTotals.filter(d => d.sodium <= sodiumLimit).length;
-  const sodiumRate = Math.round(sodiumOkDays / daysWithData * 100);
+  if (daysTracked > 0) {
+    avg.cal = Math.round(avg.cal / daysTracked);
+    avg.protein = Math.round(avg.protein / daysTracked);
+    avg.carbs = Math.round(avg.carbs / daysTracked);
+    avg.fat = Math.round(avg.fat / daysTracked);
+    avg.fiber = Math.round(avg.fiber / daysTracked);
+    avg.sodium = Math.round(avg.sodium / daysTracked);
+  }
 
+  // Top foods
   const foodCounts = {};
   entries.forEach(e => { foodCounts[e.name] = (foodCounts[e.name] || 0) + 1; });
   const topFoods = Object.entries(foodCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
-  $('#stats-content').innerHTML = `
+  const startDate = dateObj(dates[dates.length-1]).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const endDate = dateObj(dates[0]).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const proteinPct = daysTracked ? Math.round(proteinHitDays / daysTracked * 100) : 0;
+  const sodiumPct = daysTracked ? Math.round(sodiumGoodDays / daysTracked * 100) : 0;
+
+  content.innerHTML = `
     <div class="stat-card">
-      <h3>Daily Averages (${daysWithData} day${daysWithData !== 1 ? 's' : ''} with data)</h3>
-      <div class="stat-row"><span class="stat-label">Calories</span><span class="stat-value">${Math.round(avgCal)}</span></div>
-      <div class="stat-bar-wrap"><div class="stat-bar-bg"><div class="stat-bar-fill green" style="width:${Math.min(avgCal/calHigh*100,100)}%"></div></div></div>
-      <div class="stat-row"><span class="stat-label">Protein</span><span class="stat-value">${Math.round(avgProt)}g</span></div>
-      <div class="stat-bar-wrap"><div class="stat-bar-bg"><div class="stat-bar-fill green" style="width:${Math.min(avgProt/protHigh*100,100)}%"></div></div></div>
-      <div class="stat-row"><span class="stat-label">Carbs</span><span class="stat-value">${Math.round(avgCarbs)}g</span></div>
-      <div class="stat-row"><span class="stat-label">Fat</span><span class="stat-value">${Math.round(avgFat)}g</span></div>
-      <div class="stat-row"><span class="stat-label">Fiber</span><span class="stat-value">${Math.round(avgFiber)}g</span></div>
-      <div class="stat-row"><span class="stat-label">Sodium</span><span class="stat-value">${Math.round(avgSodium)}mg</span></div>
+      <h3>${startDate} – ${endDate}</h3>
+      <div class="stat-row"><span class="stat-label">${daysTracked} days tracked</span></div>
+      <div class="stat-row"><span class="stat-label">Avg Calories</span><span class="stat-value">${avg.cal}</span></div>
+      <div class="stat-row"><span class="stat-label">Avg Protein</span><span class="stat-value">${avg.protein}g</span></div>
+      <div class="stat-row"><span class="stat-label">Avg Carbs</span><span class="stat-value">${avg.carbs}g</span></div>
+      <div class="stat-row"><span class="stat-label">Avg Fat</span><span class="stat-value">${avg.fat}g</span></div>
+      <div class="stat-row"><span class="stat-label">Avg Fiber</span><span class="stat-value">${avg.fiber}g</span></div>
+      <div class="stat-row"><span class="stat-label">Avg Sodium</span><span class="stat-value">${avg.sodium}mg</span></div>
     </div>
     <div class="stat-card">
-      <h3>Target Compliance</h3>
-      <div class="stat-row"><span class="stat-label">Protein in range (${protLow}–${protHigh}g)</span><span class="stat-value">${protHitRate}%</span></div>
-      <div class="stat-bar-wrap"><div class="stat-bar-bg"><div class="stat-bar-fill ${protHitRate >= 70 ? 'green' : protHitRate >= 40 ? 'yellow' : 'red'}" style="width:${protHitRate}%"></div></div></div>
-      <div class="stat-pct">${protHitDays} of ${daysWithData} days</div>
-      <div class="stat-row" style="margin-top:.5rem"><span class="stat-label">Sodium under ${sodiumLimit}mg</span><span class="stat-value">${sodiumRate}%</span></div>
-      <div class="stat-bar-wrap"><div class="stat-bar-bg"><div class="stat-bar-fill ${sodiumRate >= 70 ? 'green' : sodiumRate >= 40 ? 'yellow' : 'red'}" style="width:${sodiumRate}%"></div></div></div>
-      <div class="stat-pct">${sodiumOkDays} of ${daysWithData} days</div>
+      <h3>Targets</h3>
+      <div class="stat-bar-wrap">
+        <div class="stat-row"><span class="stat-label">Protein in range (${targets.protein[0]}-${targets.protein[1]}g)</span><span class="stat-value">${proteinPct}%</span></div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill ${proteinPct >= 70 ? 'green' : proteinPct >= 40 ? 'yellow' : 'red'}" style="width:${proteinPct}%"></div></div>
+      </div>
+      <div class="stat-bar-wrap" style="margin-top:.75rem">
+        <div class="stat-row"><span class="stat-label">Sodium under ${settings.sodiumLimit}mg</span><span class="stat-value">${sodiumPct}%</span></div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill ${sodiumPct >= 70 ? 'green' : sodiumPct >= 40 ? 'yellow' : 'red'}" style="width:${sodiumPct}%"></div></div>
+      </div>
     </div>
     <div class="stat-card">
-      <h3>Most Logged Foods</h3>
+      <h3>Top Foods</h3>
       <div class="top-foods-list">
-        ${topFoods.length === 0 ? '<p style="color:#555;font-size:.8rem">No data yet</p>' :
-          topFoods.map(([name, count]) => `<div class="top-food-item"><span class="top-food-name">${name}</span><span class="top-food-count">×${count}</span></div>`).join('')}
+        ${topFoods.length ? topFoods.map(([name, count]) => `
+          <div class="top-food-item"><span class="top-food-name">${name}</span><span class="top-food-count">&times;${count}</span></div>
+        `).join('') : '<div class="meal-empty">No data yet</div>'}
       </div>
     </div>
   `;
 }
 
-// ─── Library ─────────────────────────────────────────────────
-let libCatFilter = 'all';
-let libTagFilter = 'all';
+let statsPeriod = 'week';
+document.querySelectorAll('.stats-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.stats-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    statsPeriod = btn.dataset.range;
+    renderStats();
+  });
+});
+
+// ══════════════════════════════════
+// LIBRARY PAGE
+// ══════════════════════════════════
+let libCategory = 'all';
+let libTag = null;
 
 function renderLibrary() {
-  const catContainer = $('#category-pills');
-  catContainer.innerHTML = CATEGORIES.map(c => `<button class="filter-pill ${c === libCatFilter ? 'active' : ''}" data-cat="${c}">${c === 'all' ? 'All' : c.charAt(0).toUpperCase() + c.slice(1)}</button>`).join('');
-  $$('.filter-pill', catContainer).forEach(p => p.addEventListener('click', () => { libCatFilter = p.dataset.cat; renderLibrary(); }));
+  // Category pills
+  const catPills = document.getElementById('category-pills');
+  catPills.innerHTML = '';
+  ['all', 'coffee', 'breakfast', 'lunch', 'dinner', 'snack', 'ingredient'].forEach(cat => {
+    const pill = document.createElement('span');
+    pill.className = 'filter-pill' + (libCategory === cat ? ' active' : '');
+    pill.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+    pill.addEventListener('click', () => { libCategory = cat; renderLibrary(); });
+    catPills.appendChild(pill);
+  });
 
-  const tagContainer = $('#tag-pills');
-  tagContainer.innerHTML = TAGS.map(t => `<button class="filter-pill ${t === libTagFilter ? 'active' : ''}" data-tag="${t}">${t === 'all' ? 'All Tags' : t.charAt(0).toUpperCase() + t.slice(1)}</button>`).join('');
-  $$('.filter-pill', tagContainer).forEach(p => p.addEventListener('click', () => { libTagFilter = p.dataset.tag; renderLibrary(); }));
+  // Tag pills
+  const tagPills = document.getElementById('tag-pills');
+  tagPills.innerHTML = '';
+  [null, 'homemade', 'quick', 'takeout', 'hungryroot'].forEach(tag => {
+    const pill = document.createElement('span');
+    pill.className = 'filter-pill' + (libTag === tag ? ' active' : '');
+    pill.textContent = tag ? tag.charAt(0).toUpperCase() + tag.slice(1) : 'All Tags';
+    pill.addEventListener('click', () => { libTag = tag; renderLibrary(); });
+    tagPills.appendChild(pill);
+  });
 
-  renderLibraryList();
-}
+  // Filter foods
+  const q = document.getElementById('library-search').value.toLowerCase();
+  let filtered = [...library];
+  if (libCategory !== 'all') filtered = filtered.filter(f => f.category === libCategory);
+  if (libTag) filtered = filtered.filter(f => (f.tags || []).includes(libTag));
+  if (q) filtered = filtered.filter(f => f.name.toLowerCase().includes(q));
 
-function renderLibraryList() {
-  const search = ($('#library-search')?.value || '').toLowerCase();
-  let filtered = foods;
-  if (libCatFilter !== 'all') filtered = filtered.filter(f => f.category === libCatFilter);
-  if (libTagFilter !== 'all') filtered = filtered.filter(f => (f.tags || []).includes(libTagFilter));
-  if (search) filtered = filtered.filter(f => f.name.toLowerCase().includes(search));
+  const list = document.getElementById('library-list');
+  list.innerHTML = '';
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="meal-empty" style="padding:2rem;text-align:center">No foods found</div>';
+    return;
+  }
 
-  const list = $('#library-list');
-  list.innerHTML = filtered.length === 0 ? '<p style="color:#555;font-size:.85rem;text-align:center;padding:2rem">No foods match</p>' :
-    filtered.map(f => {
-      const tags = (f.tags || []).filter(t => t);
-      return `<div class="lib-food-card">
-        <div class="lib-food-info">
-          <div class="lib-food-name">${f.name}</div>
-          <div class="lib-food-serving">${f.serving_label || '1 serving'}</div>
-          <div class="lib-food-macros">
-            <span>${Math.round(n(f.calories))} cal</span>
-            <span>P: ${n(f.protein)}g</span>
-            <span>C: ${n(f.carbs)}g</span>
-            <span>F: ${n(f.fat)}g</span>
-            <span>Fib: ${n(f.fiber)}g</span>
-            <span>Na: ${n(f.sodium)}mg</span>
-          </div>
-          ${tags.length ? `<div class="lib-food-tags">${tags.map(t => `<span class="food-tag ${t}">${t}</span>`).join('')}</div>` : ''}
+  filtered.forEach(f => {
+    const card = document.createElement('div');
+    card.className = 'lib-food-card';
+    const tagsHtml = (f.tags || []).map(t => `<span class="food-tag ${t}">${t}</span>`).join('');
+    card.innerHTML = `
+      <div class="lib-food-info">
+        <div class="lib-food-name">${f.name}</div>
+        <div class="lib-food-serving">${f.serving_label || '1 serving'}</div>
+        <div class="lib-food-macros">
+          <span>${f.calories} cal</span>
+          <span>P:${r1(f.protein)}g</span>
+          <span>C:${r1(f.carbs)}g</span>
+          <span>F:${r1(f.fat)}g</span>
+          <span>Na:${Math.round(f.sodium||0)}mg</span>
         </div>
-        <div class="lib-food-actions">
-          <button class="lib-action-btn edit" data-id="${f.id}" aria-label="Edit">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          </button>
-          <button class="lib-action-btn delete" data-id="${f.id}" aria-label="Delete">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-          </button>
-        </div>
-      </div>`;
-    }).join('');
+        <div class="lib-food-tags">${tagsHtml}</div>
+      </div>
+      <div class="lib-food-actions">
+        <button class="lib-action-btn edit-btn" data-id="${f.id}" title="Edit">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg>
+        </button>
+        <button class="lib-action-btn delete lib-delete-btn" data-id="${f.id}" title="Delete">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+        </button>
+      </div>
+    `;
+    list.appendChild(card);
+  });
 
-  $$('.lib-action-btn.edit', list).forEach(btn => btn.addEventListener('click', () => openEditModal(btn.dataset.id)));
-  $$('.lib-action-btn.delete', list).forEach(btn => {
-    btn.addEventListener('click', async () => {
-      if (confirm('Delete this food from your library?')) {
-        await dbDeleteFood(btn.dataset.id);
-        renderLibrary();
-        toast('Deleted');
-      }
+  // Edit handlers
+  list.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const food = library.find(f => f.id === btn.dataset.id);
+      if (food) openEditModal(food);
+    });
+  });
+
+  // Delete handlers
+  list.querySelectorAll('.lib-delete-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (confirm('Delete this food?')) deleteFoodFromLibrary(btn.dataset.id);
     });
   });
 }
 
-$('#library-search').addEventListener('input', renderLibraryList);
+document.getElementById('library-search').addEventListener('input', () => renderLibrary());
 
-$('#lib-add-food').addEventListener('click', () => {
-  currentMeal = 'breakfast';
+// Add food to library button
+document.getElementById('lib-add-food').addEventListener('click', () => {
+  currentMeal = null;
   openAddModal();
-  $$('.modal-tab').forEach(t => t.classList.remove('active'));
-  $$('.tab-content').forEach(t => t.classList.remove('active'));
-  $('.modal-tab[data-tab="quick"]').classList.add('active');
-  $('#tab-quick').classList.add('active');
-  $('#qa-save-lib').checked = true;
+  // Switch to quick add tab
+  document.querySelectorAll('#add-food-modal .modal-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('#add-food-modal .modal-tab[data-tab="quick"]').classList.add('active');
+  document.querySelectorAll('#add-food-modal .tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-quick').classList.add('active');
+  document.getElementById('qa-save-lib').checked = true;
 });
 
-// Edit food modal
-function openEditModal(id) {
-  const food = foods.find(f => f.id === id);
-  if (!food) return;
-  $('#ef-id').value = food.id;
-  $('#ef-name').value = food.name;
-  $('#ef-cal').value = food.calories;
-  $('#ef-protein').value = food.protein;
-  $('#ef-carbs').value = food.carbs;
-  $('#ef-fat').value = food.fat;
-  $('#ef-fiber').value = food.fiber || 0;
-  $('#ef-sodium').value = food.sodium || 0;
-  $('#ef-category').value = food.category || 'breakfast';
-  $('#ef-serving').value = food.serving_label || '';
-  $('#ef-tags').value = (food.tags || []).join(', ');
-  $('#edit-food-modal').classList.add('active');
-}
-
-$('#edit-modal-close').addEventListener('click', () => $('#edit-food-modal').classList.remove('active'));
-$('#edit-food-modal').addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.classList.remove('active'); });
-
-$('#edit-food-form').addEventListener('submit', async e => {
-  e.preventDefault();
-  await dbUpdateFood($('#ef-id').value, {
-    name: $('#ef-name').value.trim(),
-    calories: n($('#ef-cal').value), protein: n($('#ef-protein').value),
-    carbs: n($('#ef-carbs').value), fat: n($('#ef-fat').value),
-    fiber: n($('#ef-fiber').value), sodium: n($('#ef-sodium').value),
-    category: $('#ef-category').value, serving_label: $('#ef-serving').value.trim(),
-    tags: $('#ef-tags').value.split(',').map(t => t.trim()).filter(Boolean)
-  });
-  $('#edit-food-modal').classList.remove('active');
-  renderLibrary();
-  toast('Updated');
-});
-
-// ─── Settings ────────────────────────────────────────────────
+// ══════════════════════════════════
+// SETTINGS PAGE
+// ══════════════════════════════════
 function renderSettings() {
-  if (!settings) return;
-  const s = settings;
-  const heightFt = s.height_in ? Math.floor(n(s.height_in) / 12) : '';
-  const heightIn = s.height_in ? Math.round(n(s.height_in) % 12) : '';
+  const content = document.getElementById('settings-content');
+  const email = currentUser?.email || '';
+  const t = getTargets();
 
-  $('#settings-content').innerHTML = `
+  content.innerHTML = `
     <div class="settings-section">
       <h3>Body Stats</h3>
-      <div class="setting-row"><span class="setting-label">Weight</span><input class="setting-input" data-key="weight_lbs" type="number" value="${s.weight_lbs || ''}" placeholder="lbs"></div>
-      <div class="setting-row"><span class="setting-label">Height (ft)</span><input class="setting-input" data-key="height_ft" type="number" value="${heightFt}" placeholder="ft"></div>
-      <div class="setting-row"><span class="setting-label">Height (in)</span><input class="setting-input" data-key="height_in_part" type="number" value="${heightIn}" placeholder="in"></div>
-      <div class="setting-row"><span class="setting-label">Body Fat %</span><input class="setting-input" data-key="body_fat_pct" type="number" value="${s.body_fat_pct || ''}" placeholder="%"></div>
+      <div class="setting-row">
+        <span class="setting-label">Weight</span>
+        <div><input type="number" class="setting-input" id="s-weight" value="${settings.weight}"> lbs</div>
+      </div>
+      <div class="setting-row">
+        <span class="setting-label">Height</span>
+        <div><input type="number" class="setting-input" id="s-height" value="${settings.height}" style="width:60px"> in</div>
+      </div>
+      <div class="setting-row">
+        <span class="setting-label">Body Fat</span>
+        <div><input type="number" class="setting-input" id="s-bf" value="${settings.bodyFat}" step="0.1"> %</div>
+      </div>
     </div>
+
     <div class="settings-section">
       <h3>Activity</h3>
-      <div class="setting-row"><span class="setting-label">Avg daily steps</span><input class="setting-input" data-key="avg_steps" type="number" value="${s.avg_steps || 8000}"></div>
-      <div class="setting-row"><span class="setting-label">Workouts/wk</span><input class="setting-input" data-key="workouts_per_week" type="number" value="${s.workouts_per_week || 4}"></div>
-      <div class="setting-row"><span class="setting-label">Zone 2 min/wk</span><input class="setting-input" data-key="zone2_min_per_week" type="number" value="${s.zone2_min_per_week || 90}"></div>
+      <div class="setting-row">
+        <span class="setting-label">Avg Daily Steps</span>
+        <input type="number" class="setting-input" id="s-steps" value="${settings.steps}">
+      </div>
+      <div class="setting-row">
+        <span class="setting-label">Workouts / Week</span>
+        <input type="number" class="setting-input" id="s-workouts" value="${settings.workouts}">
+      </div>
+      <div class="setting-row">
+        <span class="setting-label">Zone 2 Min / Week</span>
+        <input type="number" class="setting-input" id="s-zone2" value="${settings.zone2}">
+      </div>
     </div>
+
     <div class="settings-section">
       <h3>Mode</h3>
       <div class="mode-buttons">
-        ${Object.keys(MODE_PRESETS).map(m => `<button class="mode-btn ${s.mode === m ? 'active' : ''}" data-mode="${m}">${m.charAt(0).toUpperCase() + m.slice(1)}</button>`).join('')}
+        ${Object.entries(MODES).map(([key, m]) => `
+          <button class="mode-btn ${settings.mode === key ? 'active' : ''}" data-mode="${key}">${m.label}</button>
+        `).join('')}
       </div>
     </div>
+
     <div class="settings-section">
-      <h3>Macro Targets</h3>
-      <div class="setting-row"><span class="setting-label">Calories (low)</span><input class="setting-input" data-key="cal_target_low" type="number" value="${s.cal_target_low}"></div>
-      <div class="setting-row"><span class="setting-label">Calories (high)</span><input class="setting-input" data-key="cal_target_high" type="number" value="${s.cal_target_high}"></div>
-      <div class="setting-row"><span class="setting-label">Protein (low, g)</span><input class="setting-input" data-key="protein_target_low" type="number" value="${s.protein_target_low}"></div>
-      <div class="setting-row"><span class="setting-label">Protein (high, g)</span><input class="setting-input" data-key="protein_target_high" type="number" value="${s.protein_target_high}"></div>
-      <div class="setting-row"><span class="setting-label">Carbs (g)</span><input class="setting-input" data-key="carb_target" type="number" value="${s.carb_target}"></div>
-      <div class="setting-row"><span class="setting-label">Fat (g)</span><input class="setting-input" data-key="fat_target" type="number" value="${s.fat_target}"></div>
-      <div class="setting-row"><span class="setting-label">Fiber (g)</span><input class="setting-input" data-key="fiber_target" type="number" value="${s.fiber_target}"></div>
+      <h3>Macro Targets (${MODES[settings.mode]?.label || 'Recomp'})</h3>
+      <div class="stat-row"><span class="stat-label">Calories</span><span class="stat-value">${t.cal[0]} – ${t.cal[1]}</span></div>
+      <div class="stat-row"><span class="stat-label">Protein</span><span class="stat-value">${t.protein[0]} – ${t.protein[1]}g</span></div>
+      <div class="stat-row"><span class="stat-label">Carbs</span><span class="stat-value">${t.carbs[0]} – ${t.carbs[1]}g</span></div>
+      <div class="stat-row"><span class="stat-label">Fat</span><span class="stat-value">${t.fat[0]} – ${t.fat[1]}g</span></div>
+      <div class="stat-row"><span class="stat-label">Fiber</span><span class="stat-value">${t.fiber[0]} – ${t.fiber[1]}g</span></div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Sodium Limit <small style="color:#ef4444;font-size:.6rem">Genome: ACE DD + ADD1</small></h3>
       <div class="setting-row">
-        <span class="setting-label">Sodium limit (mg)<small>Genome-informed</small></span>
-        <input class="setting-input" data-key="sodium_limit" type="number" value="${s.sodium_limit}">
+        <span class="setting-label">Daily Max<br><small>Salt-sensitive genotype</small></span>
+        <div><input type="number" class="setting-input" id="s-sodium" value="${settings.sodiumLimit}"> mg</div>
       </div>
     </div>
-    <div class="settings-section">
-      <h3>Data</h3>
-      <div class="settings-actions">
-        <button class="btn-secondary" id="export-btn">Export JSON</button>
-        <button class="btn-secondary" id="import-btn">Import JSON</button>
-      </div>
-      <input type="file" id="import-file" accept=".json" style="display:none">
-    </div>
+
     <div class="settings-section">
       <h3>Account</h3>
-      <div class="setting-row"><span class="setting-label">Email</span><span class="setting-email">${currentUser?.email || ''}</span></div>
-      <div class="setting-row"><span class="setting-label">Storage</span><span class="sync-status ${useSupabase ? '' : 'offline'}">${useSupabase ? 'Cloud Sync' : 'Local Only'}</span></div>
-      <button class="btn-danger" id="logout-btn" style="margin-top:.75rem;width:100%">Log Out</button>
+      <div class="setting-row">
+        <span class="setting-label">Email</span>
+        <span class="setting-email">${email}</span>
+      </div>
+      <div class="settings-actions">
+        <button class="btn-secondary" id="s-export">Export Data</button>
+        <button class="btn-danger" id="s-logout">Log Out</button>
+      </div>
     </div>
   `;
 
   // Mode buttons
-  const container = $('#settings-content');
-  $$('.mode-btn', container).forEach(btn => {
+  content.querySelectorAll('.mode-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
-      const preset = MODE_PRESETS[btn.dataset.mode];
-      Object.assign(settings, preset, { mode: btn.dataset.mode });
-      await dbSaveSettings(settings);
+      settings.mode = btn.dataset.mode;
+      await saveSettingsToDb();
       renderSettings();
       renderHome();
-      toast(`Mode: ${btn.dataset.mode}`);
     });
   });
 
-  // Setting inputs
-  $$('.setting-input', container).forEach(input => {
-    input.addEventListener('change', async () => {
-      const key = input.dataset.key;
-      const val = n(input.value);
-      if (key === 'height_ft') {
-        const inPart = n($('.setting-input[data-key="height_in_part"]', container)?.value);
-        settings.height_in = val * 12 + inPart;
-      } else if (key === 'height_in_part') {
-        const ft = n($('.setting-input[data-key="height_ft"]', container)?.value);
-        settings.height_in = ft * 12 + val;
-      } else {
-        settings[key] = val;
-      }
-      await dbSaveSettings(settings);
-      renderHome();
-    });
+  // Setting input changes
+  const saveSettingDebounced = debounce(async () => {
+    settings.weight = parseFloat(document.getElementById('s-weight')?.value) || settings.weight;
+    settings.height = parseFloat(document.getElementById('s-height')?.value) || settings.height;
+    settings.bodyFat = parseFloat(document.getElementById('s-bf')?.value) || settings.bodyFat;
+    settings.steps = parseFloat(document.getElementById('s-steps')?.value) || settings.steps;
+    settings.workouts = parseFloat(document.getElementById('s-workouts')?.value) || settings.workouts;
+    settings.zone2 = parseFloat(document.getElementById('s-zone2')?.value) || settings.zone2;
+    settings.sodiumLimit = parseFloat(document.getElementById('s-sodium')?.value) || settings.sodiumLimit;
+    await saveSettingsToDb();
+  }, 800);
+
+  content.querySelectorAll('.setting-input').forEach(input => {
+    input.addEventListener('input', saveSettingDebounced);
   });
 
-  $('#export-btn')?.addEventListener('click', () => {
-    const data = { settings, foods, log: LS.get('log_' + currentUser.id) || [], water: LS.get('water_' + currentUser.id) || {} };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = `macros-export-${fmtDate(new Date())}.json`; a.click();
-    toast('Exported');
+  // Logout
+  content.querySelector('#s-logout')?.addEventListener('click', async () => {
+    await sb.auth.signOut();
+    showAuth();
   });
 
-  $('#import-btn')?.addEventListener('click', () => $('#import-file').click());
-  $('#import-file')?.addEventListener('change', async e => {
-    const file = e.target.files[0]; if (!file) return;
-    try {
-      const data = JSON.parse(await file.text());
-      if (data.settings) { settings = data.settings; await dbSaveSettings(settings); }
-      if (data.foods) { for (const f of data.foods) { if (!foods.find(x => x.name === f.name)) await dbAddFood(f); } }
-      if (data.log) LS.set('log_' + currentUser.id, data.log);
-      if (data.water) LS.set('water_' + currentUser.id, data.water);
-      foods = await dbGetFoods(); await loadDay(); renderSettings();
-      toast('Imported');
-    } catch { toast('Invalid file'); }
+  // Export
+  content.querySelector('#s-export')?.addEventListener('click', async () => {
+    const { data: foods } = await sb.from('macro_foods').select('*').eq('user_id', currentUser.id);
+    const { data: logs } = await sb.from('macro_log').select('*').eq('user_id', currentUser.id);
+    const { data: water } = await sb.from('macro_water').select('*').eq('user_id', currentUser.id);
+    const exported = { settings, foods, logs, water, exportedAt: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(exported, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `macros-export-${todayStr()}.json`; a.click();
+    URL.revokeObjectURL(url);
+    toast('Data exported');
   });
-
-  $('#logout-btn')?.addEventListener('click', async () => { await sb.auth.signOut(); showAuth(); });
 }
 
-// ─── Service Worker ──────────────────────────────────────────
+function debounce(fn, ms) {
+  let timer;
+  return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), ms); };
+}
+
+// ══════════════════════════════════
+// NAV
+// ══════════════════════════════════
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const page = btn.dataset.page;
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (page === 'stats') renderStats();
+    if (page === 'library') renderLibrary();
+    if (page === 'settings') renderSettings();
+  });
+});
+
+// ══════════════════════════════════
+// AUTH
+// ══════════════════════════════════
+let isSignUp = false;
+const authForm = document.getElementById('auth-form');
+const authError = document.getElementById('auth-error');
+
+document.getElementById('auth-toggle-link').addEventListener('click', (e) => {
+  e.preventDefault();
+  isSignUp = !isSignUp;
+  document.getElementById('auth-submit').textContent = isSignUp ? 'Sign Up' : 'Log In';
+  document.getElementById('auth-toggle-text').textContent = isSignUp ? 'Already have an account?' : "Don't have an account?";
+  document.getElementById('auth-toggle-link').textContent = isSignUp ? 'Log In' : 'Sign Up';
+  authError.textContent = '';
+});
+
+authForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('auth-email').value;
+  const password = document.getElementById('auth-password').value;
+  authError.textContent = '';
+  document.getElementById('auth-submit').disabled = true;
+
+  try {
+    let result;
+    if (isSignUp) {
+      result = await sb.auth.signUp({ email, password });
+    } else {
+      result = await sb.auth.signInWithPassword({ email, password });
+    }
+    if (result.error) throw result.error;
+    // Session will be picked up by onAuthStateChange
+  } catch (err) {
+    authError.textContent = err.message || 'Auth failed';
+  }
+  document.getElementById('auth-submit').disabled = false;
+});
+
+function showAuth() {
+  document.getElementById('auth-screen').classList.add('active');
+  document.getElementById('app-screen').classList.remove('active');
+  currentUser = null;
+}
+
+async function showApp(user) {
+  currentUser = user;
+  document.getElementById('auth-screen').classList.remove('active');
+  document.getElementById('app-screen').classList.add('active');
+
+  // Load data
+  await loadSettings();
+  await loadLibrary();
+
+  // First time? Seed library + create settings
+  if (library.length === 0) {
+    await seedLibrary();
+    await saveSettingsToDb();
+    toast('Welcome! Your food library has been set up.');
+  }
+
+  await loadDayLog(currentDate);
+  await loadWater(currentDate);
+  renderHome();
+}
+
+// Auth state listener
+sb.auth.onAuthStateChange((event, session) => {
+  if (session?.user) {
+    showApp(session.user);
+  } else {
+    showAuth();
+  }
+});
+
+// Check existing session on load
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session?.user) {
+    showApp(session.user);
+  } else {
+    showAuth();
+  }
+})();
+
+// ══════════════════════════════════
+// SERVICE WORKER
+// ══════════════════════════════════
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
-
-// ─── Init ────────────────────────────────────────────────────
-initAuth();
