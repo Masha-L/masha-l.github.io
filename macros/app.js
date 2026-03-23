@@ -328,10 +328,10 @@ function setArc(pathEl, fraction, totalLength) {
 }
 
 function getMiniGaugeColor(value, range) {
-  if (value > range[1] * 1.2) return '#666';     // gray — way over
-  if (value > range[1]) return '#ef4444';          // red — over
+  if (value > range[1] * 1.1) return '#ef4444';    // red — over 110% of high target
   if (value >= range[0]) return '#4ade80';          // green — in range
-  return '#f59e0b';                                 // yellow — under
+  if (value < range[0] * 0.8) return '#f59e0b';    // yellow — under 80% of low target
+  return '#10b981';                                 // teal — approaching range (80-100%)
 }
 
 function getCalArcColor(value, range) {
