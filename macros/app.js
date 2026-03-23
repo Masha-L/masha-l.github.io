@@ -49,7 +49,7 @@ const SEED_FOODS = [
 let currentUser = null;
 let currentDate = todayStr();
 let currentMeal = null;
-let settings = { mode:'recomp', weight:148, height:68.5, bodyFat:25.9, steps:8000, workouts:4, zone2:120, sodiumLimit:2000 };
+let settings = { mode:'recomp', weight:148, height:68.5, bodyFat:25.9, steps:8000, workouts:4, zone2:120, sodiumLimit:2000, goalWeight:130, activityFactor:1.55 };
 let library = [];   // macro_foods rows
 let dayLog = [];     // macro_log rows for currentDate
 let waterCups = 0;
@@ -221,8 +221,15 @@ async function loadSettings() {
       workouts: data.workouts_per_week || 4,
       zone2: data.zone2_min_per_week || 120,
       sodiumLimit: data.sodium_limit || 2000,
+      goalWeight: 130,
+      activityFactor: 1.55,
     };
   }
+  // Load goal_weight and activity_factor from localStorage (fallback since DB may not have columns)
+  const lsGoal = localStorage.getItem('macros_goal_weight');
+  const lsAF = localStorage.getItem('macros_activity_factor');
+  if (lsGoal) settings.goalWeight = parseFloat(lsGoal);
+  if (lsAF) settings.activityFactor = parseFloat(lsAF);
 }
 
 async function saveSettingsToDb() {
@@ -1138,25 +1145,126 @@ document.getElementById('lib-add-food').addEventListener('click', () => {
 // ══════════════════════════════════
 // SETTINGS PAGE
 // ══════════════════════════════════
+function computeBMR() {
+  const weightKg = settings.weight * 0.453592;
+  const leanMassKg = weightKg * (1 - settings.bodyFat / 100);
+  const bmr = 370 + (21.6 * leanMassKg);
+  return { weightKg: r1(weightKg), leanMassKg: r1(leanMassKg), bmr: Math.round(bmr) };
+}
+
+function computeTDEE() {
+  const { bmr } = computeBMR();
+  return Math.round(bmr * settings.activityFactor);
+}
+
+function lbsToKg(lbs) { return r1(lbs * 0.453592); }
+function kgToLbs(kg) { return r1(kg / 0.453592); }
+function inToCm(inches) { return r1(inches * 2.54); }
+function cmToIn(cm) { return r1(cm / 2.54); }
+
+const ACTIVITY_LEVELS = [
+  { value: 1.2, label: 'Sedentary (desk job, little exercise)' },
+  { value: 1.375, label: 'Light (1-3 days/week)' },
+  { value: 1.55, label: 'Moderate (3-5 days/week)' },
+  { value: 1.725, label: 'Active (6-7 days/week)' },
+  { value: 1.9, label: 'Very Active (2x/day, physical job)' },
+];
+
 function renderSettings() {
   const content = document.getElementById('settings-content');
   const email = currentUser?.email || '';
   const t = getTargets();
+  const { weightKg, leanMassKg, bmr } = computeBMR();
+  const tdee = computeTDEE();
+  const goalWeightKg = lbsToKg(settings.goalWeight);
+  const weightDiff = r1(settings.weight - settings.goalWeight);
+  const heightCm = inToCm(settings.height);
+
+  // Estimate weeks to goal at current deficit
+  const dailyDeficit = tdee - ((t.cal[0] + t.cal[1]) / 2);
+  const lbsToLose = Math.max(0, weightDiff);
+  const weeksToGoal = dailyDeficit > 0 && lbsToLose > 0 ? Math.round((lbsToLose * 3500) / (dailyDeficit * 7)) : 0;
+
+  const afLabel = ACTIVITY_LEVELS.find(a => a.value === settings.activityFactor)?.label || `Custom (${settings.activityFactor})`;
 
   content.innerHTML = `
     <div class="settings-section">
       <h3>Body Stats</h3>
       <div class="setting-row">
         <span class="setting-label">Weight</span>
-        <div><input type="number" class="setting-input" id="s-weight" value="${settings.weight}"> lbs</div>
+        <div class="dual-input">
+          <input type="number" class="setting-input" id="s-weight-lbs" value="${settings.weight}" step="0.1"> <span class="unit-label">lbs</span>
+          <input type="number" class="setting-input" id="s-weight-kg" value="${weightKg}" step="0.1"> <span class="unit-label">kg</span>
+        </div>
       </div>
       <div class="setting-row">
         <span class="setting-label">Height</span>
-        <div><input type="number" class="setting-input" id="s-height" value="${settings.height}" style="width:60px"> in</div>
+        <div class="dual-input">
+          <input type="number" class="setting-input" id="s-height-in" value="${settings.height}" step="0.5" style="width:60px"> <span class="unit-label">in</span>
+          <input type="number" class="setting-input" id="s-height-cm" value="${heightCm}" step="0.1" style="width:60px"> <span class="unit-label">cm</span>
+        </div>
       </div>
       <div class="setting-row">
         <span class="setting-label">Body Fat</span>
-        <div><input type="number" class="setting-input" id="s-bf" value="${settings.bodyFat}" step="0.1"> %</div>
+        <div><input type="number" class="setting-input" id="s-bf" value="${settings.bodyFat}" step="0.1"> <span class="unit-label">%</span></div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Goal Weight</h3>
+      <div class="setting-row">
+        <span class="setting-label">Goal</span>
+        <div class="dual-input">
+          <input type="number" class="setting-input" id="s-goal-lbs" value="${settings.goalWeight}" step="0.1"> <span class="unit-label">lbs</span>
+          <input type="number" class="setting-input" id="s-goal-kg" value="${goalWeightKg}" step="0.1"> <span class="unit-label">kg</span>
+        </div>
+      </div>
+      <div class="goal-progress-card">
+        <div class="goal-progress-text">
+          Current: <strong>${settings.weight} lbs</strong> &rarr; Goal: <strong>${settings.goalWeight} lbs</strong>
+          ${weightDiff > 0 ? `<span class="goal-diff">(${weightDiff} lbs to lose)</span>` : weightDiff < 0 ? `<span class="goal-diff gain">(${Math.abs(weightDiff)} lbs to gain)</span>` : `<span class="goal-diff at-goal">At goal!</span>`}
+        </div>
+        ${weeksToGoal > 0 ? `<div class="goal-eta">~${weeksToGoal} weeks at current deficit (${Math.round(dailyDeficit)} cal/day)</div>` : ''}
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>TDEE Breakdown</h3>
+      <div class="formula-card">
+        <div class="formula-title">Katch-McArdle BMR</div>
+        <div class="formula-equation">BMR = 370 + (21.6 &times; lean mass kg)</div>
+        <div class="formula-steps">
+          <div class="formula-step">
+            <span>Weight</span>
+            <span>${settings.weight} lbs &rarr; ${weightKg} kg</span>
+          </div>
+          <div class="formula-step">
+            <span>Body Fat</span>
+            <span>${settings.bodyFat}%</span>
+          </div>
+          <div class="formula-step">
+            <span>Lean Mass</span>
+            <span>${weightKg} &times; ${r1(1 - settings.bodyFat/100)} = <strong>${leanMassKg} kg</strong></span>
+          </div>
+          <div class="formula-step highlight">
+            <span>BMR</span>
+            <span>370 + (21.6 &times; ${leanMassKg}) = <strong>${bmr} cal/day</strong></span>
+          </div>
+        </div>
+      </div>
+      <div class="setting-row" style="margin-top:.75rem">
+        <span class="setting-label">Activity Factor</span>
+        <select class="setting-select" id="s-activity-factor">
+          ${ACTIVITY_LEVELS.map(a => `<option value="${a.value}" ${settings.activityFactor === a.value ? 'selected' : ''}>${a.label}</option>`).join('')}
+        </select>
+      </div>
+      <div class="tdee-result">
+        <div class="tdee-equation">${bmr} <span class="tdee-op">&times;</span> ${settings.activityFactor} <span class="tdee-op">=</span> <strong>${tdee} cal/day</strong></div>
+        <div class="tdee-labels">
+          <span>BMR</span>
+          <span>Activity</span>
+          <span>TDEE</span>
+        </div>
       </div>
     </div>
 
@@ -1186,20 +1294,34 @@ function renderSettings() {
     </div>
 
     <div class="settings-section">
-      <h3>Macro Targets (${MODES[settings.mode]?.label || 'Recomp'})</h3>
-      <div class="stat-row"><span class="stat-label">Calories</span><span class="stat-value">${t.cal[0]} – ${t.cal[1]}</span></div>
-      <div class="stat-row"><span class="stat-label">Protein</span><span class="stat-value">${t.protein[0]} – ${t.protein[1]}g</span></div>
-      <div class="stat-row"><span class="stat-label">Carbs</span><span class="stat-value">${t.carbs[0]} – ${t.carbs[1]}g</span></div>
-      <div class="stat-row"><span class="stat-label">Fat</span><span class="stat-value">${t.fat[0]} – ${t.fat[1]}g</span></div>
-      <div class="stat-row"><span class="stat-label">Fiber</span><span class="stat-value">${t.fiber[0]} – ${t.fiber[1]}g</span></div>
+      <h3>Macro Targets <small class="settings-mode-label">${MODES[settings.mode]?.label || 'Recomp'}</small></h3>
+      <div class="macro-target-row">
+        <div class="stat-row"><span class="stat-label">Calories</span><span class="stat-value">${t.cal[0]} &ndash; ${t.cal[1]}</span></div>
+      </div>
+      <div class="macro-target-row">
+        <div class="stat-row"><span class="stat-label">Protein</span><span class="stat-value">${t.protein[0]} &ndash; ${t.protein[1]}g</span></div>
+        <div class="macro-explanation">1g per lb goal weight for muscle preservation during cut</div>
+      </div>
+      <div class="macro-target-row">
+        <div class="stat-row"><span class="stat-label">Fat</span><span class="stat-value">${t.fat[0]} &ndash; ${t.fat[1]}g</span></div>
+        <div class="macro-explanation">0.35-0.45g per lb bodyweight for hormone health</div>
+      </div>
+      <div class="macro-target-row">
+        <div class="stat-row"><span class="stat-label">Carbs</span><span class="stat-value">${t.carbs[0]} &ndash; ${t.carbs[1]}g</span></div>
+        <div class="macro-explanation">Remaining calories &mdash; important for marathon training</div>
+      </div>
+      <div class="macro-target-row">
+        <div class="stat-row"><span class="stat-label">Fiber</span><span class="stat-value">${t.fiber[0]} &ndash; ${t.fiber[1]}g</span></div>
+      </div>
     </div>
 
     <div class="settings-section">
-      <h3>Sodium Limit <small style="color:#ef4444;font-size:.6rem">Genome: ACE DD + ADD1</small></h3>
+      <h3>Sodium Limit <small class="genome-tag">Genome: ACE DD + ADD1</small></h3>
       <div class="setting-row">
         <span class="setting-label">Daily Max<br><small>Salt-sensitive genotype</small></span>
-        <div><input type="number" class="setting-input" id="s-sodium" value="${settings.sodiumLimit}"> mg</div>
+        <div><input type="number" class="setting-input" id="s-sodium" value="${settings.sodiumLimit}"> <span class="unit-label">mg</span></div>
       </div>
+      <div class="macro-explanation" style="margin-top:.25rem">Genome: ACE DD + ADD1 &mdash; salt-sensitive genotype</div>
     </div>
 
     <div class="settings-section">
@@ -1225,20 +1347,82 @@ function renderSettings() {
     });
   });
 
-  // Setting input changes
+  // Dual-unit weight conversions
+  const wLbs = document.getElementById('s-weight-lbs');
+  const wKg = document.getElementById('s-weight-kg');
+  if (wLbs && wKg) {
+    wLbs.addEventListener('input', () => {
+      const v = parseFloat(wLbs.value);
+      if (!isNaN(v)) { wKg.value = lbsToKg(v); settings.weight = v; }
+    });
+    wKg.addEventListener('input', () => {
+      const v = parseFloat(wKg.value);
+      if (!isNaN(v)) { const lbs = kgToLbs(v); wLbs.value = lbs; settings.weight = lbs; }
+    });
+  }
+
+  // Dual-unit height conversions
+  const hIn = document.getElementById('s-height-in');
+  const hCm = document.getElementById('s-height-cm');
+  if (hIn && hCm) {
+    hIn.addEventListener('input', () => {
+      const v = parseFloat(hIn.value);
+      if (!isNaN(v)) { hCm.value = inToCm(v); settings.height = v; }
+    });
+    hCm.addEventListener('input', () => {
+      const v = parseFloat(hCm.value);
+      if (!isNaN(v)) { const inches = cmToIn(v); hIn.value = inches; settings.height = inches; }
+    });
+  }
+
+  // Dual-unit goal weight conversions
+  const gLbs = document.getElementById('s-goal-lbs');
+  const gKg = document.getElementById('s-goal-kg');
+  if (gLbs && gKg) {
+    gLbs.addEventListener('input', () => {
+      const v = parseFloat(gLbs.value);
+      if (!isNaN(v)) { gKg.value = lbsToKg(v); settings.goalWeight = v; localStorage.setItem('macros_goal_weight', v); }
+    });
+    gKg.addEventListener('input', () => {
+      const v = parseFloat(gKg.value);
+      if (!isNaN(v)) { const lbs = kgToLbs(v); gLbs.value = lbs; settings.goalWeight = lbs; localStorage.setItem('macros_goal_weight', lbs); }
+    });
+  }
+
+  // Activity factor dropdown
+  const afSelect = document.getElementById('s-activity-factor');
+  if (afSelect) {
+    afSelect.addEventListener('change', () => {
+      settings.activityFactor = parseFloat(afSelect.value);
+      localStorage.setItem('macros_activity_factor', settings.activityFactor);
+      renderSettings(); // re-render to update TDEE
+    });
+  }
+
+  // Setting input changes (debounced save + re-render for formula updates)
   const saveSettingDebounced = debounce(async () => {
-    settings.weight = parseFloat(document.getElementById('s-weight')?.value) || settings.weight;
-    settings.height = parseFloat(document.getElementById('s-height')?.value) || settings.height;
+    settings.weight = parseFloat(document.getElementById('s-weight-lbs')?.value) || settings.weight;
+    settings.height = parseFloat(document.getElementById('s-height-in')?.value) || settings.height;
     settings.bodyFat = parseFloat(document.getElementById('s-bf')?.value) || settings.bodyFat;
     settings.steps = parseFloat(document.getElementById('s-steps')?.value) || settings.steps;
     settings.workouts = parseFloat(document.getElementById('s-workouts')?.value) || settings.workouts;
     settings.zone2 = parseFloat(document.getElementById('s-zone2')?.value) || settings.zone2;
     settings.sodiumLimit = parseFloat(document.getElementById('s-sodium')?.value) || settings.sodiumLimit;
+    settings.goalWeight = parseFloat(document.getElementById('s-goal-lbs')?.value) || settings.goalWeight;
+    localStorage.setItem('macros_goal_weight', settings.goalWeight);
+    localStorage.setItem('macros_activity_factor', settings.activityFactor);
     await saveSettingsToDb();
   }, 800);
 
+  // Re-render TDEE section when body stats change (with a longer debounce)
+  const reRenderDebounced = debounce(() => renderSettings(), 1200);
+
   content.querySelectorAll('.setting-input').forEach(input => {
     input.addEventListener('input', saveSettingDebounced);
+    // For body stat inputs that affect BMR/TDEE, also schedule a re-render
+    if (['s-weight-lbs','s-weight-kg','s-bf','s-goal-lbs','s-goal-kg'].includes(input.id)) {
+      input.addEventListener('input', reRenderDebounced);
+    }
   });
 
   // Logout

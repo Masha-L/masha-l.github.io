@@ -253,6 +253,50 @@ a{color:#10b981;text-decoration:none}
 .sync-status{font-size:.7rem;padding:.25rem .5rem;border-radius:6px;background:rgba(16,185,129,.1);color:#10b981}
 .sync-status.offline{background:rgba(245,158,11,.1);color:#f59e0b}
 
+/* ============ SETTINGS - ENHANCED ============ */
+.dual-input{display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.dual-input .setting-input{width:70px}
+.unit-label{font-size:.7rem;color:#666;min-width:18px}
+.settings-mode-label{font-size:.6rem;color:#10b981;font-weight:600;text-transform:none;letter-spacing:0;margin-left:.5rem}
+.genome-tag{font-size:.6rem;color:#ef4444;font-weight:600;text-transform:none;letter-spacing:0}
+
+/* Goal Weight Progress */
+.goal-progress-card{background:#111;border-radius:8px;padding:.75rem;margin-top:.5rem}
+.goal-progress-text{font-size:.8rem;color:#ccc;line-height:1.5}
+.goal-progress-text strong{color:#fff}
+.goal-diff{color:#f59e0b;font-size:.75rem;margin-left:.25rem}
+.goal-diff.gain{color:#3b82f6}
+.goal-diff.at-goal{color:#10b981}
+.goal-eta{font-size:.7rem;color:#666;margin-top:.35rem;padding-top:.35rem;border-top:1px solid #1f1f1f}
+
+/* Formula / TDEE Display */
+.formula-card{background:#111;border-radius:8px;padding:.75rem;border:1px solid #1f1f1f}
+.formula-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#10b981;margin-bottom:.35rem}
+.formula-equation{font-size:.75rem;color:#888;font-family:'SF Mono',Menlo,monospace;margin-bottom:.5rem;padding:.35rem .5rem;background:#0d0d0d;border-radius:4px}
+.formula-steps{display:flex;flex-direction:column;gap:.25rem}
+.formula-step{display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:#aaa;padding:.2rem 0}
+.formula-step span:last-child{color:#ccc;text-align:right}
+.formula-step strong{color:#fff}
+.formula-step.highlight{background:rgba(16,185,129,.08);border-radius:6px;padding:.35rem .5rem;margin-top:.25rem}
+.formula-step.highlight span:first-child{color:#10b981;font-weight:600}
+
+.setting-select{width:100%;padding:.4rem .5rem;background:#0d0d0d;border:1px solid #2a2a2a;border-radius:6px;color:#fff;font-size:.75rem;outline:none;-webkit-appearance:none;appearance:none;cursor:pointer;margin-top:.25rem}
+.setting-select:focus{border-color:#10b981}
+
+.tdee-result{background:#111;border-radius:8px;padding:.75rem;margin-top:.75rem;text-align:center}
+.tdee-equation{font-size:1rem;color:#fff;font-weight:600;letter-spacing:.5px}
+.tdee-equation strong{color:#10b981;font-size:1.1rem}
+.tdee-op{color:#666;margin:0 .35rem;font-weight:400}
+.tdee-labels{display:flex;justify-content:space-around;margin-top:.35rem}
+.tdee-labels span{font-size:.55rem;text-transform:uppercase;letter-spacing:1px;color:#555}
+
+/* Macro Target Explanations */
+.macro-target-row{padding:.15rem 0}
+.macro-target-row .stat-row{padding:.35rem 0 .1rem}
+.macro-explanation{font-size:.65rem;color:#666;font-style:italic;padding:0 0 .35rem;border-bottom:1px solid #1f1f1f;line-height:1.3}
+.macro-target-row:last-child .macro-explanation{border-bottom:none}
+.macro-target-row:last-child .stat-row{border-bottom:none}
+
 /* ============ ANIMATIONS ============ */
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
