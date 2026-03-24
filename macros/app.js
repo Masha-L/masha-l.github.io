@@ -2867,6 +2867,91 @@ function initEatoutTab() {
 initEatoutTab();
 
 // ══════════════════════════════════
+// VOICE INPUT (Web Speech API)
+// ══════════════════════════════════
+(function initVoiceInput() {
+  const micBtn = document.getElementById('describe-mic-btn');
+  const micStatus = document.getElementById('mic-status');
+  const describeInput = document.getElementById('describe-input');
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    micBtn.classList.add('unsupported');
+    micBtn.title = 'Voice input not supported in this browser';
+    micBtn.addEventListener('click', () => toast('Voice input requires Chrome or Safari'));
+    return;
+  }
+
+  let recognition = null;
+  let isRecording = false;
+
+  function startRecording() {
+    recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = true;
+    recognition.continuous = false;
+    recognition.maxAlternatives = 1;
+
+    const existingText = describeInput.value.trim();
+
+    recognition.onstart = () => {
+      isRecording = true;
+      micBtn.classList.add('recording');
+      micStatus.textContent = 'Listening...';
+    };
+
+    recognition.onresult = (event) => {
+      let transcript = '';
+      for (let i = 0; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      // Append to existing text or replace
+      if (existingText) {
+        describeInput.value = existingText + ', ' + transcript;
+      } else {
+        describeInput.value = transcript;
+      }
+    };
+
+    recognition.onerror = (event) => {
+      console.error('Speech recognition error:', event.error);
+      if (event.error === 'not-allowed') {
+        toast('Microphone access denied');
+      } else if (event.error === 'no-speech') {
+        toast('No speech detected — try again');
+      } else {
+        toast('Voice error: ' + event.error);
+      }
+      stopRecording();
+    };
+
+    recognition.onend = () => {
+      stopRecording();
+    };
+
+    recognition.start();
+  }
+
+  function stopRecording() {
+    isRecording = false;
+    micBtn.classList.remove('recording');
+    micStatus.textContent = '';
+    if (recognition) {
+      try { recognition.stop(); } catch (e) { /* already stopped */ }
+      recognition = null;
+    }
+  }
+
+  micBtn.addEventListener('click', () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  });
+})();
+
+// ══════════════════════════════════
 // SERVICE WORKER
 // ══════════════════════════════════
 if ('serviceWorker' in navigator) {

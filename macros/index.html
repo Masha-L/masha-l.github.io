@@ -256,7 +256,13 @@
         </div>
         <!-- Describe Tab -->
         <div class="tab-content" id="tab-describe">
-          <textarea id="describe-input" class="describe-textarea" rows="3" placeholder="e.g., 2 eggs and toast with avocado"></textarea>
+          <div class="describe-input-wrap">
+            <textarea id="describe-input" class="describe-textarea" rows="3" placeholder="e.g., 2 eggs and toast with avocado"></textarea>
+            <button class="describe-mic-btn" id="describe-mic-btn" title="Voice input" type="button">
+              <svg class="mic-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+              <span class="mic-status" id="mic-status"></span>
+            </button>
+          </div>
           <button class="btn-primary describe-estimate-btn" id="describe-estimate-btn">Estimate Macros</button>
           <div id="describe-results" class="describe-results"></div>
           <button class="btn-primary describe-log-btn" id="describe-log-btn" style="display:none">Log All</button>
