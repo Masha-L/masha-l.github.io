@@ -348,6 +348,22 @@ a{color:#10b981;text-decoration:none}
 .describe-edit-row input:focus{border-color:#10b981}
 .describe-edit-row label{font-size:.55rem;color:#666;display:block;margin-bottom:2px}
 
+/* Photo Tab */
+.photo-capture-area{display:flex;justify-content:center;padding:2rem 0}
+.photo-upload-label{display:flex;flex-direction:column;align-items:center;gap:.75rem;padding:2rem;border:2px dashed #2a2a2a;border-radius:16px;cursor:pointer;transition:border-color .2s,background .2s;text-align:center;width:100%}
+.photo-upload-label:active{border-color:#10b981;background:rgba(16,185,129,.05)}
+.photo-upload-label span{color:#888;font-size:.9rem}
+.photo-upload-hint{font-size:.75rem!important;color:#555!important}
+.photo-file-input{display:none}
+.photo-preview-area{display:flex;flex-direction:column;gap:.75rem}
+.photo-preview-wrap{position:relative;border-radius:12px;overflow:hidden;background:#0d0d0d}
+.photo-preview-img{width:100%;max-height:250px;object-fit:cover;display:block;border-radius:12px}
+.photo-retake-btn{position:absolute;top:8px;right:8px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.7);border:1px solid #444;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.photo-retake-btn:active{background:rgba(16,185,129,.3)}
+.photo-identify-section{display:flex;flex-direction:column;gap:.5rem}
+.photo-identify-prompt{color:#888;font-size:.8rem;margin:0}
+.photo-identify-input-wrap{position:relative}
+
 /* ============ EAT OUT TAB ============ */
 .eatout-remaining{background:linear-gradient(135deg,rgba(16,185,129,.12),rgba(16,185,129,.05));border:1px solid rgba(16,185,129,.2);border-radius:12px;padding:.75rem;margin-bottom:.75rem}
 .eatout-remaining-title{font-size:.65rem;text-transform:uppercase;letter-spacing:1px;color:#10b981;font-weight:700;margin-bottom:.5rem}

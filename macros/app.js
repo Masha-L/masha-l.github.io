@@ -1209,6 +1209,7 @@ function openAddModal() {
   document.getElementById('describe-results').innerHTML = '';
   document.getElementById('describe-log-btn').style.display = 'none';
   describeResults = [];
+  resetPhotoTab();
   document.getElementById('servings-row').style.display = 'none';
   servingFood = null;
   servingCount = 1;
@@ -1664,6 +1665,192 @@ document.getElementById('describe-log-btn').addEventListener('click', async () =
     document.getElementById('describe-results').innerHTML = '';
     document.getElementById('describe-log-btn').style.display = 'none';
     describeResults = [];
+    closeAddModal();
+  }
+});
+
+// ══════════════════════════════════
+// PHOTO TAB
+// ══════════════════════════════════
+let photoResults = [];
+
+const photoInput = document.getElementById('photo-input');
+const photoCaptureArea = document.getElementById('photo-capture-area');
+const photoPreviewArea = document.getElementById('photo-preview-area');
+const photoPreviewImg = document.getElementById('photo-preview-img');
+const photoRetakeBtn = document.getElementById('photo-retake-btn');
+const photoIdentifyInput = document.getElementById('photo-identify-input');
+const photoIdentifyBtn = document.getElementById('photo-identify-btn');
+const photoResultsContainer = document.getElementById('photo-results');
+const photoLogBtn = document.getElementById('photo-log-btn');
+
+function resetPhotoTab() {
+  photoCaptureArea.style.display = 'flex';
+  photoPreviewArea.style.display = 'none';
+  photoPreviewImg.src = '';
+  photoIdentifyInput.value = '';
+  photoResultsContainer.innerHTML = '';
+  photoLogBtn.style.display = 'none';
+  photoResults = [];
+  photoInput.value = '';
+}
+
+photoInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    photoPreviewImg.src = ev.target.result;
+    photoCaptureArea.style.display = 'none';
+    photoPreviewArea.style.display = 'flex';
+    photoIdentifyInput.focus();
+  };
+  reader.readAsDataURL(file);
+});
+
+photoRetakeBtn.addEventListener('click', () => {
+  resetPhotoTab();
+});
+
+photoIdentifyBtn.addEventListener('click', () => {
+  const input = photoIdentifyInput.value.trim();
+  if (!input) { toast('Describe what you see in the photo'); return; }
+
+  photoResults = parseDescribedFood(input);
+  renderPhotoResults();
+});
+
+photoIdentifyInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    photoIdentifyBtn.click();
+  }
+});
+
+function renderPhotoResults() {
+  photoResultsContainer.innerHTML = '';
+  photoLogBtn.style.display = 'none';
+
+  if (photoResults.length === 0) {
+    photoResultsContainer.innerHTML = '<p style="color:#666;text-align:center;font-size:.85rem">No items parsed</p>';
+    return;
+  }
+
+  const hasMatches = photoResults.some(r => r.match);
+  if (hasMatches) photoLogBtn.style.display = 'block';
+
+  photoResults.forEach((result, idx) => {
+    const card = document.createElement('div');
+    card.className = `describe-result-card confidence-${result.confidence}`;
+
+    if (result.match) {
+      const food = result.match;
+      const qty = result.quantity;
+      const sizeMult = result.sizeMultiplier || 1;
+      const sizeNote = sizeMult !== 1 ? ` (${sizeMult > 1 ? 'large' : 'small'})` : '';
+      const cal = Math.round(food.calories * qty * sizeMult);
+      const prot = Math.round(food.protein * qty * sizeMult * 10) / 10;
+      const carb = Math.round(food.carbs * qty * sizeMult * 10) / 10;
+      const fat = Math.round(food.fat * qty * sizeMult * 10) / 10;
+
+      const confClass = result.confidence;
+      const confLabel = result.confidence === 'exact' ? 'Exact match' : 'Fuzzy match';
+
+      card.innerHTML = `
+        <div class="describe-result-header">
+          <span class="describe-result-name">${food.name}</span>
+          <span class="describe-result-qty">${qty}x${sizeNote}</span>
+        </div>
+        <div class="describe-result-macros">
+          <span>${cal} cal</span>
+          <span>${prot}g P</span>
+          <span>${carb}g C</span>
+          <span>${fat}g F</span>
+        </div>
+        <span class="describe-confidence-tag ${confClass}">${confLabel}</span>
+        <div class="describe-edit-row">
+          <div><label>Qty</label><input type="number" data-field="qty" value="${qty}" step="0.25" min="0.25" style="width:55px"></div>
+          <div><label>Cal</label><input type="number" data-field="calories" value="${cal}"></div>
+          <div><label>Prot</label><input type="number" data-field="protein" value="${prot}" step="0.1"></div>
+          <div><label>Carb</label><input type="number" data-field="carbs" value="${carb}" step="0.1"></div>
+          <div><label>Fat</label><input type="number" data-field="fat" value="${fat}" step="0.1"></div>
+        </div>
+      `;
+
+      const qtyInput = card.querySelector('[data-field="qty"]');
+      qtyInput.addEventListener('change', () => {
+        photoResults[idx].quantity = parseFloat(qtyInput.value) || 1;
+        renderPhotoResults();
+      });
+
+    } else {
+      card.innerHTML = `
+        <div class="describe-result-header">
+          <span class="describe-result-name">"${result.original}"</span>
+        </div>
+        <span class="describe-confidence-tag unknown">Not found</span>
+        <span class="describe-unknown-link" data-idx="${idx}">Add manually &rarr;</span>
+      `;
+      card.querySelector('.describe-unknown-link').addEventListener('click', () => {
+        // Switch to Quick Add tab with name pre-filled
+        document.querySelectorAll('#add-food-modal .modal-tab').forEach(t => t.classList.remove('active'));
+        document.querySelector('#add-food-modal .modal-tab[data-tab="quick"]').classList.add('active');
+        document.querySelectorAll('#add-food-modal .tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById('tab-quick').classList.add('active');
+        document.getElementById('qa-name').value = result.original;
+        document.getElementById('qa-name').focus();
+      });
+    }
+
+    photoResultsContainer.appendChild(card);
+  });
+}
+
+photoLogBtn.addEventListener('click', async () => {
+  if (!currentMeal) { toast('Select a meal first'); return; }
+
+  let logged = 0;
+  for (const result of photoResults) {
+    if (!result.match) continue;
+    const food = result.match;
+    const qty = result.quantity;
+    const sizeMult = result.sizeMultiplier || 1;
+
+    const idx = photoResults.indexOf(result);
+    const card = photoResultsContainer.querySelectorAll('.describe-result-card')[idx];
+    let finalFood;
+
+    if (card) {
+      const calInput = card.querySelector('[data-field="calories"]');
+      const protInput = card.querySelector('[data-field="protein"]');
+      const carbInput = card.querySelector('[data-field="carbs"]');
+      const fatInput = card.querySelector('[data-field="fat"]');
+
+      if (calInput) {
+        finalFood = {
+          ...food,
+          calories: parseFloat(calInput.value) || 0,
+          protein: parseFloat(protInput.value) || 0,
+          carbs: parseFloat(carbInput.value) || 0,
+          fat: parseFloat(fatInput.value) || 0,
+          fiber: (food.fiber || 0) * qty * sizeMult,
+          sodium: (food.sodium || 0) * qty * sizeMult,
+        };
+        await addLogEntry(currentMeal, finalFood, 1);
+        logged++;
+        continue;
+      }
+    }
+
+    finalFood = { ...food };
+    await addLogEntry(currentMeal, finalFood, qty * sizeMult);
+    logged++;
+  }
+
+  if (logged > 0) {
+    toast(`Logged ${logged} item${logged > 1 ? 's' : ''}`);
+    resetPhotoTab();
     closeAddModal();
   }
 });
