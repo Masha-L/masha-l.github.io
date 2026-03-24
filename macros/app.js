@@ -130,6 +130,62 @@ const REFERENCE_FOODS = [
   {name:'Dark chocolate',calories:170,protein:2.2,carbs:13,fat:12,fiber:3.1,sodium:6,category:'snack',tags:[],serving_label:'1 oz'},
   // Avocado (standalone, not half)
   {name:'Avocado',calories:218,protein:2.7,carbs:12,fat:20,fiber:9,sodium:10,category:'ingredient',tags:[],serving_label:'1 whole'},
+  // ── Masha's staples (added from food logs) ──
+  // Fairlife milks
+  {name:'Fairlife fat free milk',calories:80,protein:13,carbs:6,fat:0,fiber:0,sodium:120,category:'ingredient',tags:['quick'],serving_label:'1 cup'},
+  {name:'Fairlife 2% milk',calories:120,protein:13,carbs:6,fat:4.5,fiber:0,sodium:120,category:'ingredient',tags:['quick'],serving_label:'1 cup'},
+  {name:'Fairlife whole milk',calories:150,protein:13,carbs:6,fat:8,fiber:0,sodium:120,category:'ingredient',tags:['quick'],serving_label:'1 cup'},
+  // TJ's staples
+  {name:'TJ maple chicken sausage',calories:45,protein:5,carbs:2,fat:2,fiber:0,sodium:170,category:'breakfast',tags:['quick'],serving_label:'1 link'},
+  {name:'Chicken sausage',calories:45,protein:5,carbs:2,fat:2,fiber:0,sodium:170,category:'breakfast',tags:['quick'],serving_label:'1 link'},
+  {name:'TJ organic mixed veggies',calories:60,protein:3,carbs:10,fat:0,fiber:3,sodium:30,category:'ingredient',tags:['quick'],serving_label:'1 cup'},
+  {name:'TJ sous vide beef',calories:180,protein:26,carbs:2,fat:8,fiber:0,sodium:380,category:'dinner',tags:['quick'],serving_label:'4 oz'},
+  {name:'TJ chicken bone broth',calories:40,protein:9,carbs:0,fat:0.5,fiber:0,sodium:430,category:'ingredient',tags:['quick'],serving_label:'1 cup'},
+  // Prepared meals Masha makes/orders
+  {name:'Chicken adobo',calories:300,protein:28,carbs:6,fat:18,fiber:0,sodium:680,category:'dinner',tags:['homemade'],serving_label:'1 serving (6 oz)'},
+  {name:'Chicken adobo with rice',calories:495,protein:40,carbs:45,fat:18,fiber:1,sodium:700,category:'lunch',tags:['homemade'],serving_label:'1 plate'},
+  {name:'Bulgogi fried rice',calories:450,protein:22,carbs:55,fat:16,fiber:2,sodium:750,category:'dinner',tags:['homemade'],serving_label:'1 plate'},
+  {name:'Bone broth rice',calories:180,protein:5,carbs:32,fat:3,fiber:1,sodium:350,category:'ingredient',tags:['quick'],serving_label:'1 cup'},
+  // Breakfast items
+  {name:'Bacon',calories:43,protein:3,carbs:0,fat:3.3,fiber:0,sodium:137,category:'breakfast',tags:['quick'],serving_label:'1 slice'},
+  {name:'Hash brown',calories:125,protein:1.3,carbs:13,fat:7.5,fiber:1.2,sodium:200,category:'breakfast',tags:['quick'],serving_label:'1 patty'},
+  {name:'Scrambled eggs',calories:147,protein:10,carbs:1.6,fat:11,fiber:0,sodium:145,category:'breakfast',tags:['quick'],serving_label:'2 eggs'},
+  {name:'Egg',calories:72,protein:6.2,carbs:0.4,fat:5,fiber:0,sodium:71,category:'breakfast',tags:['quick'],serving_label:'1 large egg'},
+  // Vegetables (missing common ones)
+  {name:'Green beans',calories:31,protein:1.8,carbs:7,fat:0.1,fiber:3.4,sodium:6,category:'ingredient',tags:['quick'],serving_label:'1 cup'},
+  {name:'Mixed vegetables',calories:60,protein:3,carbs:10,fat:0.5,fiber:3,sodium:30,category:'ingredient',tags:['quick'],serving_label:'1 cup'},
+  {name:'Carrots',calories:52,protein:1.2,carbs:12,fat:0.3,fiber:3.6,sodium:88,category:'ingredient',tags:[],serving_label:'1 cup chopped'},
+  {name:'Bell pepper',calories:31,protein:1,carbs:6,fat:0.3,fiber:2.1,sodium:4,category:'ingredient',tags:[],serving_label:'1 medium'},
+  {name:'Onion',calories:44,protein:1.2,carbs:10,fat:0.1,fiber:1.9,sodium:4,category:'ingredient',tags:[],serving_label:'1 medium'},
+  {name:'Mushrooms',calories:22,protein:3.1,carbs:3.3,fat:0.3,fiber:1,sodium:5,category:'ingredient',tags:[],serving_label:'1 cup sliced'},
+  {name:'Zucchini',calories:20,protein:1.5,carbs:3.5,fat:0.4,fiber:1.2,sodium:10,category:'ingredient',tags:[],serving_label:'1 medium'},
+  {name:'Cauliflower',calories:25,protein:2,carbs:5,fat:0.3,fiber:2,sodium:30,category:'ingredient',tags:[],serving_label:'1 cup'},
+  {name:'Asparagus',calories:27,protein:3,carbs:5,fat:0.2,fiber:2.8,sodium:3,category:'ingredient',tags:[],serving_label:'6 spears'},
+  // Snacks & misc
+  {name:'Frozen strawberries',calories:77,protein:1,carbs:20,fat:0.4,fiber:3.3,sodium:2,category:'snack',tags:['quick'],serving_label:'1 cup'},
+  {name:'Frozen strawberries in chocolate',calories:180,protein:1,carbs:28,fat:8,fiber:2,sodium:5,category:'snack',tags:[],serving_label:'1 serving'},
+  {name:'Kinder chocolate',calories:126,protein:2.3,carbs:13,fat:7.5,fiber:0.5,sodium:40,category:'snack',tags:[],serving_label:'1 bar (21g)'},
+  {name:'Crackers',calories:130,protein:2,carbs:19,fat:5,fiber:1,sodium:230,category:'snack',tags:[],serving_label:'1 oz'},
+  {name:'Pretzels',calories:108,protein:2.8,carbs:22,fat:1,fiber:0.9,sodium:352,category:'snack',tags:[],serving_label:'1 oz'},
+  {name:'Rice crackers',calories:110,protein:2,carbs:23,fat:0.5,fiber:0.5,sodium:80,category:'snack',tags:[],serving_label:'1 oz'},
+  // Oils & cooking
+  {name:'Olive oil',calories:119,protein:0,carbs:0,fat:13.5,fiber:0,sodium:0,category:'ingredient',tags:[],serving_label:'1 tbsp'},
+  {name:'Coconut oil',calories:121,protein:0,carbs:0,fat:13.5,fiber:0,sodium:0,category:'ingredient',tags:[],serving_label:'1 tbsp'},
+  {name:'Cooking spray',calories:6,protein:0,carbs:0,fat:0.6,fiber:0,sodium:0,category:'ingredient',tags:[],serving_label:'1 spray'},
+  // Drinks & misc
+  {name:'Sparkling water',calories:0,protein:0,carbs:0,fat:0,fiber:0,sodium:10,category:'snack',tags:[],serving_label:'12 oz'},
+  {name:'Peach tea',calories:30,protein:0,carbs:8,fat:0,fiber:0,sodium:5,category:'snack',tags:[],serving_label:'1 cup'},
+  {name:'Latte',calories:190,protein:10,carbs:18,fat:7,fiber:0,sodium:150,category:'coffee',tags:[],serving_label:'16 oz (grande)'},
+  {name:'Lactaid milk',calories:130,protein:8,carbs:12,fat:5,fiber:0,sodium:125,category:'ingredient',tags:[],serving_label:'1 cup'},
+  // More proteins
+  {name:'Pork chop',calories:231,protein:31,carbs:0,fat:11,fiber:0,sodium:62,category:'dinner',tags:[],serving_label:'6 oz'},
+  {name:'Rotisserie chicken',calories:190,protein:29,carbs:0,fat:8,fiber:0,sodium:380,category:'dinner',tags:['quick'],serving_label:'4 oz'},
+  {name:'Chicken thigh',calories:230,protein:28,carbs:0,fat:13,fiber:0,sodium:85,category:'dinner',tags:[],serving_label:'1 thigh'},
+  {name:'Turkey breast deli',calories:60,protein:12,carbs:2,fat:0.5,fiber:0,sodium:440,category:'lunch',tags:['quick'],serving_label:'2 oz'},
+  // Hungryroot specific
+  {name:'Hungryroot chicken stir fry',calories:420,protein:35,carbs:35,fat:15,fiber:5,sodium:580,category:'dinner',tags:['hungryroot'],serving_label:'1 meal'},
+  {name:'Hungryroot salmon bowl',calories:480,protein:32,carbs:42,fat:20,fiber:4,sodium:620,category:'dinner',tags:['hungryroot'],serving_label:'1 meal'},
+  {name:'Hungryroot grain bowl',calories:400,protein:18,carbs:50,fat:16,fiber:6,sodium:550,category:'lunch',tags:['hungryroot'],serving_label:'1 meal'},
 ];
 
 // ── Restaurant Database ──
@@ -268,12 +324,92 @@ const SIZE_MULTIPLIERS = {
 const UNIT_WORDS = ['cup', 'cups', 'slice', 'slices', 'piece', 'pieces', 'bowl', 'bowls',
   'serving', 'servings', 'scoop', 'scoops', 'tbsp', 'tablespoon', 'tablespoons',
   'tsp', 'teaspoon', 'teaspoons', 'oz', 'ounce', 'ounces', 'can', 'cans',
-  'glass', 'glasses', 'plate', 'plates', 'handful', 'handfuls', 'bag', 'bags'];
+  'glass', 'glasses', 'plate', 'plates', 'handful', 'handfuls', 'bag', 'bags',
+  'container', 'containers', 'bottle', 'bottles', 'packet', 'packets', 'bar', 'bars',
+  'strip', 'strips', 'link', 'links', 'patty', 'patties'];
+
+// Food aliases — maps common spoken names to canonical REFERENCE_FOODS names
+const FOOD_ALIASES = {
+  'egg': 'Egg', 'eggs': 'Egg', 'large egg': 'Large egg', 'fried egg': 'Egg', 'boiled egg': 'Egg', 'hard boiled egg': 'Egg',
+  'scrambled egg': 'Scrambled eggs', 'scrambled eggs': 'Scrambled eggs',
+  'sausage': 'Chicken sausage', 'sausages': 'Chicken sausage', 'chicken sausage': 'Chicken sausage',
+  'chicken sausages': 'Chicken sausage', 'maple sausage': 'TJ maple chicken sausage',
+  'tj sausage': 'TJ maple chicken sausage', 'turkey sausage': 'Turkey sausage patty',
+  'fairlife': 'Fairlife fat free milk', 'fairlife milk': 'Fairlife fat free milk',
+  'fairlife fat free': 'Fairlife fat free milk', 'fairlife 2%': 'Fairlife 2% milk',
+  'fairlife whole': 'Fairlife whole milk', 'fairlife skim': 'Fairlife fat free milk',
+  'milk': 'Whole milk', 'whole milk': 'Whole milk', 'skim milk': 'Skim milk',
+  'oat milk': 'Oat milk', 'lactaid': 'Lactaid milk',
+  'chicken adobo': 'Chicken adobo', 'adobo': 'Chicken adobo',
+  'adobo with rice': 'Chicken adobo with rice', 'chicken adobo with rice': 'Chicken adobo with rice',
+  'bulgogi': 'Bulgogi fried rice', 'bulgogi rice': 'Bulgogi fried rice', 'bulgogi fried rice': 'Bulgogi fried rice',
+  'green beans': 'Green beans', 'green bean': 'Green beans', 'string beans': 'Green beans',
+  'protein bar': 'Protein bar', 'protein bars': 'Protein bar',
+  'protein shake': 'Protein shake', 'shake': 'Protein shake',
+  'greek yogurt': 'Greek yogurt', 'yogurt': 'Greek yogurt',
+  'oatmeal': 'Oatmeal with berries', 'oats': 'Oatmeal with berries',
+  'sourdough': 'Sourdough toast', 'toast': 'Sourdough toast',
+  'avocado toast': 'Sourdough toast', // will match; user can add avocado separately
+  'chicken breast': 'Grilled chicken breast', 'grilled chicken': 'Grilled chicken breast',
+  'chicken': 'Grilled chicken breast', 'rotisserie chicken': 'Rotisserie chicken',
+  'salmon': 'Salmon fillet', 'rice': 'White rice', 'white rice': 'White rice', 'brown rice': 'Brown rice',
+  'sweet potato': 'Sweet potato', 'yam': 'Sweet potato', 'potato': 'Potato',
+  'bacon': 'Bacon', 'hash brown': 'Hash brown', 'hashbrown': 'Hash brown', 'hash browns': 'Hash brown',
+  'bone broth': 'TJ chicken bone broth', 'chicken bone broth': 'TJ chicken bone broth',
+  'bone broth rice': 'Bone broth rice',
+  'sous vide beef': 'TJ sous vide beef', 'sous vide': 'TJ sous vide beef',
+  'mixed veggies': 'Mixed vegetables', 'mixed vegetables': 'Mixed vegetables', 'veggies': 'Mixed vegetables',
+  'broccoli': 'Broccoli', 'spinach': 'Spinach', 'carrots': 'Carrots', 'carrot': 'Carrots',
+  'olive oil': 'Olive oil', 'oil': 'Olive oil',
+  'coffee': 'Drip coffee with whole milk', 'drip coffee': 'Drip coffee with whole milk',
+  'cold brew': 'Cold brew with whole milk', 'black coffee': 'Coffee black',
+  'latte': 'Latte', 'tea': 'Tea', 'peach tea': 'Peach tea',
+  'peanut butter': 'Peanut butter', 'pb': 'Peanut butter',
+  'almond butter': 'Almond butter',
+  'cheese': 'Cheese', 'shredded cheese': 'Shredded cheese',
+  'cream cheese': 'Cream cheese', 'string cheese': 'String cheese',
+  'cottage cheese': 'Cottage cheese',
+  'hummus': 'Hummus + veggies', 'hummus and veggies': 'Hummus + veggies',
+  'tortilla': 'Flour tortilla', 'wrap': 'Wrap',
+  'banana': 'Banana', 'apple': 'Apple', 'orange': 'Orange',
+  'poke bowl': 'Poke bowl', 'poke': 'Poke bowl',
+  'pizza': 'Pizza slice', 'pizza slice': 'Pizza slice',
+  'burger': 'Burger', 'hamburger': 'Burger',
+  'fries': 'French fries', 'french fries': 'French fries',
+  'ice cream': 'Ice cream',
+  'cookie': 'Cookie', 'cookies': 'Cookie',
+  'chocolate': 'Dark chocolate', 'dark chocolate': 'Dark chocolate',
+  'kinder': 'Kinder chocolate', 'kinder chocolate': 'Kinder chocolate',
+  'chips': 'Chips', 'popcorn': 'Popcorn',
+  'trail mix': 'Trail mix', 'nuts': 'Almonds', 'almonds': 'Almonds',
+  'bagel': 'Bagel', 'muffin': 'Muffin', 'cereal': 'Cereal', 'granola': 'Granola',
+  'pancake': 'Pancake', 'pancakes': 'Pancake', 'waffle': 'Waffle', 'waffles': 'Waffle',
+  'ramen': 'Ramen', 'soup': 'Soup', 'sandwich': 'Sandwich',
+  'smoothie': 'Smoothie', 'oj': 'Orange juice', 'orange juice': 'Orange juice',
+  'sushi': 'Sushi roll', 'sushi roll': 'Sushi roll',
+  'steak': 'Steak', 'ground beef': 'Ground beef', 'ground turkey': 'Ground turkey',
+  'tuna': 'Tuna', 'shrimp': 'Shrimp', 'tofu': 'Tofu',
+  'black beans': 'Black beans', 'lentils': 'Lentils', 'edamame': 'Edamame',
+  'chia pudding': 'Chia pudding w/ raspberries',
+  'hungryroot': 'Hungryroot meal (avg)', 'hungryroot meal': 'Hungryroot meal (avg)',
+  'frozen strawberries': 'Frozen strawberries', 'strawberries in chocolate': 'Frozen strawberries in chocolate',
+  'crackers': 'Crackers', 'pretzels': 'Pretzels', 'rice crackers': 'Rice crackers',
+  'sparkling water': 'Sparkling water', 'seltzer': 'Sparkling water',
+  'pork chop': 'Pork chop', 'pork': 'Pork chop',
+  'mushrooms': 'Mushrooms', 'mushroom': 'Mushrooms',
+  'bell pepper': 'Bell pepper', 'pepper': 'Bell pepper',
+  'cauliflower': 'Cauliflower', 'asparagus': 'Asparagus', 'zucchini': 'Zucchini',
+  'corn': 'Corn', 'tomato': 'Tomato', 'tomatoes': 'Tomato', 'cucumber': 'Cucumber',
+  'lettuce': 'Lettuce', 'salad': 'Garden salad', 'caesar salad': 'Caesar salad',
+};
 
 function singularize(word) {
-  if (word.endsWith('ies')) return word.slice(0, -3) + 'y';
-  if (word.endsWith('es') && !word.endsWith('ses') && !word.endsWith('ces')) return word.slice(0, -2);
-  if (word.endsWith('s') && !word.endsWith('ss')) return word.slice(0, -1);
+  if (word.endsWith('ies') && word.length > 4) return word.slice(0, -3) + 'y';
+  // Only strip 'es' for words ending in -shes, -ches, -xes, -zes, -oes (natural 'es' plurals)
+  if (word.endsWith('shes') || word.endsWith('ches') || word.endsWith('xes') || word.endsWith('zes')) return word.slice(0, -2);
+  if (word.endsWith('oes') && word.length > 4) return word.slice(0, -2);
+  if (word.endsWith('ves') && word.length > 4) return word.slice(0, -3) + 'f'; // halves → half
+  if (word.endsWith('s') && !word.endsWith('ss') && !word.endsWith('us')) return word.slice(0, -1);
   return word;
 }
 
@@ -294,18 +430,39 @@ function parseSegment(segment) {
   let foodWords = [];
   let i = 0;
 
-  // Extract numeric quantity at start
-  if (words[0] && /^\d+(\.\d+)?$/.test(words[0])) {
+  // Extract numeric quantity at start (including fractions like "1/2")
+  if (words[0] && /^\d+\/\d+$/.test(words[0])) {
+    // Fraction like "1/2", "3/4"
+    const [num, den] = words[0].split('/').map(Number);
+    quantity = num / den;
+    i = 1;
+  } else if (words[0] && /^\d+(\.\d+)?$/.test(words[0])) {
     quantity = parseFloat(words[0]);
     i = 1;
+    // Check for "1 1/2" or "2 1/2" pattern (mixed number)
+    if (words[i] && /^\d+\/\d+$/.test(words[i])) {
+      const [num, den] = words[i].split('/').map(Number);
+      quantity += num / den;
+      i++;
+    }
   } else if (words[0] && QUANTITY_WORDS[words[0]] !== undefined) {
     quantity = QUANTITY_WORDS[words[0]];
     i = 1;
+    // "a couple of" pattern
+    if (quantity === 1 && words[i] === 'couple') {
+      quantity = 2;
+      i++;
+    }
   }
 
   // Check for "and a half" pattern
   if (words[i] === 'and' && words[i+1] === 'a' && words[i+2] === 'half') {
     quantity += 0.5;
+    i += 3;
+  }
+  // "and a quarter" pattern
+  if (words[i] === 'and' && words[i+1] === 'a' && words[i+2] === 'quarter') {
+    quantity += 0.25;
     i += 3;
   }
 
@@ -319,8 +476,8 @@ function parseSegment(segment) {
     sizeMultiplier = SIZE_MULTIPLIERS[words[i-2] + ' ' + words[i-1]];
   }
 
-  // Remaining words are the food name — strip unit words
-  foodWords = words.slice(i).filter(w => !UNIT_WORDS.includes(w) && w !== 'of');
+  // Remaining words are the food name — strip unit words and filler
+  foodWords = words.slice(i).filter(w => !UNIT_WORDS.includes(w) && !['of','the','some','my','a','an','with'].includes(w));
 
   const foodQuery = foodWords.join(' ').trim();
   if (!foodQuery) return { original: segment, quantity, sizeMultiplier, match: null, confidence: 'unknown' };
@@ -338,9 +495,24 @@ function parseSegment(segment) {
 }
 
 function matchFood(query, foods) {
-  const q = query.toLowerCase();
+  const q = query.toLowerCase().trim();
   const qSingular = singularize(q);
   const qWords = q.split(/\s+/);
+
+  // 1. Check aliases first for instant exact match
+  const aliasName = FOOD_ALIASES[q] || FOOD_ALIASES[qSingular];
+  if (aliasName) {
+    const aliasMatch = foods.find(f => f.name.toLowerCase() === aliasName.toLowerCase());
+    if (aliasMatch) return { match: aliasMatch, confidence: 'exact', matchScore: 100 };
+  }
+
+  // 2. Try multi-word alias keys (e.g., "chicken adobo with rice")
+  for (const [aliasKey, aliasVal] of Object.entries(FOOD_ALIASES)) {
+    if (aliasKey.length > 3 && (q.includes(aliasKey) || aliasKey.includes(q))) {
+      const am = foods.find(f => f.name.toLowerCase() === aliasVal.toLowerCase());
+      if (am) return { match: am, confidence: 'exact', matchScore: 95 };
+    }
+  }
 
   let bestMatch = null;
   let bestScore = 0;
@@ -349,6 +521,7 @@ function matchFood(query, foods) {
   for (const food of foods) {
     const name = food.name.toLowerCase();
     const nameSingular = singularize(name);
+    const nameWords = name.split(/\s+/);
     let score = 0;
 
     // Exact match
@@ -363,14 +536,20 @@ function matchFood(query, foods) {
     else if (nameSingular.includes(qSingular) || qSingular.includes(nameSingular)) {
       score = 70;
     }
-    // Word-level matching
+    // Word-level matching with singularization
     else {
-      const nameWords = name.split(/\s+/);
-      const matchedWords = qWords.filter(w => 
-        nameWords.some(nw => nw === w || singularize(nw) === singularize(w) || nw.startsWith(w) || w.startsWith(nw))
-      );
+      const matchedWords = qWords.filter(w => {
+        const ws = singularize(w);
+        return nameWords.some(nw => {
+          const nws = singularize(nw);
+          return nw === w || nws === ws || nw.startsWith(w) || w.startsWith(nw) || nws.startsWith(ws) || ws.startsWith(nws);
+        });
+      });
       if (matchedWords.length > 0) {
-        score = (matchedWords.length / Math.max(qWords.length, nameWords.length)) * 60;
+        // Weight by proportion of matched words in both query and food name
+        const qCoverage = matchedWords.length / qWords.length;
+        const nCoverage = matchedWords.length / nameWords.length;
+        score = ((qCoverage + nCoverage) / 2) * 65;
       }
     }
 
