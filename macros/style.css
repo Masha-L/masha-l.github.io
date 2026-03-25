@@ -364,6 +364,22 @@ a{color:#10b981;text-decoration:none}
 .photo-identify-prompt{color:#888;font-size:.8rem;margin:0}
 .photo-identify-input-wrap{position:relative}
 
+/* ============ VOICE TAB ============ */
+.voice-area{display:flex;flex-direction:column;align-items:center;gap:.75rem;padding:1rem 0}
+.voice-mic-btn{width:80px;height:80px;border-radius:50%;border:2px solid #2a2a2a;background:#1a1a1a;color:#888;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;padding:0}
+.voice-mic-btn:active{background:#2a2a2a}
+.voice-mic-btn.recording{background:rgba(239,68,68,.15);border-color:#ef4444;color:#ef4444;animation:voice-pulse 1.5s ease-in-out infinite}
+.voice-mic-btn.recording svg{stroke:#ef4444}
+.voice-mic-btn.unsupported{opacity:.3;cursor:not-allowed}
+@keyframes voice-pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 16px rgba(239,68,68,0)}}
+.voice-status{color:#888;font-size:.85rem;margin:0;min-height:1.2em}
+.voice-status.active{color:#ef4444;font-weight:600}
+.voice-transcript{width:100%;display:flex;flex-direction:column;gap:.25rem}
+.voice-transcript-label{font-size:.7rem;color:#666;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.voice-transcript textarea{min-height:50px;resize:none}
+.voice-estimate-btn{width:100%}
+.voice-unsupported{color:#ef4444;font-size:.85rem;text-align:center;padding:1rem;background:rgba(239,68,68,.08);border-radius:10px;border:1px solid rgba(239,68,68,.2)}
+
 /* ============ EAT OUT TAB ============ */
 .eatout-remaining{background:linear-gradient(135deg,rgba(16,185,129,.12),rgba(16,185,129,.05));border:1px solid rgba(16,185,129,.2);border-radius:12px;padding:.75rem;margin-bottom:.75rem}
 .eatout-remaining-title{font-size:.65rem;text-transform:uppercase;letter-spacing:1px;color:#10b981;font-weight:700;margin-bottom:.5rem}

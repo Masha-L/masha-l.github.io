@@ -1210,6 +1210,7 @@ function openAddModal() {
   document.getElementById('describe-log-btn').style.display = 'none';
   describeResults = [];
   resetPhotoTab();
+  if (typeof resetVoiceTab === 'function') resetVoiceTab();
   document.getElementById('servings-row').style.display = 'none';
   servingFood = null;
   servingCount = 1;
@@ -3313,6 +3314,265 @@ initEatoutTab();
       stopRecording();
     } else {
       startRecording();
+    }
+  });
+})();
+
+// ══════════════════════════════════
+// VOICE TAB (standalone speech-to-food)
+// ══════════════════════════════════
+let voiceResults = [];
+
+function resetVoiceTab() {
+  const micBtn = document.getElementById('voice-mic-btn');
+  const status = document.getElementById('voice-status');
+  const transcriptWrap = document.getElementById('voice-transcript');
+  const transcriptText = document.getElementById('voice-transcript-text');
+  const estimateBtn = document.getElementById('voice-estimate-btn');
+  const resultsContainer = document.getElementById('voice-results');
+  const logBtn = document.getElementById('voice-log-btn');
+
+  micBtn.classList.remove('recording');
+  status.textContent = 'Tap to speak';
+  status.classList.remove('active');
+  transcriptWrap.style.display = 'none';
+  transcriptText.value = '';
+  estimateBtn.style.display = 'none';
+  resultsContainer.innerHTML = '';
+  logBtn.style.display = 'none';
+  voiceResults = [];
+}
+
+(function initVoiceTab() {
+  const micBtn = document.getElementById('voice-mic-btn');
+  const statusEl = document.getElementById('voice-status');
+  const transcriptWrap = document.getElementById('voice-transcript');
+  const transcriptText = document.getElementById('voice-transcript-text');
+  const estimateBtn = document.getElementById('voice-estimate-btn');
+  const resultsContainer = document.getElementById('voice-results');
+  const logBtn = document.getElementById('voice-log-btn');
+  const unsupportedMsg = document.getElementById('voice-unsupported');
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    micBtn.style.display = 'none';
+    statusEl.style.display = 'none';
+    unsupportedMsg.style.display = 'block';
+    return;
+  }
+
+  let recognition = null;
+  let isRecording = false;
+
+  function startRecording() {
+    recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = true;
+    recognition.continuous = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      isRecording = true;
+      micBtn.classList.add('recording');
+      statusEl.textContent = 'Listening...';
+      statusEl.classList.add('active');
+      transcriptWrap.style.display = 'flex';
+      resultsContainer.innerHTML = '';
+      logBtn.style.display = 'none';
+      estimateBtn.style.display = 'none';
+      voiceResults = [];
+    };
+
+    recognition.onresult = (event) => {
+      let finalTranscript = '';
+      let interimTranscript = '';
+      for (let i = 0; i < event.results.length; i++) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript;
+        } else {
+          interimTranscript += event.results[i][0].transcript;
+        }
+      }
+      transcriptText.value = finalTranscript || interimTranscript;
+    };
+
+    recognition.onerror = (event) => {
+      console.error('Voice tab speech error:', event.error);
+      if (event.error === 'not-allowed') {
+        toast('Microphone access denied');
+      } else if (event.error === 'no-speech') {
+        toast('No speech detected — try again');
+      } else {
+        toast('Voice error: ' + event.error);
+      }
+      stopRecording();
+    };
+
+    recognition.onend = () => {
+      stopRecording();
+      const text = transcriptText.value.trim();
+      if (text) {
+        estimateBtn.style.display = 'block';
+      }
+    };
+
+    recognition.start();
+  }
+
+  function stopRecording() {
+    isRecording = false;
+    micBtn.classList.remove('recording');
+    statusEl.classList.remove('active');
+    const text = transcriptText.value.trim();
+    statusEl.textContent = text ? 'Tap to speak again' : 'Tap to speak';
+    if (recognition) {
+      try { recognition.stop(); } catch (e) { /* already stopped */ }
+      recognition = null;
+    }
+  }
+
+  micBtn.addEventListener('click', () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  });
+
+  estimateBtn.addEventListener('click', () => {
+    const input = transcriptText.value.trim();
+    if (!input) return;
+    voiceResults = parseDescribedFood(input);
+    renderVoiceResults();
+  });
+
+  function renderVoiceResults() {
+    resultsContainer.innerHTML = '';
+    logBtn.style.display = 'none';
+
+    if (voiceResults.length === 0) {
+      resultsContainer.innerHTML = '<p style="color:#666;text-align:center;font-size:.85rem">No items parsed</p>';
+      return;
+    }
+
+    const hasMatches = voiceResults.some(r => r.match);
+    if (hasMatches) logBtn.style.display = 'block';
+
+    voiceResults.forEach((result, idx) => {
+      const card = document.createElement('div');
+      card.className = `describe-result-card confidence-${result.confidence}`;
+
+      if (result.match) {
+        const food = result.match;
+        const qty = result.quantity;
+        const sizeMult = result.sizeMultiplier || 1;
+        const totalMult = qty * sizeMult;
+        const cal = Math.round(food.calories * totalMult);
+        const prot = r1(food.protein * totalMult);
+        const carbs = r1(food.carbs * totalMult);
+        const fat = r1(food.fat * totalMult);
+        const fiber = r1((food.fiber || 0) * totalMult);
+        const sodium = Math.round((food.sodium || 0) * totalMult);
+
+        const confLabel = result.confidence === 'exact' ? 'Matched' : 'Fuzzy match';
+        const confClass = result.confidence;
+        const sizeNote = sizeMult !== 1 ? ` (${Object.entries(SIZE_MULTIPLIERS).find(([k,v]) => v === sizeMult)?.[0] || sizeMult + 'x'})` : '';
+
+        card.innerHTML = `
+          <div class="describe-result-header">
+            <span class="describe-result-name">${food.name}</span>
+            <span class="describe-result-qty">${qty}x${sizeNote}</span>
+          </div>
+          <div class="describe-result-macros">
+            <span>${cal} cal</span>
+            <span>P:${prot}g</span>
+            <span>C:${carbs}g</span>
+            <span>F:${fat}g</span>
+            <span>Fib:${fiber}g</span>
+            <span>Na:${sodium}mg</span>
+          </div>
+          <span class="describe-confidence-tag ${confClass}">${confLabel}</span>
+          <div class="describe-edit-row">
+            <div><label>Qty</label><input type="number" step="0.5" min="0.5" value="${qty}" data-idx="${idx}" data-field="quantity"></div>
+            <div><label>Cal</label><input type="number" value="${cal}" data-idx="${idx}" data-field="calories"></div>
+            <div><label>P</label><input type="number" step="0.1" value="${prot}" data-idx="${idx}" data-field="protein"></div>
+            <div><label>C</label><input type="number" step="0.1" value="${carbs}" data-idx="${idx}" data-field="carbs"></div>
+            <div><label>F</label><input type="number" step="0.1" value="${fat}" data-idx="${idx}" data-field="fat"></div>
+          </div>
+        `;
+
+        const qtyInput = card.querySelector('[data-field="quantity"]');
+        qtyInput.addEventListener('change', () => {
+          voiceResults[idx].quantity = parseFloat(qtyInput.value) || 1;
+          renderVoiceResults();
+        });
+      } else {
+        card.innerHTML = `
+          <div class="describe-result-header">
+            <span class="describe-result-name">"${result.original}"</span>
+          </div>
+          <span class="describe-confidence-tag unknown">Not found</span>
+          <span class="describe-unknown-link" data-idx="${idx}">Add manually &rarr;</span>
+        `;
+        card.querySelector('.describe-unknown-link').addEventListener('click', () => {
+          document.querySelectorAll('#add-food-modal .modal-tab').forEach(t => t.classList.remove('active'));
+          document.querySelector('#add-food-modal .modal-tab[data-tab="quick"]').classList.add('active');
+          document.querySelectorAll('#add-food-modal .tab-content').forEach(c => c.classList.remove('active'));
+          document.getElementById('tab-quick').classList.add('active');
+          document.getElementById('qa-name').value = result.original;
+          document.getElementById('qa-name').focus();
+        });
+      }
+
+      resultsContainer.appendChild(card);
+    });
+  }
+
+  logBtn.addEventListener('click', async () => {
+    if (!currentMeal) { toast('Select a meal first'); return; }
+
+    let logged = 0;
+    for (const result of voiceResults) {
+      if (!result.match) continue;
+      const food = result.match;
+      const qty = result.quantity;
+      const sizeMult = result.sizeMultiplier || 1;
+
+      const idx = voiceResults.indexOf(result);
+      const card = resultsContainer.querySelectorAll('.describe-result-card')[idx];
+      let finalFood;
+
+      if (card) {
+        const calInput = card.querySelector('[data-field="calories"]');
+        const protInput = card.querySelector('[data-field="protein"]');
+        const carbInput = card.querySelector('[data-field="carbs"]');
+        const fatInput = card.querySelector('[data-field="fat"]');
+
+        if (calInput) {
+          finalFood = {
+            ...food,
+            calories: parseFloat(calInput.value) || 0,
+            protein: parseFloat(protInput.value) || 0,
+            carbs: parseFloat(carbInput.value) || 0,
+            fat: parseFloat(fatInput.value) || 0,
+            fiber: (food.fiber || 0) * qty * sizeMult,
+            sodium: (food.sodium || 0) * qty * sizeMult,
+          };
+          await addLogEntry(currentMeal, finalFood, 1);
+          logged++;
+          continue;
+        }
+      }
+
+      finalFood = { ...food };
+      await addLogEntry(currentMeal, finalFood, qty * sizeMult);
+      logged++;
+    }
+
+    if (logged > 0) {
+      toast(`Logged ${logged} item${logged > 1 ? 's' : ''}`);
+      resetVoiceTab();
+      closeAddModal();
     }
   });
 })();

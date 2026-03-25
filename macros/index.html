@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
   <!-- AUTH SCREEN -->
@@ -238,6 +238,7 @@
         <button class="modal-tab" data-tab="quick">Quick Add</button>
         <button class="modal-tab" data-tab="describe">Describe</button>
         <button class="modal-tab" data-tab="photo">Photo</button>
+        <button class="modal-tab" data-tab="voice">Voice</button>
         <button class="modal-tab" data-tab="eatout">Eat Out</button>
       </div>
       <div class="modal-body">
@@ -328,6 +329,23 @@
             </div>
             <div id="photo-results" class="describe-results"></div>
             <button class="btn-primary describe-log-btn" id="photo-log-btn" style="display:none">Log All</button>
+          </div>
+        </div>
+        <!-- Voice Tab -->
+        <div class="tab-content" id="tab-voice">
+          <div class="voice-area" id="voice-area">
+            <p class="voice-unsupported" id="voice-unsupported" style="display:none">Voice input requires Chrome or Safari (Web Speech API not supported in this browser).</p>
+            <button class="voice-mic-btn" id="voice-mic-btn" type="button">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </button>
+            <p class="voice-status" id="voice-status">Tap to speak</p>
+            <div class="voice-transcript" id="voice-transcript" style="display:none">
+              <label class="voice-transcript-label">Transcribed:</label>
+              <textarea id="voice-transcript-text" class="describe-textarea" rows="2" readonly></textarea>
+            </div>
+            <button class="btn-primary voice-estimate-btn" id="voice-estimate-btn" style="display:none">Estimate Macros</button>
+            <div id="voice-results" class="describe-results"></div>
+            <button class="btn-primary describe-log-btn" id="voice-log-btn" style="display:none">Log All</button>
           </div>
         </div>
         <!-- Eat Out Tab -->
@@ -498,6 +516,6 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script src="app.js?v=11"></script>
+  <script src="app.js?v=12"></script>
 </body>
 </html>
