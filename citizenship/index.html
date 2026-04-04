@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0a1628">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Citizenship Prep</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <style>
+/* ===== CSS RESET & BASE ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a1628;--bg2:#0f1f3a;--bg3:#162a4a;--bg4:#1c3358;
+  --gold:#d4a853;--gold2:#e8c373;--gold3:#f0d590;--gold-dim:#8a7035;
+  --cream:#f0e6d2;--cream2:#d4c9b5;--cream3:#a89e8a;
+  --green:#4ade80;--red:#f87171;--blue:#60a5fa;
+  --radius:12px;--radius-sm:8px;
+  --nav-h:64px;--safe-b:env(safe-area-inset-bottom,0px);
+  --trans:all .3s cubic-bezier(.4,0,.2,1);
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--cream);-webkit-tap-highlight-color:transparent;position:relative}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px}
+
+/* ===== AUTH SCREEN ===== */
+.screen{display:none;height:100%;width:100%}
+.screen.active{display:flex;flex-direction:column}
+#auth-screen{align-items:center;justify-content:center;background:linear-gradient(145deg,var(--bg),var(--bg2))}
+.auth-container{width:min(360px,90vw);text-align:center}
+.auth-logo{margin-bottom:32px}
+.auth-logo h1{font-size:28px;color:var(--gold);font-weight:700;letter-spacing:1px;margin-top:16px}
+.auth-logo p{color:var(--cream3);font-size:14px;margin-top:4px}
+.auth-star{width:64px;height:64px;margin:0 auto}
+#auth-form input{width:100%;padding:14px 16px;background:var(--bg3);border:1px solid var(--bg4);border-radius:var(--radius-sm);color:var(--cream);font-size:16px;margin-bottom:12px;outline:none;transition:var(--trans)}
+#auth-form input:focus{border-color:var(--gold)}
+.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);font-size:16px;font-weight:600;border:none;border-radius:var(--radius-sm);cursor:pointer;transition:var(--trans)}
+.btn-primary:active{transform:scale(.97);opacity:.9}
+.error-text{color:var(--red);font-size:13px;margin-top:8px;min-height:20px}
+.auth-toggle{color:var(--cream3);font-size:14px;margin-top:16px}
+.auth-toggle a{color:var(--gold);text-decoration:none;font-weight:600}
+.forgot-link{color:var(--cream3);font-size:13px;text-decoration:none;display:inline-block;margin-top:8px}
+
+/* ===== APP LAYOUT ===== */
+#app-screen{position:relative}
+.page{display:none;flex-direction:column;height:calc(100vh - var(--nav-h) - var(--safe-b));overflow-y:auto;overflow-x:hidden;padding:16px 16px 24px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+.page.active{display:flex}
+.page-header{padding:8px 0 16px;position:sticky;top:0;background:var(--bg);z-index:10}
+.page-header h1{font-size:22px;color:var(--gold);font-weight:700}
+.page-header p{color:var(--cream3);font-size:13px;margin-top:2px}
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);padding-bottom:var(--safe-b);background:var(--bg2);border-top:1px solid var(--bg3);z-index:100}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;color:var(--cream3);font-size:10px;cursor:pointer;transition:var(--trans);padding:0}
+.nav-btn svg{width:22px;height:22px;transition:var(--trans)}
+.nav-btn.active{color:var(--gold)}
+.nav-btn.active svg{stroke:var(--gold)}
+
+/* ===== CARDS ===== */
+.card{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:var(--trans)}
+.card-title{font-size:14px;color:var(--cream3);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+
+/* ===== DASHBOARD ===== */
+.dash-hero{text-align:center;padding:24px 0 20px}
+.dash-hero h2{font-size:26px;color:var(--cream);font-weight:700}
+.dash-hero p{color:var(--cream3);font-size:14px;margin-top:4px}
+.track-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.track-card{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);padding:20px 16px;text-align:center;cursor:pointer;transition:var(--trans);position:relative;overflow:hidden}
+.track-card:active{transform:scale(.97)}
+.track-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.track-card h3{font-size:15px;color:var(--cream);margin-top:12px;font-weight:600}
+.track-card p{font-size:12px;color:var(--cream3);margin-top:4px}
+.track-icon{font-size:32px}
+
+/* Readiness meter */
+.readiness{margin-bottom:20px}
+.readiness-bar{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;margin-top:8px}
+.readiness-fill{height:100%;border-radius:4px;transition:width .6s ease;background:linear-gradient(90deg,var(--red),var(--gold),var(--green))}
+.readiness-label{display:flex;justify-content:space-between;margin-top:6px;font-size:12px;color:var(--cream3)}
+
+/* Streak */
+.streak-card{display:flex;align-items:center;gap:16px;padding:16px 20px}
+.streak-num{font-size:36px;font-weight:700;color:var(--gold);line-height:1}
+.streak-info{flex:1}
+.streak-info span{display:block;font-size:13px;color:var(--cream3)}
+.streak-days{display:flex;gap:4px;margin-top:8px}
+.streak-dot{width:12px;height:12px;border-radius:50%;background:var(--bg3)}
+.streak-dot.active{background:var(--gold)}
+.streak-dot.today{border:2px solid var(--gold2);background:var(--bg3)}
+
+/* Quick actions */
+.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.qa-btn{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-sm);padding:14px 12px;color:var(--cream);font-size:13px;font-weight:500;cursor:pointer;transition:var(--trans);text-align:left;display:flex;align-items:center;gap:8px}
+.qa-btn:active{background:var(--bg3)}
+.qa-btn .qa-icon{font-size:18px}
+
+/* ===== FLASHCARD ===== */
+.flashcard-container{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 8px}
+.flashcard{width:100%;max-width:400px;min-height:280px;background:linear-gradient(145deg,var(--bg2),var(--bg3));border:1px solid var(--bg4);border-radius:16px;padding:32px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;transition:transform .5s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d;position:relative;user-select:none;-webkit-user-select:none}
+.flashcard.flipped{transform:rotateY(180deg)}
+.flashcard-face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.flashcard-back{transform:rotateY(180deg)}
+.flashcard-q-num{font-size:12px;color:var(--gold-dim);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+.flashcard-question{font-size:20px;color:var(--cream);line-height:1.5;font-weight:500}
+.flashcard-answer{font-size:18px;color:var(--gold2);line-height:1.6}
+.flashcard-tap{font-size:12px;color:var(--cream3);margin-top:16px}
+.flashcard-actions{display:flex;gap:16px;margin-top:24px;width:100%;max-width:400px}
+.fc-btn{flex:1;padding:14px;border-radius:var(--radius-sm);font-size:15px;font-weight:600;border:none;cursor:pointer;transition:var(--trans)}
+.fc-btn.wrong{background:rgba(248,113,113,.15);color:var(--red);border:1px solid rgba(248,113,113,.3)}
+.fc-btn.right{background:rgba(74,222,128,.15);color:var(--green);border:1px solid rgba(74,222,128,.3)}
+.fc-btn:active{transform:scale(.95)}
+.fc-progress{margin-top:16px;font-size:12px;color:var(--cream3)}
+.fc-category-label{font-size:11px;color:var(--cream3);background:var(--bg4);padding:4px 10px;border-radius:12px;margin-bottom:8px}
+
+/* Back button */
+.back-btn{background:none;border:none;color:var(--cream3);font-size:14px;cursor:pointer;display:flex;align-items:center;gap:6px;padding:4px 0;margin-bottom:8px}
+.back-btn svg{width:18px;height:18px}
+.back-btn:active{color:var(--gold)}
+
+/* ===== QUIZ ===== */
+.quiz-setup{text-align:center;padding:40px 16px}
+.quiz-setup h2{font-size:22px;color:var(--cream);margin-bottom:8px}
+.quiz-setup p{color:var(--cream3);font-size:14px;margin-bottom:24px}
+.quiz-start-btn{padding:16px 40px;font-size:18px;width:auto;display:inline-block}
+.quiz-q{padding:24px 0}
+.quiz-q-text{font-size:20px;color:var(--cream);line-height:1.5;margin-bottom:24px;text-align:center}
+.quiz-q-num{font-size:13px;color:var(--gold-dim);text-align:center;margin-bottom:8px}
+.quiz-input{width:100%;padding:14px 16px;background:var(--bg3);border:1px solid var(--bg4);border-radius:var(--radius-sm);color:var(--cream);font-size:16px;outline:none;margin-bottom:12px}
+.quiz-input:focus{border-color:var(--gold)}
+.quiz-options{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.quiz-opt{padding:14px 16px;background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-sm);color:var(--cream);font-size:15px;cursor:pointer;transition:var(--trans);text-align:left}
+.quiz-opt:active{background:var(--bg3)}
+.quiz-opt.selected{border-color:var(--gold);background:rgba(212,168,83,.1)}
+.quiz-opt.correct{border-color:var(--green);background:rgba(74,222,128,.1);color:var(--green)}
+.quiz-opt.incorrect{border-color:var(--red);background:rgba(248,113,113,.1);color:var(--red)}
+.quiz-submit{margin-top:12px}
+.quiz-feedback{padding:16px;border-radius:var(--radius-sm);margin-top:12px;font-size:14px}
+.quiz-feedback.correct{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.2);color:var(--green)}
+.quiz-feedback.wrong{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2);color:var(--red)}
+.quiz-score-display{text-align:center;padding:8px 0 16px;font-size:14px;color:var(--cream3)}
+.quiz-score-display span{color:var(--gold);font-weight:600}
+
+/* Quiz results */
+.quiz-results{text-align:center;padding:32px 0}
+.quiz-results h2{font-size:28px;margin-bottom:4px}
+.quiz-results .score-big{font-size:64px;font-weight:700;color:var(--gold);line-height:1.2}
+.quiz-results .score-label{font-size:16px;color:var(--cream3);margin-bottom:24px}
+.quiz-results .result-badge{display:inline-block;padding:8px 20px;border-radius:20px;font-size:14px;font-weight:600;margin-bottom:24px}
+.result-badge.pass{background:rgba(74,222,128,.15);color:var(--green);border:1px solid rgba(74,222,128,.3)}
+.result-badge.fail{background:rgba(248,113,113,.15);color:var(--red);border:1px solid rgba(248,113,113,.3)}
+
+/* ===== CATEGORY PILLS ===== */
+.cat-pills{display:flex;gap:8px;overflow-x:auto;padding:8px 0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.cat-pills::-webkit-scrollbar{display:none}
+.cat-pill{padding:8px 16px;background:var(--bg3);border:1px solid var(--bg4);border-radius:20px;color:var(--cream3);font-size:13px;white-space:nowrap;cursor:pointer;transition:var(--trans);flex-shrink:0}
+.cat-pill.active{background:rgba(212,168,83,.15);border-color:var(--gold);color:var(--gold)}
+
+/* ===== I-751 ===== */
+.i751-question{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);padding:16px;margin-bottom:12px;cursor:pointer;transition:var(--trans)}
+.i751-question:active{background:var(--bg3)}
+.i751-q-text{font-size:15px;color:var(--cream);font-weight:500}
+.i751-tip{font-size:13px;color:var(--cream3);margin-top:8px;padding-top:8px;border-top:1px solid var(--bg4);display:none;line-height:1.5}
+.i751-tip.show{display:block}
+.i751-tip strong{color:var(--gold-dim);font-size:11px;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px}
+
+/* Checklist */
+.checklist-item{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius-sm);margin-bottom:8px;transition:var(--trans)}
+.checklist-item.completed{opacity:.6}
+.check-box{width:22px;height:22px;border:2px solid var(--bg4);border-radius:6px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--trans);margin-top:1px}
+.check-box.checked{background:var(--gold);border-color:var(--gold)}
+.check-box.checked::after{content:'✓';color:var(--bg);font-size:13px;font-weight:700}
+.check-info{flex:1;min-width:0}
+.check-label{font-size:14px;color:var(--cream);font-weight:500}
+.check-notes{width:100%;padding:8px;background:var(--bg3);border:1px solid var(--bg4);border-radius:6px;color:var(--cream);font-size:13px;margin-top:8px;outline:none;resize:none;min-height:36px;font-family:inherit}
+.check-notes:focus{border-color:var(--gold)}
+
+/* ===== PROGRESS PAGE ===== */
+.stat-card{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);padding:20px;margin-bottom:12px;display:flex;align-items:center;gap:16px}
+.stat-num{font-size:32px;font-weight:700;color:var(--gold);min-width:60px;text-align:center}
+.stat-info h4{font-size:14px;color:var(--cream);font-weight:600}
+.stat-info p{font-size:12px;color:var(--cream3);margin-top:2px}
+.chart-container{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);padding:20px;margin-bottom:12px}
+.chart-container h3{font-size:14px;color:var(--cream3);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:120px;padding-top:8px}
+.chart-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.chart-bar-fill{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,var(--gold),var(--gold-dim));transition:height .5s ease;min-width:16px}
+.chart-bar-label{font-size:10px;color:var(--cream3)}
+
+/* ===== SETTINGS ===== */
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--bg3)}
+.setting-row:last-child{border-bottom:none}
+.setting-label{font-size:14px;color:var(--cream)}
+.setting-desc{font-size:12px;color:var(--cream3);margin-top:2px}
+.toggle{width:48px;height:28px;background:var(--bg4);border-radius:14px;position:relative;cursor:pointer;transition:var(--trans);flex-shrink:0}
+.toggle.on{background:var(--gold)}
+.toggle::after{content:'';position:absolute;width:22px;height:22px;background:var(--cream);border-radius:50%;top:3px;left:3px;transition:var(--trans)}
+.toggle.on::after{left:23px}
+select.setting-select{padding:8px 12px;background:var(--bg3);border:1px solid var(--bg4);border-radius:var(--radius-sm);color:var(--cream);font-size:14px;outline:none}
+.btn-danger{padding:12px 20px;background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.3);border-radius:var(--radius-sm);color:var(--red);font-size:14px;font-weight:500;cursor:pointer;transition:var(--trans)}
+.btn-danger:active{opacity:.7}
+
+/* ===== MODAL ===== */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);width:min(400px,100%);max-height:80vh;overflow-y:auto;padding:24px}
+.modal h2{font-size:18px;color:var(--cream);margin-bottom:16px}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--cream3);font-size:20px;cursor:pointer}
+
+/* ===== SECTION TABS ===== */
+.section-tabs{display:flex;gap:4px;background:var(--bg3);border-radius:var(--radius-sm);padding:3px;margin-bottom:16px}
+.section-tab{flex:1;padding:10px 8px;background:none;border:none;border-radius:6px;color:var(--cream3);font-size:13px;font-weight:500;cursor:pointer;transition:var(--trans);text-align:center}
+.section-tab.active{background:var(--bg);color:var(--gold)}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .3s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.slide-up{animation:slideUp .4s ease}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* ===== FOOTER ===== */
+.app-footer{text-align:center;padding:24px 0 8px;font-size:12px;color:var(--cream3);opacity:.5}
+
+/* ===== UTILITIES ===== */
+.text-gold{color:var(--gold)}
+.text-green{color:var(--green)}
+.text-red{color:var(--red)}
+.mt-16{margin-top:16px}
+.mb-8{margin-bottom:8px}
+.hidden{display:none!important}
+  </style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen" class="screen active">
+  <div class="auth-container">
+    <div class="auth-logo">
+      <svg class="auth-star" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="28" fill="none" stroke="#d4a853" stroke-width="2"/>
+        <polygon points="32,12 36,24 49,24 39,31 42,43 32,36 22,43 25,31 15,24 28,24" fill="#d4a853"/>
+      </svg>
+      <h1>Citizenship Prep</h1>
+      <p>Your study companion for the journey ahead</p>
+    </div>
+    <form id="auth-form">
+      <input type="email" id="auth-email" placeholder="Email" required autocomplete="email">
+      <input type="password" id="auth-password" placeholder="Password" required autocomplete="current-password">
+      <button type="submit" id="auth-submit" class="btn-primary">Log In</button>
+      <p id="auth-error" class="error-text"></p>
+      <p class="auth-toggle">
+        <span id="auth-toggle-text">Don't have an account?</span>
+        <a href="#" id="auth-toggle-link">Sign Up</a>
+      </p>
+    </form>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app-screen" class="screen">
+
+  <!-- HOME / DASHBOARD -->
+  <section id="page-home" class="page active">
+    <div class="dash-hero fade-in">
+      <h2 id="greeting">Study Time</h2>
+      <p id="greeting-sub">Let's get you ready</p>
+    </div>
+
+    <div class="track-cards fade-in">
+      <div class="track-card" onclick="App.goTo('civics')">
+        <div class="track-icon">📜</div>
+        <h3>N-400 Civics</h3>
+        <p id="civics-summary">128 questions</p>
+      </div>
+      <div class="track-card" onclick="App.goTo('i751')">
+        <div class="track-icon">💍</div>
+        <h3>I-751 Prep</h3>
+        <p id="i751-summary">Interview & docs</p>
+      </div>
+    </div>
+
+    <div class="card readiness fade-in">
+      <div class="card-title">Test Readiness</div>
+      <div class="readiness-bar"><div class="readiness-fill" id="readiness-fill" style="width:0%"></div></div>
+      <div class="readiness-label"><span id="readiness-pct">0%</span><span id="readiness-text">Start studying!</span></div>
+    </div>
+
+    <div class="quick-actions fade-in">
+      <button class="qa-btn" onclick="App.startFlashcards()"><span class="qa-icon">🃏</span> Flashcards</button>
+      <button class="qa-btn" onclick="App.startQuiz()"><span class="qa-icon">📝</span> Practice Quiz</button>
+      <button class="qa-btn" onclick="App.startWeakSpots()"><span class="qa-icon">🎯</span> Weak Spots</button>
+      <button class="qa-btn" onclick="App.goTo('i751')"><span class="qa-icon">📋</span> I-751 Prep</button>
+    </div>
+
+    <div class="card streak-card fade-in" id="streak-card">
+      <div class="streak-num" id="streak-num">0</div>
+      <div class="streak-info">
+        <span>Day Study Streak</span>
+        <div class="streak-days" id="streak-days"></div>
+      </div>
+    </div>
+
+    <footer class="app-footer"><p>Powered by Ada & Masha</p></footer>
+  </section>
+
+  <!-- CIVICS STUDY -->
+  <section id="page-civics" class="page">
+    <div class="page-header">
+      <button class="back-btn" onclick="App.goTo('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Back
+      </button>
+      <h1>Civics Study</h1>
+    </div>
+    <div class="section-tabs" id="civics-tabs">
+      <button class="section-tab active" data-tab="flashcards" onclick="App.civicsTab('flashcards')">Flashcards</button>
+      <button class="section-tab" data-tab="quiz" onclick="App.civicsTab('quiz')">Quiz</button>
+      <button class="section-tab" data-tab="categories" onclick="App.civicsTab('categories')">Topics</button>
+      <button class="section-tab" data-tab="weak" onclick="App.civicsTab('weak')">Weak Spots</button>
+    </div>
+    <div id="civics-content"></div>
+    <footer class="app-footer"><p>Powered by Ada & Masha</p></footer>
+  </section>
+
+  <!-- I-751 PREP -->
+  <section id="page-i751" class="page">
+    <div class="page-header">
+      <button class="back-btn" onclick="App.goTo('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Back
+      </button>
+      <h1>I-751 Prep</h1>
+    </div>
+    <div class="section-tabs">
+      <button class="section-tab active" data-tab="questions" onclick="App.i751Tab('questions')">Questions</button>
+      <button class="section-tab" data-tab="checklist" onclick="App.i751Tab('checklist')">Documents</button>
+      <button class="section-tab" data-tab="practice" onclick="App.i751Tab('practice')">Practice</button>
+    </div>
+    <div id="i751-content"></div>
+    <footer class="app-footer"><p>Powered by Ada & Masha</p></footer>
+  </section>
+
+  <!-- PROGRESS -->
+  <section id="page-progress" class="page">
+    <div class="page-header">
+      <h1>Progress</h1>
+      <p>Your study journey</p>
+    </div>
+    <div id="progress-content"></div>
+    <footer class="app-footer"><p>Powered by Ada & Masha</p></footer>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="page-settings" class="page">
+    <div class="page-header"><h1>Settings</h1></div>
+    <div id="settings-content"></div>
+    <footer class="app-footer"><p>Powered by Ada & Masha</p></footer>
+  </section>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="nav-btn active" data-page="home" onclick="App.goTo('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-btn" data-page="civics" onclick="App.goTo('civics')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      <span>Civics</span>
+    </button>
+    <button class="nav-btn" data-page="i751" onclick="App.goTo('i751')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg>
+      <span>I-751</span>
+    </button>
+    <button class="nav-btn" data-page="progress" onclick="App.goTo('progress')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      <span>Progress</span>
+    </button>
+    <button class="nav-btn" data-page="settings" onclick="App.goTo('settings')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span>Settings</span>
+    </button>
+  </nav>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ============================================================
+// CITIZENSHIP PREP APP
+// ============================================================
+
+const SUPABASE_URL = 'https://xfmcweloaladfnmfvkuk.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmbWN3ZWxvYWxhZGZubWZ2a3VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NzIwNDMsImV4cCI6MjA4OTU0ODA0M30.q2W-rI7wwdFMyYTiQEA301z69qiVi3OgZb8cYmGBU6I';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ============================================================
+// CIVICS QUESTIONS DATA — 2025 TEST (128 questions)
+// Public domain content from USCIS
+// ============================================================
+const QUESTIONS_2025 = [
+// AMERICAN GOVERNMENT
+// Principles of American Democracy
+{id:1,q:"What is the supreme law of the land?",a:["The Constitution"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:2,q:"What does the Constitution do?",a:["Sets up the government","Defines the government","Protects basic rights of Americans"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:3,q:"The idea of self-government is in the first three words of the Constitution. What are these words?",a:["We the People"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:4,q:"What is an amendment?",a:["A change (to the Constitution)","An addition (to the Constitution)"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:5,q:"What do we call the first ten amendments to the Constitution?",a:["The Bill of Rights"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:6,q:"What is one right or freedom from the First Amendment?",a:["Speech","Religion","Assembly","Press","Petition the government"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:7,q:"How many amendments does the Constitution have?",a:["Twenty-seven (27)"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:8,q:"What did the Declaration of Independence do?",a:["Announced our independence (from Great Britain)","Declared our independence (from Great Britain)","Said that the United States is free (from Great Britain)"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:9,q:"What are two rights in the Declaration of Independence?",a:["Life","Liberty","Pursuit of happiness"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:10,q:"What is freedom of religion?",a:["You can practice any religion, or not practice a religion"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:11,q:"What is the economic system in the United States?",a:["Capitalist economy","Market economy"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:12,q:"What is the 'rule of law'?",a:["Everyone must follow the law","Leaders must obey the law","Government must obey the law","No one is above the law"],cat:"Principles of American Democracy",cat2:"American Government"},
+// System of Government
+{id:13,q:"Name one branch or part of the government.",a:["Congress","Legislative","President","Executive","The courts","Judicial"],cat:"System of Government",cat2:"American Government"},
+{id:14,q:"What stops one branch of government from becoming too powerful?",a:["Checks and balances","Separation of powers"],cat:"System of Government",cat2:"American Government"},
+{id:15,q:"Who is in charge of the executive branch?",a:["The President"],cat:"System of Government",cat2:"American Government"},
+{id:16,q:"Who makes federal laws?",a:["Congress","Senate and House (of Representatives)","(U.S. or national) legislature"],cat:"System of Government",cat2:"American Government"},
+{id:17,q:"What are the two parts of the U.S. Congress?",a:["The Senate and House (of Representatives)"],cat:"System of Government",cat2:"American Government"},
+{id:18,q:"How many U.S. Senators are there?",a:["One hundred (100)"],cat:"System of Government",cat2:"American Government"},
+{id:19,q:"We elect a U.S. Senator for how many years?",a:["Six (6)"],cat:"System of Government",cat2:"American Government"},
+{id:20,q:"Who is one of your state's U.S. Senators now?",a:["Answers will vary. [For New York: Chuck Schumer, Kirsten Gillibrand]"],cat:"System of Government",cat2:"American Government"},
+{id:21,q:"The House of Representatives has how many voting members?",a:["Four hundred thirty-five (435)"],cat:"System of Government",cat2:"American Government"},
+{id:22,q:"We elect a U.S. Representative for how many years?",a:["Two (2)"],cat:"System of Government",cat2:"American Government"},
+{id:23,q:"Name your U.S. Representative.",a:["Answers will vary by district"],cat:"System of Government",cat2:"American Government"},
+{id:24,q:"Who does a U.S. Senator represent?",a:["All people of the state","The people of their state"],cat:"System of Government",cat2:"American Government"},
+{id:25,q:"Why do some states have more Representatives than other states?",a:["Because of the state's population","Because they have more people","Because some states have more people"],cat:"System of Government",cat2:"American Government"},
+{id:26,q:"We elect a President for how many years?",a:["Four (4)"],cat:"System of Government",cat2:"American Government"},
+{id:27,q:"In what month do we vote for President?",a:["November"],cat:"System of Government",cat2:"American Government"},
+{id:28,q:"What is the name of the President of the United States now?",a:["Visit uscis.gov/citizenship/testupdates for the name of the President"],cat:"System of Government",cat2:"American Government"},
+{id:29,q:"What is the name of the Vice President of the United States now?",a:["Visit uscis.gov/citizenship/testupdates for the name of the Vice President"],cat:"System of Government",cat2:"American Government"},
+{id:30,q:"If the President can no longer serve, who becomes President?",a:["The Vice President"],cat:"System of Government",cat2:"American Government"},
+{id:31,q:"If both the President and the Vice President can no longer serve, who becomes President?",a:["The Speaker of the House"],cat:"System of Government",cat2:"American Government"},
+{id:32,q:"Who is the Commander in Chief of the military?",a:["The President"],cat:"System of Government",cat2:"American Government"},
+{id:33,q:"Who signs bills to become laws?",a:["The President"],cat:"System of Government",cat2:"American Government"},
+{id:34,q:"Who vetoes bills?",a:["The President"],cat:"System of Government",cat2:"American Government"},
+{id:35,q:"What does the President's Cabinet do?",a:["Advises the President"],cat:"System of Government",cat2:"American Government"},
+{id:36,q:"What are two Cabinet-level positions?",a:["Secretary of Agriculture","Secretary of Commerce","Secretary of Defense","Secretary of Education","Secretary of Energy","Secretary of Health and Human Services","Secretary of Homeland Security","Secretary of Housing and Urban Development","Secretary of the Interior","Secretary of Labor","Secretary of State","Secretary of Transportation","Secretary of the Treasury","Secretary of Veterans Affairs","Attorney General","Vice President"],cat:"System of Government",cat2:"American Government"},
+{id:37,q:"What does the judicial branch do?",a:["Reviews laws","Explains laws","Resolves disputes (disagreements)","Decides if a law goes against the Constitution"],cat:"System of Government",cat2:"American Government"},
+{id:38,q:"What is the highest court in the United States?",a:["The Supreme Court"],cat:"System of Government",cat2:"American Government"},
+{id:39,q:"How many justices are on the Supreme Court?",a:["Nine (9)"],cat:"System of Government",cat2:"American Government"},
+{id:40,q:"Who is the Chief Justice of the United States now?",a:["Visit uscis.gov/citizenship/testupdates for the name of the Chief Justice"],cat:"System of Government",cat2:"American Government"},
+{id:41,q:"Under our Constitution, some powers belong to the federal government. What is one power of the federal government?",a:["To print money","To declare war","To create an army","To make treaties"],cat:"System of Government",cat2:"American Government"},
+{id:42,q:"Under our Constitution, some powers belong to the states. What is one power of the states?",a:["Provide schooling and education","Provide protection (police)","Provide safety (fire departments)","Give a driver's license","Approve zoning and land use"],cat:"System of Government",cat2:"American Government"},
+{id:43,q:"Who is the Governor of your state now?",a:["Answers will vary. [For New York: Kathy Hochul]"],cat:"System of Government",cat2:"American Government"},
+{id:44,q:"What is the capital of your state?",a:["Answers will vary. [For New York: Albany]"],cat:"System of Government",cat2:"American Government"},
+{id:45,q:"What are the two major political parties in the United States?",a:["Democratic and Republican"],cat:"System of Government",cat2:"American Government"},
+{id:46,q:"What is the political party of the President now?",a:["Visit uscis.gov/citizenship/testupdates"],cat:"System of Government",cat2:"American Government"},
+{id:47,q:"What is the name of the Speaker of the House of Representatives now?",a:["Visit uscis.gov/citizenship/testupdates for the name of the Speaker"],cat:"System of Government",cat2:"American Government"},
+// Rights and Responsibilities
+{id:48,q:"There are four amendments to the Constitution about who can vote. Describe one of them.",a:["Citizens eighteen (18) and older (can vote)","You don't have to pay (a poll tax) to vote","Any citizen can vote (women and men can vote)","A male citizen of any race (can vote)"],cat:"Rights and Responsibilities",cat2:"American Government"},
+{id:49,q:"What is one responsibility that is only for United States citizens?",a:["Serve on a jury","Vote in a federal election"],cat:"Rights and Responsibilities",cat2:"American Government"},
+{id:50,q:"Name one right only for United States citizens.",a:["Vote in a federal election","Run for federal office"],cat:"Rights and Responsibilities",cat2:"American Government"},
+{id:51,q:"What are two rights of everyone living in the United States?",a:["Freedom of expression","Freedom of speech","Freedom of assembly","Freedom to petition the government","Freedom of religion","The right to bear arms"],cat:"Rights and Responsibilities",cat2:"American Government"},
+{id:52,q:"What do we show loyalty to when we say the Pledge of Allegiance?",a:["The United States","The flag"],cat:"Rights and Responsibilities",cat2:"American Government"},
+{id:53,q:"What is one promise you make when you become a United States citizen?",a:["Give up loyalty to other countries","Defend the Constitution and laws of the United States","Obey the laws of the United States","Serve in the U.S. military (if needed)","Serve (do important work for) the nation (if needed)","Be loyal to the United States"],cat:"Rights and Responsibilities",cat2:"American Government"},
+{id:54,q:"How old do citizens have to be to vote for President?",a:["Eighteen (18) and older"],cat:"Rights and Responsibilities",cat2:"American Government"},
+{id:55,q:"What are two ways that Americans can participate in their democracy?",a:["Vote","Join a political party","Help with a campaign","Join a civic group","Join a community group","Give an elected official your opinion on an issue","Call Senators and Representatives","Publicly support or oppose an issue or policy","Run for office","Write to a newspaper"],cat:"Rights and Responsibilities",cat2:"American Government"},
+{id:56,q:"When is the last day you can send in federal income tax forms?",a:["April 15"],cat:"Rights and Responsibilities",cat2:"American Government"},
+{id:57,q:"When must all men register for the Selective Service?",a:["At age eighteen (18)","Between eighteen (18) and twenty-six (26)"],cat:"Rights and Responsibilities",cat2:"American Government"},
+// AMERICAN HISTORY
+// Colonial Period and Independence
+{id:58,q:"What is one reason colonists came to America?",a:["Freedom","Political liberty","Religious freedom","Economic opportunity","Practice their religion","Escape persecution"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:59,q:"Who lived in America before the Europeans arrived?",a:["American Indians","Native Americans"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:60,q:"What group of people was taken to America and sold as slaves?",a:["Africans","People from Africa"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:61,q:"Why did the colonists fight the British?",a:["Because of high taxes (taxation without representation)","Because the British army stayed in their houses (boarding, quartering)","Because they didn't have self-government"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:62,q:"Who wrote the Declaration of Independence?",a:["(Thomas) Jefferson"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:63,q:"When was the Declaration of Independence adopted?",a:["July 4, 1776"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:64,q:"There were 13 original states. Name three.",a:["New Hampshire","Massachusetts","Rhode Island","Connecticut","New York","New Jersey","Pennsylvania","Delaware","Maryland","Virginia","North Carolina","South Carolina","Georgia"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:65,q:"What happened at the Constitutional Convention?",a:["The Constitution was written","The Founding Fathers wrote the Constitution"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:66,q:"When was the Constitution written?",a:["1787"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:67,q:"The Federalist Papers supported the passage of the U.S. Constitution. Name one of the writers.",a:["(James) Madison","(Alexander) Hamilton","(John) Jay","Publius"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:68,q:"What is one thing Benjamin Franklin is famous for?",a:["U.S. diplomat","Oldest member of the Constitutional Convention","First Postmaster General of the United States","Writer of 'Poor Richard's Almanac'","Started the first free libraries"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:69,q:"Who is the 'Father of Our Country'?",a:["(George) Washington"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:70,q:"Who was the first President?",a:["(George) Washington"],cat:"Colonial Period and Independence",cat2:"American History"},
+// 1800s
+{id:71,q:"What territory did the United States buy from France in 1803?",a:["The Louisiana Territory","Louisiana"],cat:"1800s",cat2:"American History"},
+{id:72,q:"Name one war fought by the United States in the 1800s.",a:["War of 1812","Mexican-American War","Civil War","Spanish-American War"],cat:"1800s",cat2:"American History"},
+{id:73,q:"Name the U.S. war between the North and the South.",a:["The Civil War","The War between the States"],cat:"1800s",cat2:"American History"},
+{id:74,q:"Name one problem that led to the Civil War.",a:["Slavery","Economic reasons","States' rights"],cat:"1800s",cat2:"American History"},
+{id:75,q:"What was one important thing that Abraham Lincoln did?",a:["Freed the slaves (Emancipation Proclamation)","Saved (or preserved) the Union","Led the United States during the Civil War"],cat:"1800s",cat2:"American History"},
+{id:76,q:"What did the Emancipation Proclamation do?",a:["Freed the slaves","Freed slaves in the Confederacy","Freed slaves in the Confederate states","Freed slaves in most Southern states"],cat:"1800s",cat2:"American History"},
+{id:77,q:"What did Susan B. Anthony do?",a:["Fought for women's rights","Fought for civil rights"],cat:"1800s",cat2:"American History"},
+// Recent American History and Other Important Historical Information
+{id:78,q:"Name one war fought by the United States in the 1900s.",a:["World War I","World War II","Korean War","Vietnam War","(Persian) Gulf War"],cat:"Recent American History",cat2:"American History"},
+{id:79,q:"Who was President during World War I?",a:["(Woodrow) Wilson"],cat:"Recent American History",cat2:"American History"},
+{id:80,q:"Who was President during the Great Depression and World War II?",a:["(Franklin) Roosevelt"],cat:"Recent American History",cat2:"American History"},
+{id:81,q:"Who did the United States fight in World War II?",a:["Japan, Germany, and Italy"],cat:"Recent American History",cat2:"American History"},
+{id:82,q:"Before he was President, Eisenhower was a general. What war was he in?",a:["World War II"],cat:"Recent American History",cat2:"American History"},
+{id:83,q:"During the Cold War, what was the main concern of the United States?",a:["Communism"],cat:"Recent American History",cat2:"American History"},
+{id:84,q:"What movement tried to end racial discrimination?",a:["Civil rights (movement)"],cat:"Recent American History",cat2:"American History"},
+{id:85,q:"What did Martin Luther King, Jr. do?",a:["Fought for civil rights","Worked for equality for all Americans"],cat:"Recent American History",cat2:"American History"},
+{id:86,q:"What major event happened on September 11, 2001, in the United States?",a:["Terrorists attacked the United States"],cat:"Recent American History",cat2:"American History"},
+{id:87,q:"Name one American Indian tribe in the United States.",a:["Cherokee","Navajo","Sioux","Chippewa","Choctaw","Pueblo","Apache","Iroquois","Creek","Blackfeet","Seminole","Cheyenne","Arawak","Shawnee","Mohegan","Huron","Oneida","Lakota","Crow","Teton","Hopi","Inuit"],cat:"Recent American History",cat2:"American History"},
+{id:88,q:"Name one of the two longest rivers in the United States.",a:["Missouri (River)","Mississippi (River)"],cat:"Geography",cat2:"Integrated Civics"},
+{id:89,q:"What ocean is on the West Coast of the United States?",a:["Pacific (Ocean)"],cat:"Geography",cat2:"Integrated Civics"},
+{id:90,q:"What ocean is on the East Coast of the United States?",a:["Atlantic (Ocean)"],cat:"Geography",cat2:"Integrated Civics"},
+{id:91,q:"Name one U.S. territory.",a:["Puerto Rico","U.S. Virgin Islands","American Samoa","Northern Mariana Islands","Guam"],cat:"Geography",cat2:"Integrated Civics"},
+{id:92,q:"Name one state that borders Canada.",a:["Maine","New Hampshire","Vermont","New York","Pennsylvania","Ohio","Michigan","Minnesota","North Dakota","Montana","Idaho","Washington","Alaska"],cat:"Geography",cat2:"Integrated Civics"},
+{id:93,q:"Name one state that borders Mexico.",a:["California","Arizona","New Mexico","Texas"],cat:"Geography",cat2:"Integrated Civics"},
+{id:94,q:"What is the capital of the United States?",a:["Washington, D.C."],cat:"Geography",cat2:"Integrated Civics"},
+{id:95,q:"Where is the Statue of Liberty?",a:["New York (Harbor)","Liberty Island","New Jersey","Near New York City","On the Hudson (River)"],cat:"Geography",cat2:"Integrated Civics"},
+// Symbols
+{id:96,q:"Why does the flag have 13 stripes?",a:["Because there were 13 original colonies","Because the stripes represent the original colonies"],cat:"Symbols",cat2:"Integrated Civics"},
+{id:97,q:"Why does the flag have 50 stars?",a:["Because there is one star for each state","Because each star represents a state","Because there are 50 states"],cat:"Symbols",cat2:"Integrated Civics"},
+{id:98,q:"What is the name of the national anthem?",a:["The Star-Spangled Banner"],cat:"Symbols",cat2:"Integrated Civics"},
+// Holidays
+{id:99,q:"When do we celebrate Independence Day?",a:["July 4"],cat:"Holidays",cat2:"Integrated Civics"},
+{id:100,q:"Name two national U.S. holidays.",a:["New Year's Day","Martin Luther King, Jr. Day","Presidents' Day","Memorial Day","Independence Day","Labor Day","Columbus Day","Veterans Day","Thanksgiving","Christmas"],cat:"Holidays",cat2:"Integrated Civics"},
+// Additional 2025 questions (101-128)
+{id:101,q:"What did the 19th Amendment do?",a:["Gave women the right to vote","Gave (some) women the right to vote","Women's suffrage"],cat:"Rights and Responsibilities",cat2:"American Government"},
+{id:102,q:"Name one right guaranteed by the First Amendment.",a:["Freedom of speech","Freedom of religion","Freedom of the press","Freedom of assembly","Right to petition the government"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:103,q:"What is the purpose of the 10th Amendment?",a:["It states that the powers not given to the federal government belong to the states or to the people"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:104,q:"Who does a member of the House of Representatives represent?",a:["The people of their district","The citizens of their district"],cat:"System of Government",cat2:"American Government"},
+{id:105,q:"What is the purpose of the Electoral College?",a:["To elect the President"],cat:"System of Government",cat2:"American Government"},
+{id:106,q:"Name one power of the President.",a:["Sign bills into law","Veto bills","Enforce laws","Commander in Chief of the military","Make treaties","Appoint judges"],cat:"System of Government",cat2:"American Government"},
+{id:107,q:"Who is the current Chief Justice of the Supreme Court?",a:["Visit uscis.gov/citizenship/testupdates"],cat:"System of Government",cat2:"American Government"},
+{id:108,q:"How long do Supreme Court justices serve?",a:["For life","Until they want to retire","Until they die"],cat:"System of Government",cat2:"American Government"},
+{id:109,q:"What is one power the U.S. Constitution gives to Congress?",a:["Make laws","Declare war","Approve the budget","Confirm Presidential appointments"],cat:"System of Government",cat2:"American Government"},
+{id:110,q:"What is one thing only the federal government can do?",a:["Print money","Declare war","Create an army","Make treaties","Set foreign policy"],cat:"System of Government",cat2:"American Government"},
+{id:111,q:"What is the purpose of the United Nations?",a:["For countries to discuss and try to resolve world problems","To provide economic assistance to many countries"],cat:"Recent American History",cat2:"American History"},
+{id:112,q:"Name one war fought by the United States in the 2000s.",a:["War in Afghanistan","War in Iraq","Global War on Terror"],cat:"Recent American History",cat2:"American History"},
+{id:113,q:"Who was President during the September 11 attacks?",a:["George W. Bush"],cat:"Recent American History",cat2:"American History"},
+{id:114,q:"Name one important thing the federal government does.",a:["Enforces the law","Provides national defense","Provides social programs (Social Security, Medicare)"],cat:"System of Government",cat2:"American Government"},
+{id:115,q:"What is the 14th Amendment?",a:["It defines citizenship","It guarantees equal protection under the law","It ensures due process"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:116,q:"What is one reason the colonists were unhappy with the British government?",a:["Taxation without representation","They didn't have self-government","The British army stayed in their houses"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:117,q:"What is one benefit of being a U.S. citizen?",a:["Right to vote","Right to run for office","Right to a U.S. passport","Right to petition the government"],cat:"Rights and Responsibilities",cat2:"American Government"},
+{id:118,q:"What are the first 10 amendments called?",a:["The Bill of Rights"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:119,q:"Name one right protected by the Bill of Rights.",a:["Freedom of speech","Freedom of religion","Right to bear arms","Right to a trial by jury","Right to due process"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:120,q:"What is the economic system of the United States?",a:["Capitalism","Free market economy","Market economy"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:121,q:"What are inalienable rights?",a:["Rights that cannot be taken away","Natural rights","Rights given by God or nature"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:122,q:"What is the 'rule of law'?",a:["Everyone must follow the law","Leaders must obey the law","Government must obey the law","No one is above the law"],cat:"Principles of American Democracy",cat2:"American Government"},
+{id:123,q:"George Washington is important for many reasons. Name one.",a:["Father of Our Country","First President","General of the Continental Army","President of the Constitutional Convention"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:124,q:"Thomas Jefferson is important for many reasons. Name one.",a:["Wrote the Declaration of Independence","Third President","Doubled the size of the United States (Louisiana Purchase)","First Secretary of State","Founder of the University of Virginia"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:125,q:"Alexander Hamilton is important for many reasons. Name one.",a:["First Secretary of the Treasury","One of the writers of the Federalist Papers","Helped establish the national banking system"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:126,q:"James Madison is important for many reasons. Name one.",a:["Father of the Constitution","Fourth President","One of the writers of the Federalist Papers","Wrote the Bill of Rights"],cat:"Colonial Period and Independence",cat2:"American History"},
+{id:127,q:"What did the 13th Amendment do?",a:["Abolished slavery","Freed the slaves"],cat:"1800s",cat2:"American History"},
+{id:128,q:"What did the 15th Amendment do?",a:["Gave African American men the right to vote","Gave citizens the right to vote regardless of race"],cat:"1800s",cat2:"American History"},
+];
+
+// 2008 TEST (100 questions) - same as first 100 of 2025 with minor wording differences
+const QUESTIONS_2008 = QUESTIONS_2025.slice(0, 100);
+
+// I-751 Interview Questions
+const I751_QUESTIONS = [
+{q:"How and where did you meet your spouse?",tip:"They want to confirm your story is consistent and natural. Include specific details — who introduced you, what drew you together, the timeline."},
+{q:"Describe your wedding.",tip:"They want details: date, venue, guest count, who officiated, what you wore, who attended. Consistency between both partners' answers is key."},
+{q:"What does your spouse do for work?",tip:"Know the company name, job title, general responsibilities, work schedule. Basic stuff a real partner would know."},
+{q:"What is your daily routine together?",tip:"They're checking that you actually live together. Who wakes up first? Who cooks? Morning routines, evening routines."},
+{q:"What did you do for your last anniversary, birthday, or holiday?",tip:"Specific celebrations show ongoing relationship. Gifts exchanged, where you went, who was there."},
+{q:"Can you name some of your spouse's friends and family?",tip:"Knowing your partner's social circle is natural. Parents' names, siblings, close friends. Where they live, how often you see them."},
+{q:"Describe your home layout.",tip:"They may ask how many rooms, what floor you live on, where the bathroom is, what color the bedroom is. Know your home."},
+{q:"What joint financial accounts do you have? Which banks?",tip:"Joint accounts are strong evidence. Know the bank names, account types (checking, savings, credit cards)."},
+{q:"Who pays which bills?",tip:"Demonstrate shared financial life. Rent/mortgage, utilities, subscriptions — who handles what."},
+{q:"Do you have any pets? What are their names?",tip:"Simple question but they'll check consistency. If you have pets, know breeds, ages, names, who takes care of them."},
+{q:"What is your spouse's daily schedule?",tip:"What time do they leave for work? When do they come home? Weekend routines? Shows you live together."},
+{q:"Where have you traveled together?",tip:"Trips together show a real relationship. Dates, destinations, what you did. Bring photos if you can."},
+{q:"How do you resolve disagreements?",tip:"They want to see a real relationship, not a perfect one. Be honest but appropriate. 'We talk it out' or 'we give each other space first.'"},
+{q:"What are your spouse's hobbies?",tip:"Know what your partner does in their free time. Sports, gaming, reading, cooking — specifics matter."},
+{q:"What did you do last weekend?",tip:"Recent, specific details are convincing. Where you went, what you ate, who you saw. The mundane is fine."},
+];
+
+// I-751 Document Checklist
+const I751_CHECKLIST = [
+{key:"tax_returns",label:"Joint Tax Returns",desc:"Filed jointly for each year of conditional residence"},
+{key:"bank_statements",label:"Joint Bank Statements",desc:"Checking, savings, investment accounts"},
+{key:"lease_mortgage",label:"Joint Lease/Mortgage",desc:"Both names on housing documents"},
+{key:"utility_bills",label:"Joint Utility Bills",desc:"Electric, gas, water, internet — both names"},
+{key:"insurance",label:"Insurance Policies",desc:"Health, auto, renters/homeowners — joint or listing spouse"},
+{key:"photos",label:"Photos Together",desc:"Chronological photos spanning your relationship"},
+{key:"affidavits",label:"Affidavits from Friends/Family",desc:"Sworn statements from people who know your relationship"},
+{key:"travel_records",label:"Travel Records",desc:"Flights, hotels booked together, passport stamps"},
+{key:"subscriptions",label:"Joint Subscriptions/Memberships",desc:"Gym, streaming, warehouse clubs — shared accounts"},
+];
+
+// ============================================================
+// APP STATE
+// ============================================================
+const Store = {
+  _data: null,
+  _key: 'citizenship_app_data',
+  load() {
+    try { this._data = JSON.parse(localStorage.getItem(this._key)) || {}; } catch { this._data = {}; }
+    if (!this._data.progress) this._data.progress = {};
+    if (!this._data.quizHistory) this._data.quizHistory = [];
+    if (!this._data.checklist) this._data.checklist = {};
+    if (!this._data.streaks) this._data.streaks = {};
+    if (!this._data.settings) this._data.settings = { testVersion: '2025' };
+    return this._data;
+  },
+  save() { localStorage.setItem(this._key, JSON.stringify(this._data)); },
+  get d() { return this._data || this.load(); },
+
+  getProgress(qId, version) {
+    const k = `${version}_${qId}`;
+    return this.d.progress[k] || { correct: 0, wrong: 0, mastered: false, lastSeen: null };
+  },
+  updateProgress(qId, version, correct) {
+    const k = `${version}_${qId}`;
+    const p = this.getProgress(qId, version);
+    if (correct) { p.correct++; } else { p.correct = 0; p.wrong++; }
+    p.mastered = p.correct >= 3;
+    p.lastSeen = Date.now();
+    this.d.progress[k] = p;
+    this.save();
+  },
+  addQuiz(result) {
+    this.d.quizHistory.push(result);
+    if (this.d.quizHistory.length > 50) this.d.quizHistory = this.d.quizHistory.slice(-50);
+    this.save();
+  },
+  getChecklist() { return this.d.checklist; },
+  setChecklistItem(key, val) { this.d.checklist[key] = val; this.save(); },
+  recordStudy() {
+    const today = new Date().toISOString().split('T')[0];
+    this.d.streaks[today] = true;
+    this.save();
+  },
+  getStreak() {
+    const days = Object.keys(this.d.streaks).sort().reverse();
+    if (!days.length) return 0;
+    let streak = 0;
+    const today = new Date();
+    for (let i = 0; i < 365; i++) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const k = d.toISOString().split('T')[0];
+      if (this.d.streaks[k]) streak++;
+      else if (i > 0) break;
+    }
+    return streak;
+  },
+  getTestVersion() { return this.d.settings?.testVersion || '2025'; },
+  setTestVersion(v) { this.d.settings.testVersion = v; this.save(); },
+  getQuestions() { return this.getTestVersion() === '2025' ? QUESTIONS_2025 : QUESTIONS_2008; },
+  getMasteredCount() {
+    const v = this.getTestVersion();
+    const qs = this.getQuestions();
+    return qs.filter(q => this.getProgress(q.id, v).mastered).length;
+  },
+  getWeakQuestions() {
+    const v = this.getTestVersion();
+    return this.getQuestions().filter(q => {
+      const p = this.getProgress(q.id, v);
+      return p.wrong > 0 && !p.mastered;
+    }).sort((a, b) => {
+      const pa = this.getProgress(a.id, v), pb = this.getProgress(b.id, v);
+      return pb.wrong - pa.wrong;
+    });
+  },
+  getReadiness() {
+    const qs = this.getQuestions();
+    const mastered = this.getMasteredCount();
+    return Math.round((mastered / qs.length) * 100);
+  }
+};
+
+// ============================================================
+// APP CONTROLLER
+// ============================================================
+const App = {
+  currentPage: 'home',
+  currentCivicsTab: 'flashcards',
+  currentI751Tab: 'questions',
+  flashcardIndex: 0,
+  flashcardDeck: [],
+  quizState: null,
+  userId: null,
+
+  async init() {
+    Store.load();
+    this.setupAuth();
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+  },
+
+  setupAuth() {
+    const form = document.getElementById('auth-form');
+    const toggle = document.getElementById('auth-toggle-link');
+    let isLogin = true;
+
+    toggle.addEventListener('click', e => {
+      e.preventDefault();
+      isLogin = !isLogin;
+      document.getElementById('auth-submit').textContent = isLogin ? 'Log In' : 'Sign Up';
+      document.getElementById('auth-toggle-text').textContent = isLogin ? "Don't have an account?" : 'Already have an account?';
+      toggle.textContent = isLogin ? 'Sign Up' : 'Log In';
+      document.getElementById('auth-error').textContent = '';
+    });
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = document.getElementById('auth-email').value;
+      const pass = document.getElementById('auth-password').value;
+      const errEl = document.getElementById('auth-error');
+      errEl.textContent = '';
+
+      try {
+        const { data, error } = isLogin
+          ? await sb.auth.signInWithPassword({ email, password: pass })
+          : await sb.auth.signUp({ email, password: pass });
+        if (error) throw error;
+        if (!isLogin && !data.session) {
+          errEl.style.color = 'var(--green)';
+          errEl.textContent = 'Check your email to confirm your account!';
+          return;
+        }
+        this.userId = data.user?.id;
+        this.showApp();
+      } catch (err) {
+        errEl.textContent = err.message || 'Something went wrong';
+      }
+    });
+
+    // Check existing session
+    sb.auth.getSession().then(({ data }) => {
+      if (data.session) {
+        this.userId = data.session.user.id;
+        this.showApp();
+      }
+    });
+  },
+
+  showApp() {
+    document.getElementById('auth-screen').classList.remove('active');
+    document.getElementById('app-screen').classList.add('active');
+    this.renderDashboard();
+  },
+
+  goTo(page) {
+    this.currentPage = page;
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(`page-${page}`).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.page === page);
+    });
+
+    if (page === 'home') this.renderDashboard();
+    else if (page === 'civics') this.civicsTab(this.currentCivicsTab);
+    else if (page === 'i751') this.i751Tab(this.currentI751Tab);
+    else if (page === 'progress') this.renderProgress();
+    else if (page === 'settings') this.renderSettings();
+  },
+
+  // ===== DASHBOARD =====
+  renderDashboard() {
+    const hour = new Date().getHours();
+    const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+    document.getElementById('greeting').textContent = greeting;
+
+    const qs = Store.getQuestions();
+    const mastered = Store.getMasteredCount();
+    const version = Store.getTestVersion();
+    document.getElementById('civics-summary').textContent = `${mastered}/${qs.length} mastered`;
+
+    const checkData = Store.getChecklist();
+    const checkDone = I751_CHECKLIST.filter(c => checkData[c.key]?.completed).length;
+    document.getElementById('i751-summary').textContent = `${checkDone}/${I751_CHECKLIST.length} docs ready`;
+
+    const readiness = Store.getReadiness();
+    document.getElementById('readiness-fill').style.width = readiness + '%';
+    document.getElementById('readiness-pct').textContent = readiness + '%';
+    const readinessText = readiness < 20 ? "Let's get started!" :
+      readiness < 50 ? 'Building momentum' :
+      readiness < 75 ? 'Making great progress!' :
+      readiness < 95 ? 'Almost there!' : 'Ready for the test!';
+    document.getElementById('readiness-text').textContent = readinessText;
+
+    // Streak
+    const streak = Store.getStreak();
+    document.getElementById('streak-num').textContent = streak;
+    const streakDays = document.getElementById('streak-days');
+    streakDays.innerHTML = '';
+    const today = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const k = d.toISOString().split('T')[0];
+      const dot = document.createElement('div');
+      dot.className = 'streak-dot' + (Store.d.streaks[k] ? ' active' : '') + (i === 0 ? ' today' : '');
+      streakDays.appendChild(dot);
+    }
+
+    document.getElementById('greeting-sub').textContent =
+      version === '2025' ? '2025 Test · 128 questions · Need 12/20' : '2008 Test · 100 questions · Need 6/10';
+  },
+
+  // ===== CIVICS =====
+  civicsTab(tab) {
+    this.currentCivicsTab = tab;
+    document.querySelectorAll('#civics-tabs .section-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.tab === tab);
+    });
+    const el = document.getElementById('civics-content');
+    if (tab === 'flashcards') this.renderFlashcards(el);
+    else if (tab === 'quiz') this.renderQuizSetup(el);
+    else if (tab === 'categories') this.renderCategories(el);
+    else if (tab === 'weak') this.renderWeakSpots(el);
+  },
+
+  startFlashcards(categoryFilter) {
+    this.goTo('civics');
+    this.flashcardDeck = categoryFilter
+      ? Store.getQuestions().filter(q => q.cat === categoryFilter || q.cat2 === categoryFilter)
+      : [...Store.getQuestions()];
+    this.shuffleArray(this.flashcardDeck);
+    this.flashcardIndex = 0;
+    this.civicsTab('flashcards');
+  },
+
+  renderFlashcards(el) {
+    if (!this.flashcardDeck.length) {
+      this.flashcardDeck = [...Store.getQuestions()];
+      this.shuffleArray(this.flashcardDeck);
+      this.flashcardIndex = 0;
+    }
+    const q = this.flashcardDeck[this.flashcardIndex];
+    if (!q) { this.flashcardIndex = 0; return this.renderFlashcards(el); }
+    const v = Store.getTestVersion();
+    const p = Store.getProgress(q.id, v);
+
+    el.innerHTML = `
+      <div class="flashcard-container slide-up">
+        <div class="flashcard" id="flashcard" onclick="App.flipCard()">
+          <div class="flashcard-face">
+            <span class="fc-category-label">${q.cat}</span>
+            <span class="flashcard-q-num">Question ${q.id} of ${Store.getQuestions().length}</span>
+            <div class="flashcard-question">${q.q}</div>
+            <div class="flashcard-tap">Tap to reveal answer</div>
+          </div>
+          <div class="flashcard-face flashcard-back">
+            <span class="fc-category-label">${q.cat}</span>
+            <span class="flashcard-q-num">Answer</span>
+            <div class="flashcard-answer">${q.a.join('<br>')}</div>
+          </div>
+        </div>
+        <div class="flashcard-actions" id="fc-actions" style="display:none">
+          <button class="fc-btn wrong" onclick="App.flashcardAnswer(false)">Need Practice</button>
+          <button class="fc-btn right" onclick="App.flashcardAnswer(true)">Got It!</button>
+        </div>
+        <div class="fc-progress">${this.flashcardIndex + 1} / ${this.flashcardDeck.length} · ${p.mastered ? '⭐ Mastered' : p.correct > 0 ? `${p.correct}/3 streak` : 'New'}</div>
+      </div>`;
+  },
+
+  flipCard() {
+    const card = document.getElementById('flashcard');
+    card.classList.toggle('flipped');
+    document.getElementById('fc-actions').style.display = card.classList.contains('flipped') ? 'flex' : 'none';
+  },
+
+  flashcardAnswer(correct) {
+    const q = this.flashcardDeck[this.flashcardIndex];
+    Store.updateProgress(q.id, Store.getTestVersion(), correct);
+    Store.recordStudy();
+    this.flashcardIndex++;
+    if (this.flashcardIndex >= this.flashcardDeck.length) {
+      this.flashcardIndex = 0;
+      this.shuffleArray(this.flashcardDeck);
+    }
+    this.renderFlashcards(document.getElementById('civics-content'));
+  },
+
+  // ===== QUIZ =====
+  startQuiz() {
+    this.goTo('civics');
+    this.civicsTab('quiz');
+  },
+
+  renderQuizSetup(el) {
+    const v = Store.getTestVersion();
+    const total = v === '2025' ? 20 : 10;
+    const pass = v === '2025' ? 12 : 6;
+    el.innerHTML = `
+      <div class="quiz-setup slide-up">
+        <h2>Practice Quiz</h2>
+        <p>${v === '2025' ? '2025 Test' : '2008 Test'}: ${total} questions, need ${pass} correct</p>
+        <button class="btn-primary quiz-start-btn" onclick="App.beginQuiz()">Start Quiz</button>
+        ${Store.d.quizHistory.length ? `<div class="mt-16"><p style="color:var(--cream3);font-size:13px">Last score: ${Store.d.quizHistory[Store.d.quizHistory.length-1].score}/${Store.d.quizHistory[Store.d.quizHistory.length-1].total}</p></div>` : ''}
+      </div>`;
+  },
+
+  beginQuiz() {
+    const v = Store.getTestVersion();
+    const total = v === '2025' ? 20 : 10;
+    const qs = [...Store.getQuestions()];
+    this.shuffleArray(qs);
+    this.quizState = {
+      questions: qs.slice(0, total),
+      current: 0,
+      score: 0,
+      wrong: 0,
+      answers: [],
+      version: v,
+      pass: v === '2025' ? 12 : 6
+    };
+    this.renderQuizQuestion();
+  },
+
+  renderQuizQuestion() {
+    const el = document.getElementById('civics-content');
+    const s = this.quizState;
+    if (!s) return;
+
+    // Check end conditions
+    if (s.score >= s.pass || s.wrong >= (s.version === '2025' ? 9 : 4) || s.current >= s.questions.length) {
+      return this.renderQuizResults(el);
+    }
+
+    const q = s.questions[s.current];
+    const allAnswers = Store.getQuestions().reduce((acc, qu) => {
+      qu.a.forEach(a => { if (a.length < 60 && !a.includes('Visit') && !a.includes('Answers will vary')) acc.add(a); });
+      return acc;
+    }, new Set());
+
+    // Generate options: 1 correct + 3 wrong
+    const correctAnswer = q.a.find(a => !a.includes('Visit') && !a.includes('Answers will vary')) || q.a[0];
+    let options = [correctAnswer];
+    const wrongPool = [...allAnswers].filter(a => !q.a.includes(a));
+    this.shuffleArray(wrongPool);
+    options.push(...wrongPool.slice(0, 3));
+    this.shuffleArray(options);
+
+    el.innerHTML = `
+      <div class="quiz-q slide-up">
+        <div class="quiz-score-display">Score: <span>${s.score}/${s.pass} needed</span> · Wrong: <span class="text-red">${s.wrong}</span></div>
+        <div class="quiz-q-num">Question ${s.current + 1} of ${s.questions.length}</div>
+        <div class="quiz-q-text">${q.q}</div>
+        <div class="quiz-options" id="quiz-options">
+          ${options.map((o, i) => `<button class="quiz-opt" data-idx="${i}" onclick="App.selectQuizOption(this)">${o}</button>`).join('')}
+        </div>
+        <button class="btn-primary quiz-submit" id="quiz-submit" onclick="App.submitQuizAnswer()" disabled>Check Answer</button>
+        <div id="quiz-feedback"></div>
+      </div>`;
+    this._quizCorrectAnswer = correctAnswer;
+    this._quizSelectedOption = null;
+  },
+
+  selectQuizOption(btn) {
+    document.querySelectorAll('.quiz-opt').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    this._quizSelectedOption = btn.textContent;
+    document.getElementById('quiz-submit').disabled = false;
+  },
+
+  submitQuizAnswer() {
+    const s = this.quizState;
+    const q = s.questions[s.current];
+    const selected = this._quizSelectedOption;
+    const isCorrect = q.a.some(a => a.toLowerCase() === selected.toLowerCase());
+
+    // Show feedback
+    document.querySelectorAll('.quiz-opt').forEach(btn => {
+      if (q.a.some(a => a.toLowerCase() === btn.textContent.toLowerCase())) btn.classList.add('correct');
+      else if (btn.classList.contains('selected')) btn.classList.add('incorrect');
+      btn.style.pointerEvents = 'none';
+    });
+
+    const fb = document.getElementById('quiz-feedback');
+    if (isCorrect) {
+      s.score++;
+      fb.className = 'quiz-feedback correct';
+      fb.textContent = 'Correct!';
+    } else {
+      s.wrong++;
+      fb.className = 'quiz-feedback wrong';
+      fb.innerHTML = `Wrong. Correct answer: ${q.a[0]}`;
+    }
+
+    Store.updateProgress(q.id, s.version, isCorrect);
+    s.answers.push({ qId: q.id, correct: isCorrect });
+
+    // Auto-advance
+    const submitBtn = document.getElementById('quiz-submit');
+    submitBtn.textContent = 'Next Question';
+    submitBtn.onclick = () => {
+      s.current++;
+      this.renderQuizQuestion();
+    };
+    submitBtn.disabled = false;
+  },
+
+  renderQuizResults(el) {
+    const s = this.quizState;
+    const passed = s.score >= s.pass;
+    Store.addQuiz({
+      date: new Date().toISOString(),
+      version: s.version,
+      score: s.score,
+      total: s.questions.length,
+      passed
+    });
+    Store.recordStudy();
+
+    el.innerHTML = `
+      <div class="quiz-results slide-up">
+        <div class="score-big">${s.score}/${s.questions.length}</div>
+        <div class="score-label">questions correct</div>
+        <div class="result-badge ${passed ? 'pass' : 'fail'}">${passed ? 'PASSED!' : 'Keep Studying'}</div>
+        <p style="color:var(--cream3);font-size:14px;margin-bottom:24px">
+          ${passed ? 'You would have passed the test! Keep it up.' : `You needed ${s.pass} correct. Don't worry — practice makes perfect.`}
+        </p>
+        <button class="btn-primary" onclick="App.beginQuiz()" style="margin-bottom:12px">Try Again</button>
+        <button class="qa-btn" onclick="App.startWeakSpots()" style="justify-content:center;width:100%">
+          <span class="qa-icon">🎯</span> Study Weak Spots
+        </button>
+      </div>`;
+  },
+
+  // ===== CATEGORIES =====
+  renderCategories(el) {
+    const qs = Store.getQuestions();
+    const v = Store.getTestVersion();
+    const cats = {};
+    qs.forEach(q => {
+      if (!cats[q.cat]) cats[q.cat] = { total: 0, mastered: 0 };
+      cats[q.cat].total++;
+      if (Store.getProgress(q.id, v).mastered) cats[q.cat].mastered++;
+    });
+
+    el.innerHTML = `<div class="slide-up">
+      ${Object.entries(cats).map(([cat, data]) => {
+        const pct = Math.round((data.mastered / data.total) * 100);
+        return `<div class="card" style="cursor:pointer" onclick="App.startFlashcards('${cat}')">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:15px;font-weight:600;color:var(--cream)">${cat}</div>
+              <div style="font-size:12px;color:var(--cream3);margin-top:4px">${data.mastered}/${data.total} mastered</div>
+            </div>
+            <div style="font-size:24px;font-weight:700;color:${pct === 100 ? 'var(--green)' : 'var(--gold)'}">${pct}%</div>
+          </div>
+          <div class="readiness-bar" style="margin-top:12px"><div class="readiness-fill" style="width:${pct}%;background:${pct === 100 ? 'var(--green)' : 'linear-gradient(90deg,var(--gold),var(--gold2))'}"></div></div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  },
+
+  // ===== WEAK SPOTS =====
+  startWeakSpots() {
+    this.goTo('civics');
+    const weak = Store.getWeakQuestions();
+    if (weak.length) {
+      this.flashcardDeck = weak;
+      this.flashcardIndex = 0;
+    }
+    this.civicsTab('weak');
+  },
+
+  renderWeakSpots(el) {
+    const weak = Store.getWeakQuestions();
+    const v = Store.getTestVersion();
+    if (!weak.length) {
+      el.innerHTML = `<div class="quiz-setup slide-up">
+        <h2>No Weak Spots!</h2>
+        <p>Keep studying to find questions that need more practice.</p>
+        <button class="btn-primary quiz-start-btn" onclick="App.startFlashcards()">Start Flashcards</button>
+      </div>`;
+      return;
+    }
+
+    this.flashcardDeck = weak;
+    this.flashcardIndex = 0;
+    this.renderFlashcards(el);
+  },
+
+  // ===== I-751 =====
+  i751Tab(tab) {
+    this.currentI751Tab = tab;
+    document.querySelectorAll('#page-i751 .section-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.tab === tab);
+    });
+    const el = document.getElementById('i751-content');
+    if (tab === 'questions') this.renderI751Questions(el);
+    else if (tab === 'checklist') this.renderI751Checklist(el);
+    else if (tab === 'practice') this.renderI751Practice(el);
+  },
+
+  renderI751Questions(el) {
+    el.innerHTML = `<div class="slide-up">
+      <p style="color:var(--cream3);font-size:13px;margin-bottom:16px">Tap any question to see what the officer is looking for.</p>
+      ${I751_QUESTIONS.map((q, i) => `
+        <div class="i751-question" onclick="this.querySelector('.i751-tip').classList.toggle('show')">
+          <div class="i751-q-text">${q.q}</div>
+          <div class="i751-tip"><strong>What they're looking for</strong>${q.tip}</div>
+        </div>
+      `).join('')}
+    </div>`;
+  },
+
+  renderI751Checklist(el) {
+    const data = Store.getChecklist();
+    el.innerHTML = `<div class="slide-up">
+      <p style="color:var(--cream3);font-size:13px;margin-bottom:16px">Track your document preparation. Tap to mark complete, add notes below each item.</p>
+      ${I751_CHECKLIST.map(item => {
+        const d = data[item.key] || { completed: false, notes: '' };
+        return `<div class="checklist-item ${d.completed ? 'completed' : ''}">
+          <div class="check-box ${d.completed ? 'checked' : ''}" onclick="App.toggleCheck('${item.key}', this)"></div>
+          <div class="check-info">
+            <div class="check-label">${item.label}</div>
+            <div style="font-size:12px;color:var(--cream3);margin-top:2px">${item.desc}</div>
+            <textarea class="check-notes" placeholder="Add notes..." 
+              onchange="App.saveCheckNotes('${item.key}', this.value)">${d.notes || ''}</textarea>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  },
+
+  toggleCheck(key, boxEl) {
+    const data = Store.getChecklist();
+    const current = data[key] || { completed: false, notes: '' };
+    current.completed = !current.completed;
+    Store.setChecklistItem(key, current);
+    boxEl.classList.toggle('checked');
+    boxEl.closest('.checklist-item').classList.toggle('completed');
+  },
+
+  saveCheckNotes(key, notes) {
+    const data = Store.getChecklist();
+    const current = data[key] || { completed: false, notes: '' };
+    current.notes = notes;
+    Store.setChecklistItem(key, current);
+  },
+
+  renderI751Practice(el) {
+    const q = I751_QUESTIONS[Math.floor(Math.random() * I751_QUESTIONS.length)];
+    el.innerHTML = `
+      <div class="quiz-setup slide-up">
+        <h2>Mock Interview</h2>
+        <p style="margin-bottom:24px">Practice answering out loud, then tap to see what they're looking for.</p>
+        <div class="card" style="text-align:left">
+          <div style="font-size:18px;color:var(--cream);font-weight:500;line-height:1.5;margin-bottom:16px">"${q.q}"</div>
+          <p style="color:var(--cream3);font-size:13px;margin-bottom:16px">Take a moment to answer this question out loud, as if you're in the interview.</p>
+          <button class="btn-primary" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Reveal Tip</button>
+          <div style="display:none;padding-top:12px;border-top:1px solid var(--bg4)">
+            <div style="font-size:11px;color:var(--gold-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">What they're looking for</div>
+            <div style="font-size:14px;color:var(--cream3);line-height:1.5">${q.tip}</div>
+          </div>
+        </div>
+        <button class="btn-primary mt-16" onclick="App.renderI751Practice(document.getElementById('i751-content'))">Next Question</button>
+      </div>`;
+    Store.recordStudy();
+  },
+
+  // ===== PROGRESS =====
+  renderProgress() {
+    const el = document.getElementById('progress-content');
+    const qs = Store.getQuestions();
+    const v = Store.getTestVersion();
+    const mastered = Store.getMasteredCount();
+    const streak = Store.getStreak();
+    const quizzes = Store.d.quizHistory.filter(q => q.version === v);
+    const weak = Store.getWeakQuestions().length;
+
+    // Quiz history chart
+    const recentQuizzes = quizzes.slice(-7);
+    const maxScore = Math.max(...recentQuizzes.map(q => q.total), 1);
+
+    el.innerHTML = `<div class="slide-up">
+      <div class="stat-card">
+        <div class="stat-num">${mastered}</div>
+        <div class="stat-info">
+          <h4>Questions Mastered</h4>
+          <p>Out of ${qs.length} total (${Math.round(mastered/qs.length*100)}%)</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--green)">${streak}</div>
+        <div class="stat-info">
+          <h4>Day Study Streak</h4>
+          <p>Keep it going!</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:${weak > 0 ? 'var(--red)' : 'var(--green)'}">${weak}</div>
+        <div class="stat-info">
+          <h4>Weak Spots</h4>
+          <p>Questions needing more practice</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">${quizzes.length}</div>
+        <div class="stat-info">
+          <h4>Quizzes Taken</h4>
+          <p>${quizzes.filter(q => q.passed).length} passed</p>
+        </div>
+      </div>
+
+      ${recentQuizzes.length ? `
+      <div class="chart-container">
+        <h3>Recent Quiz Scores</h3>
+        <div class="chart-bars">
+          ${recentQuizzes.map(q => {
+            const pct = Math.round((q.score / q.total) * 100);
+            const d = new Date(q.date);
+            return `<div class="chart-bar">
+              <div class="chart-bar-fill" style="height:${pct}%;background:${q.passed ? 'linear-gradient(180deg,var(--green),#22c55e)' : 'linear-gradient(180deg,var(--gold),var(--gold-dim))'}"></div>
+              <div class="chart-bar-label">${q.score}/${q.total}</div>
+              <div class="chart-bar-label">${d.getMonth()+1}/${d.getDate()}</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>` : ''}
+
+      <div class="card">
+        <div class="card-title">Confidence Meter</div>
+        <div style="text-align:center;padding:16px 0">
+          <div style="font-size:48px;font-weight:700;color:var(--gold)">${Store.getReadiness()}%</div>
+          <div style="font-size:14px;color:var(--cream3);margin-top:4px">Test Ready</div>
+        </div>
+        <div class="readiness-bar"><div class="readiness-fill" style="width:${Store.getReadiness()}%"></div></div>
+      </div>
+    </div>`;
+  },
+
+  // ===== SETTINGS =====
+  renderSettings() {
+    const el = document.getElementById('settings-content');
+    const v = Store.getTestVersion();
+    el.innerHTML = `<div class="slide-up">
+      <div class="card">
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Test Version</div>
+            <div class="setting-desc">Which civics test are you taking?</div>
+          </div>
+          <select class="setting-select" onchange="App.changeTestVersion(this.value)">
+            <option value="2025" ${v==='2025'?'selected':''}>2025 (128 Q, need 12/20)</option>
+            <option value="2008" ${v==='2008'?'selected':''}>2008 (100 Q, need 6/10)</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Current Version</div>
+            <div class="setting-desc">${v === '2025' ? '128 questions · Asked 20 · Need 12 correct' : '100 questions · Asked 10 · Need 6 correct'}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Data</div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Reset Progress</div>
+            <div class="setting-desc">Clear all study progress and quiz history</div>
+          </div>
+          <button class="btn-danger" onclick="App.resetProgress()">Reset</button>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Sign Out</div>
+            <div class="setting-desc">Log out of your account</div>
+          </div>
+          <button class="btn-danger" onclick="App.signOut()">Sign Out</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">About</div>
+        <div style="padding:8px 0;font-size:13px;color:var(--cream3);line-height:1.6">
+          <p>Citizenship Prep helps you study for the N-400 Naturalization Interview civics test and I-751 Removal of Conditions interview.</p>
+          <p style="margin-top:8px">Civics questions are public domain content from USCIS. Some answers (like current officials) may change — check <a href="https://www.uscis.gov/citizenship/testupdates" style="color:var(--gold)" target="_blank">uscis.gov/citizenship/testupdates</a> before your test.</p>
+          <p style="margin-top:12px;opacity:.5">Built with love by Ada & Masha</p>
+        </div>
+      </div>
+    </div>`;
+  },
+
+  changeTestVersion(v) {
+    Store.setTestVersion(v);
+    this.flashcardDeck = [];
+    this.renderSettings();
+  },
+
+  resetProgress() {
+    if (confirm('Reset all study progress? This cannot be undone.')) {
+      Store.d.progress = {};
+      Store.d.quizHistory = [];
+      Store.d.streaks = {};
+      Store.save();
+      this.flashcardDeck = [];
+      this.renderSettings();
+    }
+  },
+
+  async signOut() {
+    await sb.auth.signOut();
+    document.getElementById('app-screen').classList.remove('active');
+    document.getElementById('auth-screen').classList.add('active');
+  },
+
+  // ===== HELPERS =====
+  shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+};
+
+// Boot
+document.addEventListener('DOMContentLoaded', () => App.init());
+</script>
+</body>
+</html>
