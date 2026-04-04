@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0f0d0b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Soft Challenge</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <style>
+/* ===== RESET & BASE ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0d0b;--bg2:#1a1510;--bg3:#241e16;--bg4:#2e2519;
+  --text:#f5f0e8;--text2:#c4b89a;--text3:#8a7e6a;
+  --amber:#f59e0b;--amber2:#d97706;--amber3:#b45309;--amber-glow:rgba(245,158,11,0.15);
+  --gold:#fbbf24;--gold2:#f59e0b;
+  --warm:#fef3c7;--warm2:#fde68a;
+  --success:#34d399;--danger:#ef4444;
+  --radius:16px;--radius-sm:10px;
+  --nav-h:64px;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+html{font-family:var(--font);font-size:16px;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent;overflow:hidden;height:100%}
+body{height:100%;overflow:hidden;position:relative}
+.screen{display:none;height:100%;width:100%}
+.screen.active{display:flex;flex-direction:column}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font-family:inherit;font-size:inherit;color:var(--text);background:var(--bg3);border:1px solid var(--bg4);border-radius:var(--radius-sm);padding:12px 16px;outline:none;width:100%;transition:border-color .2s}
+input:focus,textarea:focus{border-color:var(--amber)}
+a{color:var(--amber);text-decoration:none}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+
+/* ===== AUTH ===== */
+.auth-container{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:24px;max-width:360px;margin:0 auto}
+.auth-logo{text-align:center;margin-bottom:40px}
+.auth-logo h1{font-size:28px;color:var(--text);margin-top:16px;font-weight:700;letter-spacing:-.5px}
+.auth-subtitle{color:var(--text3);font-size:14px;margin-top:6px}
+.auth-logo svg{filter:drop-shadow(0 0 20px rgba(245,158,11,0.3))}
+#auth-form{width:100%;display:flex;flex-direction:column;gap:12px}
+.btn-primary{background:linear-gradient(135deg,var(--amber),var(--amber2));color:#0f0d0b;font-weight:600;padding:14px;border-radius:var(--radius-sm);font-size:15px;transition:transform .15s,box-shadow .15s;text-align:center}
+.btn-primary:active{transform:scale(.97)}
+.btn-primary:hover{box-shadow:0 4px 20px rgba(245,158,11,0.3)}
+.error-text{color:var(--danger);font-size:13px;text-align:center;min-height:20px}
+.auth-toggle{text-align:center;color:var(--text3);font-size:13px;margin-top:8px}
+.auth-toggle a{color:var(--amber);font-weight:600;margin-left:4px}
+.forgot-link{text-align:center;font-size:12px;color:var(--text3);display:block}
+
+/* ===== APP LAYOUT ===== */
+#app-screen{display:none;height:100%}
+#app-screen.active{display:flex;flex-direction:column}
+.page{display:none;flex:1;overflow-y:auto;padding:16px 16px calc(var(--nav-h) + 24px);scroll-behavior:smooth}
+.page.active{display:block}
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);background:rgba(15,13,11,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:space-around;border-top:1px solid var(--bg3);z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;color:var(--text3);transition:color .2s;font-size:11px;font-weight:500;min-width:60px}
+.nav-btn.active{color:var(--amber)}
+.nav-btn svg{transition:transform .2s}
+.nav-btn.active svg{transform:scale(1.1)}
+
+/* ===== TODAY PAGE ===== */
+.day-header{text-align:center;margin-bottom:20px;padding-top:8px}
+.day-header h1{font-size:42px;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--amber2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}
+.day-header .day-subtitle{color:var(--text3);font-size:14px;margin-top:4px}
+.day-header .day-date{color:var(--text2);font-size:13px;margin-top:2px}
+
+/* ===== STREAK CARD ===== */
+.streak-card{background:linear-gradient(135deg,var(--bg2),var(--bg3));border-radius:var(--radius);padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-around;border:1px solid var(--bg4)}
+.streak-item{text-align:center}
+.streak-value{font-size:28px;font-weight:800;color:var(--amber)}
+.streak-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+
+/* ===== PROGRESS RING ===== */
+.progress-ring-wrap{display:flex;justify-content:center;margin-bottom:20px;position:relative}
+.progress-ring-wrap svg{filter:drop-shadow(0 0 12px rgba(245,158,11,0.2))}
+.progress-ring-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.progress-ring-count{font-size:32px;font-weight:800;color:var(--text)}
+.progress-ring-label{font-size:12px;color:var(--text3);display:block}
+
+/* ===== HABITS LIST ===== */
+.habits-section{margin-bottom:20px}
+.habits-section h2{font-size:16px;color:var(--text2);margin-bottom:12px;font-weight:600}
+.habit-item{display:flex;align-items:center;gap:14px;padding:16px;background:var(--bg2);border-radius:var(--radius);margin-bottom:8px;border:1px solid var(--bg4);transition:all .3s ease;cursor:pointer;position:relative;overflow:hidden;-webkit-user-select:none;user-select:none}
+.habit-item:active{transform:scale(.98)}
+.habit-item.checked{border-color:rgba(245,158,11,0.3);background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(217,119,6,0.04))}
+.habit-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--bg3);transition:all .3s;flex-shrink:0}
+.habit-item.checked .habit-icon{background:linear-gradient(135deg,var(--amber),var(--amber2));color:#0f0d0b}
+.habit-info{flex:1}
+.habit-name{font-size:15px;font-weight:600;color:var(--text)}
+.habit-desc{font-size:12px;color:var(--text3);margin-top:2px}
+.habit-check{width:28px;height:28px;border-radius:50%;border:2px solid var(--bg4);display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0}
+.habit-item.checked .habit-check{border-color:var(--amber);background:var(--amber)}
+.habit-check svg{opacity:0;transition:opacity .2s;transform:scale(.8)}
+.habit-item.checked .habit-check svg{opacity:1;transform:scale(1)}
+
+/* Ripple effect */
+.ripple{position:absolute;border-radius:50%;background:rgba(245,158,11,0.2);transform:scale(0);animation:ripple-anim .6s ease-out forwards;pointer-events:none}
+@keyframes ripple-anim{to{transform:scale(4);opacity:0}}
+
+/* Glow pulse on check */
+.habit-item.just-checked{animation:glow-pulse .5s ease-out}
+@keyframes glow-pulse{
+  0%{box-shadow:0 0 0 0 rgba(245,158,11,0.4)}
+  70%{box-shadow:0 0 0 12px rgba(245,158,11,0)}
+  100%{box-shadow:0 0 0 0 rgba(245,158,11,0)}
+}
+
+/* ===== ENCOURAGING MESSAGE ===== */
+.encourage-msg{text-align:center;padding:16px;color:var(--text2);font-size:14px;font-style:italic;opacity:.8;min-height:52px}
+
+/* ===== NOTES ===== */
+.notes-section{margin-bottom:20px}
+.notes-section textarea{width:100%;min-height:80px;resize:vertical;background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius-sm);padding:12px 16px;color:var(--text);font-size:14px}
+.notes-section label{display:block;font-size:13px;color:var(--text3);margin-bottom:6px}
+
+/* ===== CONFETTI ===== */
+.confetti-container{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1000;overflow:hidden}
+.confetti-piece{position:absolute;width:10px;height:10px;top:-10px;animation:confetti-fall 3s ease-in forwards}
+@keyframes confetti-fall{
+  0%{transform:translateY(0) rotate(0deg) scale(1);opacity:1}
+  80%{opacity:1}
+  100%{transform:translateY(100vh) rotate(720deg) scale(0.3);opacity:0}
+}
+
+/* ===== PERFECT DAY BANNER ===== */
+.perfect-day-banner{background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(251,191,36,0.08));border:1px solid rgba(245,158,11,0.3);border-radius:var(--radius);padding:20px;text-align:center;margin-bottom:16px;animation:perfect-glow 2s ease-in-out infinite alternate}
+.perfect-day-banner h3{color:var(--gold);font-size:18px;margin-bottom:4px}
+.perfect-day-banner p{color:var(--text2);font-size:13px}
+@keyframes perfect-glow{
+  from{box-shadow:0 0 20px rgba(245,158,11,0.1)}
+  to{box-shadow:0 0 40px rgba(245,158,11,0.2)}
+}
+
+/* ===== PROGRESS PAGE ===== */
+.progress-header{text-align:center;padding:8px 0 20px}
+.progress-header h1{font-size:24px;font-weight:700;color:var(--text)}
+
+/* Calendar grid */
+.calendar-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin-bottom:24px}
+.cal-day{aspect-ratio:1;border-radius:4px;position:relative;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text3);transition:all .2s}
+.cal-day.empty{background:var(--bg2);opacity:.3}
+.cal-day.future{background:var(--bg2);border:1px dashed var(--bg4)}
+.cal-day.partial{background:rgba(245,158,11,0.15)}
+.cal-day.partial-2{background:rgba(245,158,11,0.25)}
+.cal-day.partial-3{background:rgba(245,158,11,0.35)}
+.cal-day.partial-4{background:rgba(245,158,11,0.45)}
+.cal-day.partial-5{background:rgba(245,158,11,0.55)}
+.cal-day.partial-6{background:rgba(245,158,11,0.7)}
+.cal-day.perfect{background:linear-gradient(135deg,var(--amber),var(--amber2));color:#0f0d0b;font-weight:700}
+.cal-day.today{outline:2px solid var(--gold);outline-offset:1px}
+.cal-day.missed{background:var(--bg2);opacity:.5}
+.cal-legend{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:24px;font-size:11px;color:var(--text3)}
+.cal-legend-item{display:flex;align-items:center;gap:4px}
+.cal-legend-swatch{width:12px;height:12px;border-radius:2px}
+
+/* Stats cards */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.stat-card{background:var(--bg2);border-radius:var(--radius);padding:16px;border:1px solid var(--bg4);text-align:center}
+.stat-value{font-size:28px;font-weight:800;color:var(--amber)}
+.stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.stat-card.full-width{grid-column:1/-1}
+
+/* 100 day arc */
+.arc-container{display:flex;justify-content:center;margin-bottom:24px}
+.arc-container svg{max-width:320px;width:100%;filter:drop-shadow(0 0 8px rgba(245,158,11,0.15))}
+
+/* Habit breakdown */
+.habit-breakdown{margin-bottom:24px}
+.habit-breakdown h3{font-size:14px;color:var(--text2);margin-bottom:12px;font-weight:600}
+.breakdown-item{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.breakdown-icon{font-size:18px;width:32px;text-align:center}
+.breakdown-bar-wrap{flex:1}
+.breakdown-label{display:flex;justify-content:space-between;font-size:12px;color:var(--text3);margin-bottom:4px}
+.breakdown-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.breakdown-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--gold));border-radius:3px;transition:width .5s ease}
+
+/* ===== SETTINGS PAGE ===== */
+.settings-header{padding:8px 0 20px}
+.settings-header h1{font-size:24px;font-weight:700;color:var(--text)}
+.settings-group{margin-bottom:24px}
+.settings-group h3{font-size:14px;color:var(--text2);margin-bottom:12px;font-weight:600}
+.setting-item{background:var(--bg2);border-radius:var(--radius-sm);padding:16px;margin-bottom:8px;border:1px solid var(--bg4)}
+.setting-item label{display:block;font-size:13px;color:var(--text3);margin-bottom:6px}
+.setting-item input{margin-top:4px}
+.btn-danger{background:rgba(239,68,68,0.15);color:var(--danger);border:1px solid rgba(239,68,68,0.3);padding:14px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;width:100%;text-align:center;transition:all .2s}
+.btn-danger:hover{background:rgba(239,68,68,0.25)}
+.btn-secondary{background:var(--bg3);color:var(--text2);border:1px solid var(--bg4);padding:14px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;width:100%;text-align:center;transition:all .2s}
+.btn-secondary:hover{border-color:var(--amber)}
+.settings-footer{text-align:center;padding:20px;color:var(--text3);font-size:12px}
+.logout-btn{margin-top:8px}
+
+/* ===== MODAL ===== */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal-overlay.active{display:flex}
+.modal{background:var(--bg2);border-radius:var(--radius);width:100%;max-width:400px;padding:24px;border:1px solid var(--bg4)}
+.modal h2{font-size:18px;margin-bottom:16px;color:var(--text)}
+.modal-close{position:absolute;top:16px;right:16px;font-size:24px;color:var(--text3);cursor:pointer}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.animate-in{animation:fadeIn .4s ease-out}
+.animate-slide-up{animation:slideUp .5s ease-out}
+
+/* ===== LOADING ===== */
+.loading-spinner{display:flex;align-items:center;justify-content:center;padding:40px}
+.spinner{width:32px;height:32px;border:3px solid var(--bg4);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ===== FORGOT PASSWORD MODAL ===== */
+.success-text{color:var(--success);font-size:13px;text-align:center}
+  </style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen" class="screen active">
+  <div class="auth-container">
+    <div class="auth-logo">
+      <svg width="72" height="72" viewBox="0 0 72 72">
+        <circle cx="36" cy="36" r="30" fill="none" stroke="#f59e0b" stroke-width="3" opacity=".3"/>
+        <path d="M 36 6 A 30 30 0 1 1 6 36" fill="none" stroke="url(#auth-grad)" stroke-width="3" stroke-linecap="round"/>
+        <defs><linearGradient id="auth-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#d97706"/></linearGradient></defs>
+        <text x="36" y="40" text-anchor="middle" fill="#f59e0b" font-family="Georgia,serif" font-size="18" font-weight="bold">100</text>
+      </svg>
+      <h1>Soft Challenge</h1>
+      <p class="auth-subtitle">100 days of gentle growth</p>
+    </div>
+    <form id="auth-form">
+      <input type="email" id="auth-email" placeholder="Email" required autocomplete="email">
+      <input type="password" id="auth-password" placeholder="Password" required autocomplete="current-password">
+      <button type="submit" id="auth-submit" class="btn-primary">Log In</button>
+      <p id="auth-error" class="error-text"></p>
+      <p class="auth-toggle">
+        <span id="auth-toggle-text">Don't have an account?</span>
+        <a href="#" id="auth-toggle-link">Sign Up</a>
+      </p>
+      <a href="#" id="auth-forgot" class="forgot-link">Forgot password?</a>
+    </form>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app-screen" class="screen">
+
+  <!-- TODAY PAGE -->
+  <section id="page-today" class="page active">
+    <div class="day-header animate-in">
+      <h1 id="day-number">Day 1</h1>
+      <p class="day-subtitle" id="day-subtitle">Your journey begins</p>
+      <p class="day-date" id="day-date"></p>
+    </div>
+
+    <div id="perfect-banner"></div>
+
+    <div class="progress-ring-wrap animate-in">
+      <svg width="140" height="140" viewBox="0 0 140 140">
+        <circle cx="70" cy="70" r="58" fill="none" stroke="var(--bg3)" stroke-width="10"/>
+        <circle id="habit-ring" cx="70" cy="70" r="58" fill="none" stroke="url(#ring-grad)" stroke-width="10" stroke-linecap="round" stroke-dasharray="0 999" transform="rotate(-90 70 70)" style="transition:stroke-dasharray .5s ease"/>
+        <defs><linearGradient id="ring-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#d97706"/></linearGradient></defs>
+      </svg>
+      <div class="progress-ring-center">
+        <span class="progress-ring-count" id="ring-count">0/7</span>
+        <span class="progress-ring-label">today</span>
+      </div>
+    </div>
+
+    <div class="streak-card animate-in">
+      <div class="streak-item">
+        <div class="streak-value" id="current-streak">0</div>
+        <div class="streak-label">Current Streak</div>
+      </div>
+      <div class="streak-item">
+        <div class="streak-value" id="longest-streak">0</div>
+        <div class="streak-label">Longest Streak</div>
+      </div>
+      <div class="streak-item">
+        <div class="streak-value" id="total-days">0</div>
+        <div class="streak-label">Days Done</div>
+      </div>
+    </div>
+
+    <div class="habits-section" id="habits-list"></div>
+
+    <div class="encourage-msg" id="encourage-msg"></div>
+
+    <div class="notes-section animate-slide-up">
+      <label for="day-notes">Notes for today</label>
+      <textarea id="day-notes" placeholder="How are you feeling? What went well?"></textarea>
+    </div>
+  </section>
+
+  <!-- PROGRESS PAGE -->
+  <section id="page-progress" class="page">
+    <div class="progress-header">
+      <h1>Your Journey</h1>
+    </div>
+
+    <div class="arc-container" id="arc-container"></div>
+
+    <div class="stats-grid" id="stats-grid"></div>
+
+    <h3 style="color:var(--text2);font-size:14px;margin-bottom:12px">100-Day Map</h3>
+    <div class="calendar-grid" id="calendar-grid"></div>
+    <div class="cal-legend">
+      <div class="cal-legend-item"><div class="cal-legend-swatch" style="background:var(--bg2);opacity:.5"></div>Missed</div>
+      <div class="cal-legend-item"><div class="cal-legend-swatch" style="background:rgba(245,158,11,0.25)"></div>Some</div>
+      <div class="cal-legend-item"><div class="cal-legend-swatch" style="background:linear-gradient(135deg,var(--amber),var(--amber2))"></div>Perfect</div>
+    </div>
+
+    <div class="habit-breakdown" id="habit-breakdown"></div>
+  </section>
+
+  <!-- SETTINGS PAGE -->
+  <section id="page-settings" class="page">
+    <div class="settings-header"><h1>Settings</h1></div>
+
+    <div class="settings-group">
+      <h3>Challenge</h3>
+      <div class="setting-item">
+        <label for="setting-name">Challenge Name</label>
+        <input type="text" id="setting-name" placeholder="100 Day Soft Challenge">
+      </div>
+      <div class="setting-item">
+        <label for="setting-start">Start Date</label>
+        <input type="date" id="setting-start">
+      </div>
+      <button class="btn-primary" id="save-settings" style="margin-top:12px">Save Settings</button>
+    </div>
+
+    <div class="settings-group">
+      <h3>Danger Zone</h3>
+      <button class="btn-danger" id="reset-challenge">Reset Challenge</button>
+      <p style="font-size:12px;color:var(--text3);margin-top:8px;text-align:center">This deletes all your challenge data. Cannot be undone.</p>
+    </div>
+
+    <div class="settings-group">
+      <button class="btn-secondary logout-btn" id="logout-btn">Log Out</button>
+    </div>
+
+    <div class="settings-footer">
+      <p>Powered by Ada & Masha</p>
+      <p style="margin-top:4px">v1.0</p>
+    </div>
+  </section>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="nav-btn active" data-page="today">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <span>Today</span>
+    </button>
+    <button class="nav-btn" data-page="progress">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      <span>Progress</span>
+    </button>
+    <button class="nav-btn" data-page="settings">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span>Settings</span>
+    </button>
+  </nav>
+</div>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div class="modal-overlay" id="forgot-modal">
+  <div class="modal" style="position:relative">
+    <button class="modal-close" id="forgot-close">&times;</button>
+    <h2>Reset Password</h2>
+    <form id="forgot-form" style="display:flex;flex-direction:column;gap:12px">
+      <input type="email" id="forgot-email" placeholder="Your email" required>
+      <button type="submit" class="btn-primary">Send Reset Link</button>
+      <p id="forgot-msg" class="success-text"></p>
+    </form>
+  </div>
+</div>
+
+<!-- RESET CONFIRM MODAL -->
+<div class="modal-overlay" id="reset-modal">
+  <div class="modal" style="position:relative">
+    <button class="modal-close" id="reset-close">&times;</button>
+    <h2>Reset Challenge?</h2>
+    <p style="color:var(--text2);font-size:14px;margin-bottom:16px">This will delete all your check-ins and start fresh. Are you sure?</p>
+    <div style="display:flex;gap:12px">
+      <button class="btn-secondary" id="reset-cancel" style="flex:1">Cancel</button>
+      <button class="btn-danger" id="reset-confirm" style="flex:1">Reset Everything</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+'use strict';
+
+/* ===== Supabase ===== */
+const SUPABASE_URL = 'https://xfmcweloaladfnmfvkuk.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmbWN3ZWxvYWxhZGZubWZ2a3VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NzIwNDMsImV4cCI6MjA4OTU0ODA0M30.q2W-rI7wwdFMyYTiQEA301z69qiVi3OgZb8cYmGBU6I';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ===== Habits Config ===== */
+const HABITS = [
+  { id: 'water',        name: 'Water',         desc: '64oz / ~2L',                    icon: '\u{1F4A7}' },
+  { id: 'movement',     name: 'Movement',       desc: '30 min, any kind',              icon: '\u{1F3C3}' },
+  { id: 'reading',      name: 'Read',           desc: '10 pages',                      icon: '\u{1F4DA}' },
+  { id: 'nutrition',    name: 'Nutrition',       desc: 'Ate intentionally',             icon: '\u{1F96C}' },
+  { id: 'mindfulness',  name: 'Mindfulness',     desc: 'Meditation, journaling, breathwork', icon: '\u{1F9D8}' },
+  { id: 'sleep_hygiene',name: 'Sleep Hygiene',   desc: 'In bed by target time',         icon: '\u{1F319}' },
+  { id: 'self_care',    name: 'Self-Care',       desc: 'Shower, teeth, skincare',        icon: '\u{2728}' },
+];
+
+const ENCOURAGE_MSGS = [
+  "You're doing something beautiful for yourself.",
+  "Progress isn't perfect. It's persistent.",
+  "Small steps still move you forward.",
+  "Be gentle with yourself today.",
+  "You showed up. That's what matters.",
+  "Every day is a fresh start.",
+  "You're building something wonderful.",
+  "Rest is productive too.",
+  "Celebrate the small wins.",
+  "You're stronger than you think.",
+  "This is your journey, not a race.",
+  "One day at a time. You've got this.",
+  "Consistency over perfection.",
+  "You deserve this care.",
+  "Look how far you've come.",
+];
+
+const PERFECT_MSGS = [
+  "All 7! You're absolutely radiant today!",
+  "Perfect day! You're on fire!",
+  "7 for 7 — unstoppable!",
+  "Look at you go! Every single one!",
+  "A perfect day of self-love!",
+];
+
+/* ===== State ===== */
+let currentUser = null;
+let config = null;
+let todayEntry = null;
+let allEntries = [];
+let notesTimeout = null;
+
+/* ===== Auth ===== */
+const authScreen = document.getElementById('auth-screen');
+const appScreen = document.getElementById('app-screen');
+const authForm = document.getElementById('auth-form');
+const authEmail = document.getElementById('auth-email');
+const authPassword = document.getElementById('auth-password');
+const authSubmit = document.getElementById('auth-submit');
+const authError = document.getElementById('auth-error');
+const authToggleLink = document.getElementById('auth-toggle-link');
+const authToggleText = document.getElementById('auth-toggle-text');
+let isSignUp = false;
+
+authToggleLink.addEventListener('click', e => {
+  e.preventDefault();
+  isSignUp = !isSignUp;
+  authSubmit.textContent = isSignUp ? 'Sign Up' : 'Log In';
+  authToggleText.textContent = isSignUp ? 'Already have an account?' : "Don't have an account?";
+  authToggleLink.textContent = isSignUp ? 'Log In' : 'Sign Up';
+  authError.textContent = '';
+});
+
+authForm.addEventListener('submit', async e => {
+  e.preventDefault();
+  authError.textContent = '';
+  authSubmit.disabled = true;
+  authSubmit.textContent = 'Loading...';
+  try {
+    const { data, error } = isSignUp
+      ? await sb.auth.signUp({ email: authEmail.value, password: authPassword.value })
+      : await sb.auth.signInWithPassword({ email: authEmail.value, password: authPassword.value });
+    if (error) throw error;
+    if (isSignUp && data.user && !data.session) {
+      authError.style.color = 'var(--success)';
+      authError.textContent = 'Check your email to confirm!';
+    }
+  } catch (err) {
+    authError.style.color = 'var(--danger)';
+    authError.textContent = err.message;
+  }
+  authSubmit.disabled = false;
+  authSubmit.textContent = isSignUp ? 'Sign Up' : 'Log In';
+});
+
+// Forgot password
+document.getElementById('auth-forgot').addEventListener('click', e => {
+  e.preventDefault();
+  document.getElementById('forgot-modal').classList.add('active');
+});
+document.getElementById('forgot-close').addEventListener('click', () => {
+  document.getElementById('forgot-modal').classList.remove('active');
+});
+document.getElementById('forgot-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = document.getElementById('forgot-email').value;
+  const { error } = await sb.auth.resetPasswordForEmail(email);
+  document.getElementById('forgot-msg').textContent = error ? error.message : 'Reset link sent!';
+});
+
+// Auth state listener
+sb.auth.onAuthStateChange(async (event, session) => {
+  if (session?.user) {
+    currentUser = session.user;
+    authScreen.classList.remove('active');
+    appScreen.classList.add('active');
+    await loadApp();
+  } else {
+    currentUser = null;
+    authScreen.classList.add('active');
+    appScreen.classList.remove('active');
+  }
+});
+
+/* ===== Navigation ===== */
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const page = document.getElementById('page-' + btn.dataset.page);
+    page.classList.add('active');
+    if (btn.dataset.page === 'progress') renderProgress();
+  });
+});
+
+/* ===== Load App ===== */
+async function loadApp() {
+  await loadConfig();
+  await loadAllEntries();
+  await loadToday();
+  renderToday();
+  updateStreaks();
+}
+
+async function loadConfig() {
+  const { data } = await sb.from('soft_challenge_config').select('*').eq('user_id', currentUser.id).single();
+  if (data) {
+    config = data;
+  } else {
+    // Create default config — start date is today
+    const today = localDateStr();
+    const { data: newConfig } = await sb.from('soft_challenge_config')
+      .insert({ user_id: currentUser.id, start_date: today, challenge_name: '100 Day Soft Challenge' })
+      .select().single();
+    config = newConfig;
+  }
+  document.getElementById('setting-name').value = config?.challenge_name || '100 Day Soft Challenge';
+  document.getElementById('setting-start').value = config?.start_date || localDateStr();
+}
+
+async function loadAllEntries() {
+  const { data } = await sb.from('soft_challenge_entries')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .order('date', { ascending: true });
+  allEntries = data || [];
+}
+
+async function loadToday() {
+  const today = localDateStr();
+  const existing = allEntries.find(e => e.date === today);
+  if (existing) {
+    todayEntry = existing;
+  } else {
+    todayEntry = {
+      user_id: currentUser.id,
+      date: today,
+      day_number: getDayNumber(today),
+      water: false, movement: false, reading: false, nutrition: false,
+      mindfulness: false, sleep_hygiene: false, self_care: false,
+      notes: ''
+    };
+  }
+}
+
+/* ===== Date Utils ===== */
+function localDateStr(d) {
+  const dt = d ? new Date(d) : new Date();
+  return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0');
+}
+
+function getDayNumber(dateStr) {
+  if (!config?.start_date) return 1;
+  const start = new Date(config.start_date + 'T00:00:00');
+  const current = new Date(dateStr + 'T00:00:00');
+  const diff = Math.floor((current - start) / 86400000) + 1;
+  return Math.max(1, Math.min(diff, 100));
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+}
+
+/* ===== Render Today ===== */
+function renderToday() {
+  const dayNum = getDayNumber(todayEntry.date);
+  document.getElementById('day-number').textContent = `Day ${dayNum}`;
+  document.getElementById('day-date').textContent = formatDate(todayEntry.date);
+
+  // Subtitle
+  const subtitles = dayNum === 1 ? 'Your journey begins' :
+    dayNum <= 10 ? 'Building the foundation' :
+    dayNum <= 25 ? 'Finding your rhythm' :
+    dayNum <= 50 ? 'Halfway there!' :
+    dayNum <= 75 ? 'The home stretch begins' :
+    dayNum <= 90 ? 'Almost legendary' :
+    dayNum <= 99 ? 'The final push' : 'You made it!';
+  document.getElementById('day-subtitle').textContent = subtitles;
+
+  // Habits
+  const list = document.getElementById('habits-list');
+  list.innerHTML = '<h2>Today\'s Habits</h2>';
+  HABITS.forEach(h => {
+    const checked = !!todayEntry[h.id];
+    const item = document.createElement('div');
+    item.className = 'habit-item' + (checked ? ' checked' : '');
+    item.innerHTML = `
+      <div class="habit-icon">${h.icon}</div>
+      <div class="habit-info">
+        <div class="habit-name">${h.name}</div>
+        <div class="habit-desc">${h.desc}</div>
+      </div>
+      <div class="habit-check">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f0d0b" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+    `;
+    item.addEventListener('click', (e) => toggleHabit(h.id, item, e));
+    list.appendChild(item);
+  });
+
+  // Progress ring
+  updateRing();
+
+  // Notes
+  document.getElementById('day-notes').value = todayEntry.notes || '';
+
+  // Encourage message
+  updateEncourageMsg();
+}
+
+function updateRing() {
+  const count = HABITS.filter(h => todayEntry[h.id]).length;
+  const circumference = 2 * Math.PI * 58;
+  const dashLen = (count / 7) * circumference;
+  document.getElementById('habit-ring').setAttribute('stroke-dasharray', `${dashLen} ${circumference}`);
+  document.getElementById('ring-count').textContent = `${count}/7`;
+
+  // Perfect day banner
+  const banner = document.getElementById('perfect-banner');
+  if (count === 7) {
+    const msg = PERFECT_MSGS[Math.floor(Math.random() * PERFECT_MSGS.length)];
+    banner.innerHTML = `<div class="perfect-day-banner"><h3>\u2728 Perfect Day! \u2728</h3><p>${msg}</p></div>`;
+  } else {
+    banner.innerHTML = '';
+  }
+}
+
+function updateEncourageMsg() {
+  const count = HABITS.filter(h => todayEntry[h.id]).length;
+  let msg;
+  if (count === 0) {
+    msg = ENCOURAGE_MSGS[Math.floor(Math.random() * ENCOURAGE_MSGS.length)];
+  } else if (count < 4) {
+    msg = `${count} down, ${7-count} to go. You're getting there!`;
+  } else if (count < 7) {
+    msg = `${count} out of 7! So close to a perfect day!`;
+  } else {
+    msg = '';
+  }
+  document.getElementById('encourage-msg').textContent = msg;
+}
+
+/* ===== Toggle Habit ===== */
+async function toggleHabit(habitId, element, event) {
+  const newVal = !todayEntry[habitId];
+  todayEntry[habitId] = newVal;
+
+  // Visual
+  if (newVal) {
+    element.classList.add('checked', 'just-checked');
+    // Ripple
+    const ripple = document.createElement('div');
+    ripple.className = 'ripple';
+    const rect = element.getBoundingClientRect();
+    ripple.style.left = (event.clientX - rect.left) + 'px';
+    ripple.style.top = (event.clientY - rect.top) + 'px';
+    element.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+    setTimeout(() => element.classList.remove('just-checked'), 500);
+  } else {
+    element.classList.remove('checked');
+  }
+
+  updateRing();
+  updateEncourageMsg();
+  updateStreaks();
+
+  // Confetti on perfect day
+  const count = HABITS.filter(h => todayEntry[h.id]).length;
+  if (count === 7 && newVal) {
+    launchConfetti();
+  }
+
+  // Save
+  await saveToday();
+}
+
+async function saveToday() {
+  if (todayEntry.id) {
+    await sb.from('soft_challenge_entries')
+      .update({
+        water: todayEntry.water, movement: todayEntry.movement, reading: todayEntry.reading,
+        nutrition: todayEntry.nutrition, mindfulness: todayEntry.mindfulness,
+        sleep_hygiene: todayEntry.sleep_hygiene, self_care: todayEntry.self_care,
+        notes: todayEntry.notes, day_number: getDayNumber(todayEntry.date)
+      })
+      .eq('id', todayEntry.id);
+  } else {
+    todayEntry.day_number = getDayNumber(todayEntry.date);
+    const { data } = await sb.from('soft_challenge_entries')
+      .insert(todayEntry)
+      .select().single();
+    if (data) {
+      todayEntry = data;
+      if (!allEntries.find(e => e.date === data.date)) allEntries.push(data);
+    }
+  }
+  // Update local cache
+  const idx = allEntries.findIndex(e => e.date === todayEntry.date);
+  if (idx >= 0) allEntries[idx] = { ...todayEntry };
+}
+
+// Notes auto-save
+document.getElementById('day-notes').addEventListener('input', e => {
+  todayEntry.notes = e.target.value;
+  clearTimeout(notesTimeout);
+  notesTimeout = setTimeout(() => saveToday(), 800);
+});
+
+/* ===== Streaks ===== */
+function updateStreaks() {
+  const today = localDateStr();
+  let currentStreak = 0;
+  let longestStreak = 0;
+  let streak = 0;
+
+  // Sort entries by date
+  const sorted = [...allEntries].sort((a,b) => a.date.localeCompare(b.date));
+
+  // Count total days with at least 1 habit
+  const activeDays = sorted.filter(e => habitCount(e) > 0);
+  document.getElementById('total-days').textContent = activeDays.length;
+
+  // Calculate streaks (a day counts if at least 1 habit done)
+  if (!config?.start_date) {
+    document.getElementById('current-streak').textContent = '0';
+    document.getElementById('longest-streak').textContent = '0';
+    return;
+  }
+
+  for (let i = 0; i < 100; i++) {
+    const d = new Date(config.start_date + 'T00:00:00');
+    d.setDate(d.getDate() + i);
+    const ds = localDateStr(d);
+    if (ds > today) break;
+    const entry = sorted.find(e => e.date === ds);
+    if (entry && habitCount(entry) > 0) {
+      streak++;
+      longestStreak = Math.max(longestStreak, streak);
+    } else {
+      streak = 0;
+    }
+  }
+  currentStreak = streak;
+
+  document.getElementById('current-streak').textContent = currentStreak;
+  document.getElementById('longest-streak').textContent = longestStreak;
+}
+
+function habitCount(entry) {
+  return HABITS.filter(h => entry[h.id]).length;
+}
+
+/* ===== Confetti ===== */
+function launchConfetti() {
+  const container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+  const colors = ['#f59e0b','#fbbf24','#d97706','#fde68a','#f97316','#fb923c','#fef3c7'];
+  for (let i = 0; i < 50; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 0.5 + 's';
+    piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+    const shapes = ['circle','square'];
+    if (shapes[Math.floor(Math.random()*2)] === 'circle') piece.style.borderRadius = '50%';
+    piece.style.width = (6 + Math.random()*8) + 'px';
+    piece.style.height = piece.style.width;
+    container.appendChild(piece);
+  }
+  setTimeout(() => container.remove(), 4000);
+}
+
+/* ===== Progress Page ===== */
+function renderProgress() {
+  renderArc();
+  renderStats();
+  renderCalendar();
+  renderBreakdown();
+}
+
+function renderArc() {
+  const container = document.getElementById('arc-container');
+  const total = 100;
+  const done = allEntries.filter(e => habitCount(e) > 0).length;
+  const pct = done / total;
+
+  // SVG arc
+  const r = 120, cx = 150, cy = 150;
+  const startAngle = -210 * Math.PI / 180;
+  const endAngle = 30 * Math.PI / 180;
+  const totalAngle = endAngle - startAngle;
+
+  function polarToCart(angle) {
+    return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+  }
+
+  const bgStart = polarToCart(startAngle);
+  const bgEnd = polarToCart(endAngle);
+  const progressEnd = polarToCart(startAngle + totalAngle * pct);
+  const largeArcBg = totalAngle > Math.PI ? 1 : 0;
+  const largeArcProg = (totalAngle * pct) > Math.PI ? 1 : 0;
+
+  container.innerHTML = `
+    <svg viewBox="0 0 300 200">
+      <defs>
+        <linearGradient id="arc-grad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#d97706"/>
+          <stop offset="100%" stop-color="#fbbf24"/>
+        </linearGradient>
+      </defs>
+      <path d="M ${bgStart.x} ${bgStart.y} A ${r} ${r} 0 ${largeArcBg} 1 ${bgEnd.x} ${bgEnd.y}"
+        fill="none" stroke="#241e16" stroke-width="16" stroke-linecap="round"/>
+      ${pct > 0 ? `<path d="M ${bgStart.x} ${bgStart.y} A ${r} ${r} 0 ${largeArcProg} 1 ${progressEnd.x} ${progressEnd.y}"
+        fill="none" stroke="url(#arc-grad)" stroke-width="16" stroke-linecap="round"/>` : ''}
+      <text x="${cx}" y="${cy-8}" text-anchor="middle" fill="var(--text)" font-size="36" font-weight="800">${done}</text>
+      <text x="${cx}" y="${cy+16}" text-anchor="middle" fill="var(--text3)" font-size="12">of ${total} days</text>
+    </svg>
+  `;
+}
+
+function renderStats() {
+  const grid = document.getElementById('stats-grid');
+  const today = localDateStr();
+  const activeDays = allEntries.filter(e => habitCount(e) > 0);
+  const perfectDays = allEntries.filter(e => habitCount(e) === 7);
+  const totalHabits = allEntries.reduce((sum, e) => sum + habitCount(e), 0);
+  const avgPerDay = activeDays.length > 0 ? (totalHabits / activeDays.length).toFixed(1) : '0';
+  const completionRate = activeDays.length > 0 ? Math.round((perfectDays.length / activeDays.length) * 100) : 0;
+
+  grid.innerHTML = `
+    <div class="stat-card">
+      <div class="stat-value">${perfectDays.length}</div>
+      <div class="stat-label">Perfect Days</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${avgPerDay}</div>
+      <div class="stat-label">Avg Habits/Day</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${totalHabits}</div>
+      <div class="stat-label">Total Check-ins</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${completionRate}%</div>
+      <div class="stat-label">Perfect Rate</div>
+    </div>
+  `;
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('calendar-grid');
+  grid.innerHTML = '';
+  const today = localDateStr();
+  if (!config?.start_date) return;
+
+  for (let i = 0; i < 100; i++) {
+    const d = new Date(config.start_date + 'T00:00:00');
+    d.setDate(d.getDate() + i);
+    const ds = localDateStr(d);
+    const entry = allEntries.find(e => e.date === ds);
+    const count = entry ? habitCount(entry) : 0;
+
+    const cell = document.createElement('div');
+    cell.className = 'cal-day';
+    cell.textContent = i + 1;
+
+    if (ds === today) cell.classList.add('today');
+
+    if (ds > today) {
+      cell.classList.add('future');
+    } else if (count === 7) {
+      cell.classList.add('perfect');
+    } else if (count >= 6) {
+      cell.classList.add('partial-6');
+    } else if (count >= 5) {
+      cell.classList.add('partial-5');
+    } else if (count >= 4) {
+      cell.classList.add('partial-4');
+    } else if (count >= 3) {
+      cell.classList.add('partial-3');
+    } else if (count >= 2) {
+      cell.classList.add('partial-2');
+    } else if (count >= 1) {
+      cell.classList.add('partial');
+    } else {
+      cell.classList.add('missed');
+    }
+
+    grid.appendChild(cell);
+  }
+}
+
+function renderBreakdown() {
+  const container = document.getElementById('habit-breakdown');
+  const activeDays = allEntries.filter(e => habitCount(e) > 0).length || 1;
+
+  let html = '<h3>Habit Breakdown</h3>';
+  HABITS.forEach(h => {
+    const doneCount = allEntries.filter(e => e[h.id]).length;
+    const pct = Math.round((doneCount / Math.max(activeDays, 1)) * 100);
+    html += `
+      <div class="breakdown-item">
+        <div class="breakdown-icon">${h.icon}</div>
+        <div class="breakdown-bar-wrap">
+          <div class="breakdown-label"><span>${h.name}</span><span>${pct}%</span></div>
+          <div class="breakdown-bar"><div class="breakdown-fill" style="width:${pct}%"></div></div>
+        </div>
+      </div>
+    `;
+  });
+  container.innerHTML = html;
+}
+
+/* ===== Settings ===== */
+document.getElementById('save-settings').addEventListener('click', async () => {
+  const name = document.getElementById('setting-name').value.trim() || '100 Day Soft Challenge';
+  const startDate = document.getElementById('setting-start').value;
+  if (config?.id) {
+    await sb.from('soft_challenge_config')
+      .update({ challenge_name: name, start_date: startDate, updated_at: new Date().toISOString() })
+      .eq('id', config.id);
+    config.challenge_name = name;
+    config.start_date = startDate;
+  }
+  // Recalculate day numbers
+  await loadAllEntries();
+  await loadToday();
+  renderToday();
+  updateStreaks();
+  document.getElementById('save-settings').textContent = 'Saved!';
+  setTimeout(() => document.getElementById('save-settings').textContent = 'Save Settings', 1500);
+});
+
+// Reset challenge
+document.getElementById('reset-challenge').addEventListener('click', () => {
+  document.getElementById('reset-modal').classList.add('active');
+});
+document.getElementById('reset-close').addEventListener('click', () => {
+  document.getElementById('reset-modal').classList.remove('active');
+});
+document.getElementById('reset-cancel').addEventListener('click', () => {
+  document.getElementById('reset-modal').classList.remove('active');
+});
+document.getElementById('reset-confirm').addEventListener('click', async () => {
+  await sb.from('soft_challenge_entries').delete().eq('user_id', currentUser.id);
+  await sb.from('soft_challenge_config')
+    .update({ start_date: localDateStr(), updated_at: new Date().toISOString() })
+    .eq('user_id', currentUser.id);
+  allEntries = [];
+  document.getElementById('reset-modal').classList.remove('active');
+  await loadApp();
+});
+
+// Logout
+document.getElementById('logout-btn').addEventListener('click', async () => {
+  await sb.auth.signOut();
+});
+
+/* ===== Service Worker ===== */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>
