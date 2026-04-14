@@ -456,6 +456,7 @@ const DEFAULT_HABITS = [
 ];
 
 const MASHA_EMAIL = 'masha.lifsh@gmail.com';
+const MASHA_EMAIL_HINTS = ['masha', 'lifsh'];
 const MASHA_DEFAULT_HABITS = [
   { id: 'sunscreen',       name: 'Sunscreen',       desc: 'Put it on',             icon: '☀️' },
   { id: 'steps_10k',       name: '10k Steps',       desc: 'Walk 10,000 steps',     icon: '👟' },
@@ -474,7 +475,10 @@ function cloneHabits(habits) {
 }
 
 function isMashaUser(user) {
-  return !!(user?.email && user.email.toLowerCase() === MASHA_EMAIL);
+  const email = (user?.email || '').trim().toLowerCase();
+  if (!email) return false;
+  if (email === MASHA_EMAIL) return true;
+  return MASHA_EMAIL_HINTS.every(part => email.includes(part));
 }
 
 function getSeedHabitsForUser(user) {
