@@ -652,20 +652,34 @@ async function loadConfig() {
     }
   }
 
-  // Habits: prefer localStorage (has custom habits), fall back to cloud, then user-aware defaults
-  const habitsStr = localConfig?.habits || config?.habits;
-  if (habitsStr) {
-    try {
-      const parsed = typeof habitsStr === 'string' ? JSON.parse(habitsStr) : habitsStr;
-      if (Array.isArray(parsed) && parsed.length > 0) HABITS = parsed;
-      else HABITS = seededHabits;
-    } catch(e) { HABITS = seededHabits; }
+  // For Masha, the personal soft challenge defaults should override older saved generic habits.
+  if (isMashaUser(currentUser)) {
+    HABITS = cloneHabits(MASHA_DEFAULT_HABITS);
+    config.habits = JSON.stringify(HABITS);
+    localStorage.setItem(localKey, JSON.stringify(config));
+    if (config?.id) {
+      try {
+        await sb.from('soft_challenge_config')
+          .update({ habits: config.habits, updated_at: new Date().toISOString() })
+          .eq('id', config.id);
+      } catch(e) {}
+    }
   } else {
-    HABITS = seededHabits;
-  }
+    // Habits: prefer localStorage (has custom habits), fall back to cloud, then user-aware defaults
+    const habitsStr = localConfig?.habits || config?.habits;
+    if (habitsStr) {
+      try {
+        const parsed = typeof habitsStr === 'string' ? JSON.parse(habitsStr) : habitsStr;
+        if (Array.isArray(parsed) && parsed.length > 0) HABITS = parsed;
+        else HABITS = seededHabits;
+      } catch(e) { HABITS = seededHabits; }
+    } else {
+      HABITS = seededHabits;
+    }
 
-  config.habits = JSON.stringify(HABITS);
-  localStorage.setItem(localKey, JSON.stringify(config));
+    config.habits = JSON.stringify(HABITS);
+    localStorage.setItem(localKey, JSON.stringify(config));
+  }
 
   document.getElementById('setting-name').value = config?.challenge_name || '100 Day Soft Challenge';
   document.getElementById('setting-start').value = config?.start_date || localDateStr();
