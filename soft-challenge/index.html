@@ -441,19 +441,43 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* ===== Habits Config ===== */
 const DEFAULT_HABITS = [
-  { id: 'water',        name: 'Water',         desc: '64oz / ~2L',                    icon: '\u{1F4A7}' },
-  { id: 'movement',     name: 'Movement',       desc: '30 min, any kind',              icon: '\u{1F3C3}' },
-  { id: 'reading',      name: 'Read',           desc: '10 pages',                      icon: '\u{1F4DA}' },
-  { id: 'nutrition',    name: 'Nutrition',       desc: 'Ate intentionally',             icon: '\u{1F96C}' },
-  { id: 'mindfulness',  name: 'Mindfulness',     desc: 'Meditation, journaling, breathwork', icon: '\u{1F9D8}' },
-  { id: 'sleep_hygiene',name: 'Sleep Hygiene',   desc: 'In bed by target time',         icon: '\u{1F319}' },
-  { id: 'self_care',    name: 'Self-Care',       desc: 'Shower, teeth, skincare',        icon: '\u{2728}' },
+  { id: 'water',        name: 'Water',          desc: '64oz / ~2L',                        icon: '\u{1F4A7}' },
+  { id: 'movement',     name: 'Movement',       desc: '30 min, any kind',                  icon: '\u{1F3C3}' },
+  { id: 'reading',      name: 'Read',           desc: '10 pages',                          icon: '\u{1F4DA}' },
+  { id: 'nutrition',    name: 'Nutrition',      desc: 'Ate intentionally',                 icon: '\u{1F96C}' },
+  { id: 'mindfulness',  name: 'Mindfulness',    desc: 'Meditation, journaling, breathwork',icon: '\u{1F9D8}' },
+  { id: 'sleep_hygiene',name: 'Sleep Hygiene',  desc: 'In bed by target time',             icon: '\u{1F319}' },
+  { id: 'self_care',    name: 'Self-Care',      desc: 'Shower, teeth, skincare',           icon: '\u{2728}' },
 ];
 
-const EMOJI_PICKER = ['\u{1F4A7}','\u{1F3C3}','\u{1F4DA}','\u{1F96C}','\u{1F9D8}','\u{1F319}','\u{2728}','\u{1F4AA}','\u{2764}\u{FE0F}','\u{1F3B5}','\u{1F4DD}','\u{1F3A8}','\u{1F4F5}','\u{1F9F9}','\u{1F48A}','\u{2615}','\u{1F34E}','\u{1F6B6}','\u{1F9D1}\u{200D}\u{1F4BB}','\u{1F30E}','\u{1F3CB}','\u{1F6BF}','\u{1F4F1}','\u{1F333}','\u{1F60A}','\u{1F37D}\u{FE0F}','\u{1F4B0}','\u{1F3AF}'];
+const MASHA_EMAIL = 'masha.lifsh@gmail.com';
+const MASHA_DEFAULT_HABITS = [
+  { id: 'sunscreen',       name: 'Sunscreen',       desc: 'Put it on',             icon: '☀️' },
+  { id: 'steps_10k',       name: '10k Steps',       desc: 'Walk 10,000 steps',     icon: '👟' },
+  { id: 'exercise_10_min', name: '10 Min Exercise', desc: 'Move for 10 minutes',   icon: '💪' },
+  { id: 'reading_10_pages',name: '10 Pages Reading',desc: 'Read 10 pages',         icon: '📚' },
+  { id: 'teeth',           name: 'Teeth',           desc: 'Brush your teeth',      icon: '🪥' },
+  { id: 'protein',         name: 'Protein',         desc: 'Hit your protein goal', icon: '🍗' },
+  { id: 'vegetable',       name: '1 Vegetable',     desc: 'Eat a vegetable',       icon: '🥦' },
+  { id: 'no_insta',        name: 'No Insta',        desc: 'Stay off Instagram',    icon: '📵' },
+];
+
+const EMOJI_PICKER = ['\u{1F4A7}','\u{1F3C3}','\u{1F4DA}','\u{1F96C}','\u{1F9D8}','\u{1F319}','\u{2728}','\u{1F4AA}','\u{2764}\u{FE0F}','\u{1F3B5}','\u{1F4DD}','\u{1F3A8}','\u{1F4F5}','\u{1F9F9}','\u{1F48A}','\u{2615}','\u{1F34E}','\u{1F6B6}','\u{1F9D1}\u{200D}\u{1F4BB}','\u{1F30E}','\u{1F3CB}','\u{1F6BF}','\u{1F4F1}','\u{1F333}','\u{1F60A}','\u{1F37D}\u{FE0F}','\u{1F4B0}','\u{1F3AF}','☀️','👟','🪥','🍗','🥦','📵'];
+
+function cloneHabits(habits) {
+  return habits.map(h => ({ ...h }));
+}
+
+function isMashaUser(user) {
+  return !!(user?.email && user.email.toLowerCase() === MASHA_EMAIL);
+}
+
+function getSeedHabitsForUser(user) {
+  return isMashaUser(user) ? cloneHabits(MASHA_DEFAULT_HABITS) : cloneHabits(DEFAULT_HABITS);
+}
 
 /* Live habits list — loaded from config or defaults */
-let HABITS = [...DEFAULT_HABITS];
+let HABITS = cloneHabits(DEFAULT_HABITS);
 
 const ENCOURAGE_MSGS = [
   "You're doing something beautiful for yourself.",
@@ -474,9 +498,9 @@ const ENCOURAGE_MSGS = [
 ];
 
 const PERFECT_MSGS = [
-  "All 7! You're absolutely radiant today!",
+  "Perfect day! You're absolutely radiant today!",
   "Perfect day! You're on fire!",
-  "7 for 7 — unstoppable!",
+  "Unstoppable.",
   "Look at you go! Every single one!",
   "A perfect day of self-love!",
 ];
@@ -594,31 +618,49 @@ async function loadConfig() {
   const localRaw = localStorage.getItem(localKey);
   const localConfig = localRaw ? JSON.parse(localRaw) : null;
 
+  const seededHabits = getSeedHabitsForUser(currentUser);
+  const seededHabitsJson = JSON.stringify(seededHabits);
+
   if (cloudConfig) {
     config = cloudConfig;
   } else if (localConfig) {
     config = localConfig;
   } else {
-    config = { user_id: currentUser.id, start_date: localDateStr(), challenge_name: '100 Day Soft Challenge', habits: JSON.stringify(DEFAULT_HABITS) };
+    config = { user_id: currentUser.id, start_date: localDateStr(), challenge_name: '100 Day Soft Challenge', habits: seededHabitsJson };
     // Try to save to cloud
     try {
       const { data: newConfig } = await sb.from('soft_challenge_config')
-        .insert({ user_id: currentUser.id, start_date: config.start_date, challenge_name: config.challenge_name })
+        .insert({ user_id: currentUser.id, start_date: config.start_date, challenge_name: config.challenge_name, habits: seededHabitsJson })
         .select().single();
-      if (newConfig) config = { ...newConfig, habits: JSON.stringify(DEFAULT_HABITS) };
+      if (newConfig) config = { ...newConfig, habits: newConfig.habits || seededHabitsJson };
     } catch(e) {}
   }
 
-  // Habits: prefer localStorage (has custom habits), fall back to cloud, then defaults
+  if (!localConfig?.habits && !config?.habits) {
+    config.habits = seededHabitsJson;
+    if (config?.id) {
+      try {
+        await sb.from('soft_challenge_config')
+          .update({ habits: seededHabitsJson, updated_at: new Date().toISOString() })
+          .eq('id', config.id);
+      } catch(e) {}
+    }
+  }
+
+  // Habits: prefer localStorage (has custom habits), fall back to cloud, then user-aware defaults
   const habitsStr = localConfig?.habits || config?.habits;
   if (habitsStr) {
     try {
       const parsed = typeof habitsStr === 'string' ? JSON.parse(habitsStr) : habitsStr;
       if (Array.isArray(parsed) && parsed.length > 0) HABITS = parsed;
-    } catch(e) { HABITS = [...DEFAULT_HABITS]; }
+      else HABITS = seededHabits;
+    } catch(e) { HABITS = seededHabits; }
   } else {
-    HABITS = [...DEFAULT_HABITS];
+    HABITS = seededHabits;
   }
+
+  config.habits = JSON.stringify(HABITS);
+  localStorage.setItem(localKey, JSON.stringify(config));
 
   document.getElementById('setting-name').value = config?.challenge_name || '100 Day Soft Challenge';
   document.getElementById('setting-start').value = config?.start_date || localDateStr();
@@ -646,6 +688,9 @@ async function loadAllEntries() {
   cloudEntries.forEach(e => {
     const completions = {};
     DEFAULT_HABITS.forEach(h => { if (e[h.id]) completions[h.id] = true; });
+    if (isMashaUser(currentUser)) {
+      MASHA_DEFAULT_HABITS.forEach(h => { if (e[h.id]) completions[h.id] = true; });
+    }
     merged[e.date] = { ...e, completions };
   });
   localEntries.forEach(e => {
@@ -670,7 +715,7 @@ async function loadToday() {
     if (!todayEntry.completions) todayEntry.completions = {};
     // Backward compat: migrate old boolean columns to completions object
     if (!todayEntry._migrated) {
-      DEFAULT_HABITS.forEach(h => {
+      [...DEFAULT_HABITS, ...(isMashaUser(currentUser) ? MASHA_DEFAULT_HABITS : [])].forEach(h => {
         if (todayEntry[h.id] === true && !todayEntry.completions[h.id]) {
           todayEntry.completions[h.id] = true;
         }
