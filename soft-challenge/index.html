@@ -1300,7 +1300,9 @@ async function autoSaveHabits() {
 
 /* ===== Service Worker ===== */
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
+  navigator.serviceWorker.getRegistrations()
+    .then(registrations => Promise.all(registrations.map(reg => reg.unregister())))
+    .catch(() => {});
 }
 </script>
 </body>
