@@ -455,6 +455,7 @@ const DEFAULT_HABITS = [
   { id: 'self_care',    name: 'Self-Care',      desc: 'Shower, teeth, skincare',           icon: '\u{2728}' },
 ];
 
+const MASHA_USER_ID = '1f7182fb-3f53-4741-b69c-e4160a4e4396';
 const MASHA_EMAIL = 'masha.lifsh@gmail.com';
 const MASHA_EMAIL_HINTS = ['masha', 'lifsh'];
 const MASHA_DEFAULT_HABITS = [
@@ -475,6 +476,7 @@ function cloneHabits(habits) {
 }
 
 function isMashaUser(user) {
+  if (user?.id === MASHA_USER_ID) return true;
   const email = (user?.email || '').trim().toLowerCase();
   if (!email) return false;
   if (email === MASHA_EMAIL) return true;
