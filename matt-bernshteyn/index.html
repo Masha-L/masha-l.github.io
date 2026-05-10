@@ -3,207 +3,267 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Matvey Bernshteyn | Exhibitor Relations & Communications</title>
-  <meta name="description" content="Portfolio site for Matvey Bernshteyn, a New York-based communications and exhibitor relations professional.">
+  <title>Matvey Bernshteyn | Masha Lifshits</title>
+  <meta name="description" content="Matvey Bernshteyn — exhibitor relations and communications professional based in New York.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Space+Grotesk:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
+  <style>
+    .compact-intro { max-width: 780px; }
+    .contact-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+    .quick-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
+    .quick-fact { padding: 1.5rem; border-radius: var(--radius-lg); background: var(--color-bg); border: 1px solid var(--color-border); }
+    .quick-fact-number { font-family: var(--font-heading); font-size: 2rem; font-weight: 700; color: var(--color-primary); display: block; margin-bottom: 0.5rem; }
+    .contact-card { height: 100%; }
+    .contact-card p:last-child { margin-bottom: 0; }
+    .resume-link-row { margin-top: 1rem; }
+    @media (max-width: 768px) { .quick-facts { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body>
-  <main>
-    <section class="hero">
-      <div class="hero-inner">
-        <p class="eyebrow">New York, NY</p>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav-container">
+      <a href="/" class="nav-logo">ML</a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/work/">Work</a>
+        <a href="/projects/">Projects</a>
+        <a href="/games/">Games</a>
+        <a href="/blog/">Writing</a>
+        <button class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+        <button class="nerd-toggle" aria-label="Toggle nerd mode" aria-pressed="false" title="Toggle nerd mode">🤓</button>
+      </div>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main id="main-content" class="main" role="main">
+    <section class="about-intro">
+      <div class="about-content compact-intro">
+        <p class="section-label">portfolio</p>
         <h1>Matvey Bernshteyn</h1>
-        <p class="lede">Communications and exhibitor relations professional building strong partnerships, clean workflows, and revenue-supporting programs.</p>
-        <div class="hero-actions">
-          <a class="button primary" href="mailto:mattbernshteyn@gmail.com">Email Matvey</a>
-          <a class="button secondary" href="https://www.linkedin.com/in/matvey-b-17046515a/" target="_blank" rel="noopener">LinkedIn</a>
-          <a class="button secondary" href="./Matvey_Bernshteyn_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+        <p class="lead">Exhibitor relations and communications professional with 6+ years of experience supporting client-facing teams through relationship management, sales enablement, and strategic communications.</p>
+        <div class="contact-actions">
+          <a href="mailto:mattbernshteyn@gmail.com" class="btn btn-primary">Email Matvey</a>
+          <a href="https://www.linkedin.com/in/matvey-b-17046515a/" class="btn btn-secondary" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="./Matvey_Bernshteyn_Resume.pdf" class="btn btn-secondary" target="_blank" rel="noopener">Resume</a>
         </div>
-        <ul class="contact-list" aria-label="Contact information">
-          <li>mattbernshteyn@gmail.com</li>
-          <li>(857) 361-9214</li>
-          <li>Open to exhibitor relations, partnerships, and communications roles</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="section intro">
-      <div class="section-heading">
-        <p class="eyebrow">About</p>
-        <h2>Client-facing work, without the chaos</h2>
-      </div>
-      <p>
-        Matvey has 6+ years of experience supporting client-facing teams through relationship management,
-        sales enablement, event logistics, and strategic communications. He works well at the intersection of
-        people, process, and message — the part where strong partnerships turn into repeat business.
-      </p>
-    </section>
-
-    <section class="section metrics">
-      <div class="metric-card">
-        <span class="metric-number">$70–100K</span>
-        <span class="metric-label">projected annual pipeline supported through venue relationships</span>
-      </div>
-      <div class="metric-card">
-        <span class="metric-number">15%</span>
-        <span class="metric-label">increase in event and program attendance at EMC</span>
-      </div>
-      <div class="metric-card">
-        <span class="metric-number">10%</span>
-        <span class="metric-label">increase in LinkedIn executive reach at DataArt</span>
-      </div>
-      <div class="metric-card">
-        <span class="metric-number">8%</span>
-        <span class="metric-label">growth in engagement and following at Bank Leumi USA</span>
-      </div>
-    </section>
-
-    <section class="section two-column">
-      <div>
-        <div class="section-heading">
-          <p class="eyebrow">Strengths</p>
-          <h2>What he brings</h2>
-        </div>
-        <ul class="pill-list">
-          <li>Exhibitor & vendor relations</li>
-          <li>Event and venue coordination</li>
-          <li>Client-facing communications</li>
-          <li>Editorial calendars & campaign planning</li>
-          <li>Sales reporting & outreach materials</li>
-          <li>Cross-functional project coordination</li>
-          <li>Proposal, deck, and case study development</li>
-          <li>Social and executive content</li>
-        </ul>
-      </div>
-      <div>
-        <div class="section-heading">
-          <p class="eyebrow">Tools</p>
-          <h2>Platform fluency</h2>
-        </div>
-        <ul class="tool-list">
-          <li>Microsoft Office Suite</li>
-          <li>Google Workspace</li>
-          <li>Adobe Acrobat</li>
-          <li>HubSpot</li>
-          <li>Constant Contact</li>
-          <li>Hootsuite</li>
-          <li>Sprout Social</li>
-          <li>Later Social</li>
-          <li>LinkedIn Analytics</li>
-          <li>WordPress</li>
-          <li>Webflow</li>
-          <li>Figma</li>
-          <li>SharePoint</li>
-          <li>Canva</li>
-          <li>ChatGPT</li>
-          <li>Microsoft Copilot</li>
-        </ul>
       </div>
     </section>
 
     <section class="section">
-      <div class="section-heading">
-        <p class="eyebrow">Experience</p>
-        <h2>Recent work</h2>
-      </div>
-      <div class="timeline">
-        <article class="timeline-item">
-          <div class="timeline-meta">
-            <p class="role">Director of Exhibitor Relations (part-time)</p>
-            <p class="company">Roof Dragon Entertainment</p>
-            <p class="date">Nov 2025 – Present</p>
+      <div class="section-container">
+        <div class="section-header">
+          <p class="section-label">at a glance</p>
+          <h2 class="section-title">Partnership-focused, detail-obsessed, and unusually good at keeping moving parts from flying off the table</h2>
+        </div>
+        <div class="quick-facts">
+          <div class="quick-fact">
+            <span class="quick-fact-number">$70–100K</span>
+            <p class="card-text">Projected annual revenue pipeline supported through venue relationship management at Roof Dragon Entertainment.</p>
           </div>
-          <div class="timeline-content">
-            <ul>
-              <li>Acts as the primary liaison for venue booking relationships.</li>
-              <li>Built a projected annual revenue pipeline of $70–100K through exhibitor and venue coordination.</li>
-              <li>Owns category sales reporting and organizes outreach materials for partnership efforts.</li>
-            </ul>
+          <div class="quick-fact">
+            <span class="quick-fact-number">15%</span>
+            <p class="card-text">Increase in overall event and program attendance supported through campaigns and logistics at Engaging Math Circles.</p>
           </div>
-        </article>
-
-        <article class="timeline-item">
-          <div class="timeline-meta">
-            <p class="role">Marketing Specialist</p>
-            <p class="company">Engaging Math Circles</p>
-            <p class="date">May 2021 – Present</p>
+          <div class="quick-fact">
+            <span class="quick-fact-number">10%</span>
+            <p class="card-text">Growth in LinkedIn executive reach driven by stronger client-facing content at DataArt.</p>
           </div>
-          <div class="timeline-content">
-            <ul>
-              <li>Maintains editorial calendars and communications schedules while supporting senior leadership operations.</li>
-              <li>Coordinates social campaigns, event logistics, and program communications.</li>
-              <li>Helped drive a 15% increase in overall event and program attendance.</li>
-            </ul>
-          </div>
-        </article>
-
-        <article class="timeline-item">
-          <div class="timeline-meta">
-            <p class="role">Content Manager (part-time)</p>
-            <p class="company">DataArt</p>
-            <p class="date">May 2021 – Sep 2024</p>
-          </div>
-          <div class="timeline-content">
-            <ul>
-              <li>Created and refined client-facing social content that increased LinkedIn executive reach by 10%.</li>
-              <li>Drafted proposals, case studies, thought leadership articles, and executive presentations.</li>
-              <li>Coordinated project timelines, deliverables, and document repositories across teams.</li>
-            </ul>
-          </div>
-        </article>
-
-        <article class="timeline-item">
-          <div class="timeline-meta">
-            <p class="role">CSR / Marketing Intern</p>
-            <p class="company">Bank Leumi USA (now Valley Bank)</p>
-            <p class="date">Jun 2020 – Jan 2021</p>
-          </div>
-          <div class="timeline-content">
-            <ul>
-              <li>Analyzed campaign and social performance, contributing to an 8% increase in engagement and following.</li>
-              <li>Project managed vendor relationships and logistics for a $1M COVID-19 relief fund for small business clients.</li>
-            </ul>
-          </div>
-        </article>
-
-        <article class="timeline-item">
-          <div class="timeline-meta">
-            <p class="role">Customer Success Associate</p>
-            <p class="company">Homeolux (now Bright)</p>
-            <p class="date">May 2019 – Jun 2020</p>
-          </div>
-          <div class="timeline-content">
-            <ul>
-              <li>Researched advertising targets, trade shows, industry publications, and email marketing opportunities.</li>
-              <li>Wrote copy and developed design for the company user manual.</li>
-            </ul>
-          </div>
-        </article>
+        </div>
       </div>
     </section>
 
-    <section class="section education">
-      <div class="section-heading">
-        <p class="eyebrow">Education</p>
-        <h2>University of Massachusetts Amherst</h2>
+    <section class="section section-alt">
+      <div class="section-container">
+        <div class="section-header">
+          <p class="section-label">strengths</p>
+          <h2 class="section-title">Where he does his best work</h2>
+        </div>
+        <div class="team-grid stagger">
+          <div class="team-card">
+            <h3 style="margin-bottom: 0.5rem;">Exhibitor & venue relationships</h3>
+            <p>Primary liaison work, booking coordination, outreach materials, and the sort of steady partner management that keeps revenue conversations alive.</p>
+          </div>
+          <div class="team-card">
+            <h3 style="margin-bottom: 0.5rem;">Communications that actually land</h3>
+            <p>Editorial calendars, campaign planning, executive social content, proposals, case studies, and presentations that say something useful.</p>
+          </div>
+          <div class="team-card">
+            <h3 style="margin-bottom: 0.5rem;">Cross-functional glue</h3>
+            <p>Vendor logistics, timeline coordination, reporting, repository management, and the administrative discipline most teams pretend they do not need.</p>
+          </div>
+        </div>
       </div>
-      <p>BA in English Studies, 2021</p>
     </section>
 
-    <section class="section closing">
-      <div class="closing-card">
-        <p class="eyebrow">Contact</p>
-        <h2>Need someone who can manage relationships and keep the message sharp?</h2>
-        <p>Matvey is based in New York and open to opportunities in exhibitor relations, communications, partnerships, and event-facing operations.</p>
-        <div class="hero-actions">
-          <a class="button primary" href="mailto:mattbernshteyn@gmail.com">Get in touch</a>
-          <a class="button secondary" href="tel:+18573619214">Call</a>
+    <section class="section">
+      <div class="section-container">
+        <div class="section-header">
+          <p class="section-label">experience</p>
+          <h2 class="section-title">Recent roles</h2>
+        </div>
+        <div class="featured-grid stagger">
+          <div class="featured-card">
+            <span class="badge badge-shipped">Current</span>
+            <h3>Roof Dragon Entertainment</h3>
+            <p class="tech-stack">Director of Exhibitor Relations (part-time) · Nov 2025 – Present</p>
+            <p class="description">Leads venue relationships as the primary booking liaison, built a projected $70–100K annual revenue pipeline, and owns category sales reporting and outreach materials.</p>
+          </div>
+          <div class="featured-card">
+            <span class="badge badge-shipped">Current</span>
+            <h3>Engaging Math Circles</h3>
+            <p class="tech-stack">Marketing Specialist · May 2021 – Present</p>
+            <p class="description">Maintains editorial calendars and communications schedules, supports senior leadership, and helped drive a 15% increase in event and program attendance.</p>
+          </div>
+          <div class="featured-card">
+            <span class="badge badge-google">Past</span>
+            <h3>DataArt</h3>
+            <p class="tech-stack">Content Manager (part-time) · May 2021 – Sep 2024</p>
+            <p class="description">Created executive social content that increased LinkedIn reach by 10%, while also drafting proposals, case studies, articles, and executive presentations.</p>
+          </div>
+          <div class="featured-card">
+            <span class="badge badge-shipped">Past</span>
+            <h3>Bank Leumi USA / Valley Bank</h3>
+            <p class="tech-stack">CSR / Marketing Intern · Jun 2020 – Jan 2021</p>
+            <p class="description">Analyzed campaign performance and helped manage vendor relationships and logistics for a $1M COVID-19 relief fund for small business clients.</p>
+          </div>
+          <div class="featured-card">
+            <span class="badge badge-shipped">Past</span>
+            <h3>Homeolux / Bright</h3>
+            <p class="tech-stack">Customer Success Associate · May 2019 – Jun 2020</p>
+            <p class="description">Conducted market research on advertising and trade show opportunities, and wrote copy and design content for the company user manual.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="section-container">
+        <div class="category-header">
+          <span class="category-icon">🛠️</span>
+          <h2>Tools & platforms</h2>
+        </div>
+        <div class="team-grid stagger">
+          <div class="team-card">
+            <p class="team-type">Marketing & communication</p>
+            <p>HubSpot, Constant Contact, Hootsuite, Sprout Social, Later Social, LinkedIn Analytics</p>
+          </div>
+          <div class="team-card">
+            <p class="team-type">Content & web</p>
+            <p>WordPress, Webflow, Canva, Figma, Adobe Acrobat</p>
+          </div>
+          <div class="team-card">
+            <p class="team-type">Operations</p>
+            <p>Microsoft Office Suite, Google Workspace, SharePoint, ChatGPT, Microsoft Copilot</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-container">
+        <div class="section-header">
+          <p class="section-label">education</p>
+          <h2 class="section-title">University of Massachusetts Amherst</h2>
+          <p class="section-subtitle">BA, English Studies · 2021</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="section-container">
+        <div class="category-header">
+          <span class="category-icon">✉️</span>
+          <h2>Contact</h2>
+        </div>
+        <div class="team-grid stagger">
+          <div class="team-card contact-card">
+            <h3 style="margin-bottom: 0.75rem;">Get in touch</h3>
+            <p>For exhibitor relations, partnerships, communications, or event-facing operations roles.</p>
+            <div class="resume-link-row">
+              <a href="mailto:mattbernshteyn@gmail.com" class="btn btn-primary">mattbernshteyn@gmail.com</a>
+            </div>
+          </div>
+          <div class="team-card contact-card">
+            <h3 style="margin-bottom: 0.75rem;">Phone</h3>
+            <p><a href="tel:+18573619214">(857) 361-9214</a></p>
+            <p>New York, NY</p>
+          </div>
+          <div class="team-card contact-card">
+            <h3 style="margin-bottom: 0.75rem;">Links</h3>
+            <p><a href="https://www.linkedin.com/in/matvey-b-17046515a/" target="_blank" rel="noopener">LinkedIn</a></p>
+            <p><a href="./Matvey_Bernshteyn_Resume.pdf" target="_blank" rel="noopener">Download resume</a></p>
+          </div>
         </div>
       </div>
     </section>
   </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer-container">
+      <div class="footer-content">
+        <p class="footer-tagline">Building things that matter, one line at a time.</p>
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a href="/now/">Now</a>
+          <a href="/uses/">Uses</a>
+          <a href="/running/">Running</a>
+          <a href="https://github.com/Masha-L" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+      </div>
+      <p class="footer-copy">© 2026 Masha Lifshits · Built with Jekyll, hosted on GitHub Pages, designed with <a href="https://github.com/Masha-L/masha-l.github.io" style="color: inherit; text-decoration: underline;">curiosity</a></p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.querySelector('.theme-toggle');
+    const nerdToggle = document.querySelector('.nerd-toggle');
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = localStorage.getItem('theme');
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      if (themeToggle) themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
+
+    if (savedTheme) setTheme(savedTheme);
+    else if (prefersDark) setTheme('dark');
+
+    themeToggle?.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    if (localStorage.getItem('nerdMode') === 'true') {
+      document.documentElement.setAttribute('data-nerd', 'true');
+      nerdToggle?.setAttribute('aria-pressed', 'true');
+    }
+
+    nerdToggle?.addEventListener('click', () => {
+      const enabled = document.documentElement.getAttribute('data-nerd') === 'true';
+      document.documentElement.setAttribute('data-nerd', enabled ? 'false' : 'true');
+      localStorage.setItem('nerdMode', String(!enabled));
+      nerdToggle.setAttribute('aria-pressed', String(!enabled));
+    });
+
+    navToggle?.addEventListener('click', () => {
+      document.body.classList.toggle('nav-open');
+    });
+
+    navLinks?.querySelectorAll('a').forEach(link => {
+      if (link.getAttribute('href') === '/matt-bernshteyn/') link.classList.add('active');
+    });
+  </script>
 </body>
 </html>
