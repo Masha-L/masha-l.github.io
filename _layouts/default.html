@@ -26,7 +26,6 @@
         <a href="{{ '/about/' | relative_url }}" {% if page.url == '/about/' %}class="active"{% endif %}>About</a>
         <a href="{{ '/work/' | relative_url }}" {% if page.url == '/work/' %}class="active"{% endif %}>Work</a>
         <a href="{{ '/projects/' | relative_url }}" {% if page.url == '/projects/' %}class="active"{% endif %}>Projects</a>
-        <a href="{{ '/portfolio/' | relative_url }}" {% if page.url == '/portfolio/' or page.url contains '/matt-bernshteyn/' %}class="active"{% endif %}>Portfolio</a>
         <a href="{{ '/games/' | relative_url }}" {% if page.url == '/games/' %}class="active"{% endif %}>Games</a>
         <a href="{{ '/blog/' | relative_url }}" {% if page.url contains '/blog' %}class="active"{% endif %}>Writing</a>
         <button class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
